@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Enplace.Service.Contracts;
+using System;
 using System.Collections.Generic;
 
 namespace Enplace.Service.Entities;
 
-public partial class Ingredient
+public partial class Ingredient : ILabeled
 {
     public int Id { get; set; }
 
@@ -13,5 +14,5 @@ public partial class Ingredient
 
     public virtual IngredientCategory IngredientCategory { get; set; } = null!;
 
-    public virtual ICollection<RecipeIngredient> RecipeIngredients { get; set; } = new List<RecipeIngredient>();
+    public virtual ICollection<RecipeIngredient> RecipeIngredients { get; set; } = [];
 }

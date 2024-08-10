@@ -13,5 +13,5 @@ public partial class UserMenu
 
     public virtual User User { get; set; } = null!;
 
-    public virtual ICollection<Recipe> Recipes { get; set; } = new List<Recipe>();
+    public virtual ICollection<Recipe> Recipes { get; set; } = [];
 }

@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enplace", "Enplace\Enplace\Enplace.csproj", "{F19D8DA1-1572-47AD-A9D4-95198BD4B9C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enplace", "Enplace\Enplace\Enplace.csproj", "{F19D8DA1-1572-47AD-A9D4-95198BD4B9C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enplace.Client", "Enplace\Enplace.Client\Enplace.Client.csproj", "{3A710DE9-67DB-4BF5-8D99-70E5F4671578}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enplace.Client", "Enplace\Enplace.Client\Enplace.Client.csproj", "{3A710DE9-67DB-4BF5-8D99-70E5F4671578}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enplace.Service", "Enplace\Enplace.Service\Enplace.Service.csproj", "{4A8D9101-4C2F-4991-AFE9-521EC871BF12}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enplace.Service", "Enplace\Enplace.Service\Enplace.Service.csproj", "{4A8D9101-4C2F-4991-AFE9-521EC871BF12}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enplace.Tests", "Enplace\Enplace.Tests\Enplace.Tests.csproj", "{C09FC8C3-55B0-4830-9A3C-3B34CE3561D3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enplace.Tests", "Enplace\Enplace.Tests\Enplace.Tests.csproj", "{C09FC8C3-55B0-4830-9A3C-3B34CE3561D3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

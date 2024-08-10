@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Enplace.Service.Contracts;
+using System;
 using System.Collections.Generic;
 
 namespace Enplace.Service.Entities;
 
-public partial class Recipe
+public partial class Recipe : ILabeled
 {
     public int Id { get; set; }
 
@@ -17,11 +18,11 @@ public partial class Recipe
 
     public virtual User OwnerUser { get; set; } = null!;
 
-    public virtual ICollection<RecipeIngredient> RecipeIngredients { get; set; } = new List<RecipeIngredient>();
+    public virtual ICollection<RecipeIngredient> RecipeIngredients { get; set; } = [];
 
-    public virtual ICollection<RecipeStep> RecipeSteps { get; set; } = new List<RecipeStep>();
+    public virtual ICollection<RecipeStep> RecipeSteps { get; set; } = [];
 
-    public virtual ICollection<UserMenu> Menus { get; set; } = new List<UserMenu>();
+    public virtual ICollection<UserMenu> Menus { get; set; } = [];
 
-    public virtual ICollection<User> Users { get; set; } = new List<User>();
+    public virtual ICollection<User> Users { get; set; } = [];
 }

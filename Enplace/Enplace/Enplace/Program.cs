@@ -1,5 +1,7 @@
 using Enplace.Client.Pages;
 using Enplace.Components;
+using Enplace.Service;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
+builder.Services.AddEnplaceServices();
 
 var app = builder.Build();
 

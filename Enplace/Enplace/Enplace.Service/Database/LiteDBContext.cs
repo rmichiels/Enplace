@@ -35,8 +35,10 @@ public partial class LiteDBContext : DbContext
     public virtual DbSet<UserMenu> UserMenus { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlite("Server=tcp:swissknife.database.windows.net,1433;Initial Catalog=EnplaceDB;Persist Security Info=False;User ID=dabman;Password=M4st3rk3y;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+    {
+        string liteConstr = @"Data Source=C:\Users\rmichiel\source\repos\Enplace\Enplace\Enplace\Enplace.Service\Database\Enplace.db;";
+        optionsBuilder.UseSqlite(liteConstr);
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

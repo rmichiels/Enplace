@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Enplace.Service
 {
-    internal class Program
+    public enum RepositoryMarker
     {
+        Primary, Secondary
     }
 }

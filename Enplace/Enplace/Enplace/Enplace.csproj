@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Enplace.Client\Enplace.Client.csproj" />
+    <ProjectReference Include="..\Enplace.Service\Enplace.Service.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.4" />
   </ItemGroup>
 

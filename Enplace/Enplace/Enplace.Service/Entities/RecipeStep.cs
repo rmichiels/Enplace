@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Enplace.Service.Contracts;
+using System;
 using System.Collections.Generic;
 
 namespace Enplace.Service.Entities;
 
-public partial class RecipeStep
+public partial class RecipeStep : ILabeled
 {
     public int Id { get; set; }
 
