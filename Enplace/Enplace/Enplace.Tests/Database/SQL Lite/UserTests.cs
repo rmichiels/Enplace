@@ -1,12 +1,6 @@
 ﻿using Enplace.Service;
-using Enplace.Service.Contracts;
 using Enplace.Service.Database;
 using Enplace.Service.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Enplace.Tests.Database.SQL_Lite
 {
@@ -21,33 +15,33 @@ namespace Enplace.Tests.Database.SQL_Lite
         }
 
         [TestMethod]
-        public void RepositoryShould_BeAbleTo_AddNewUsers()
+        public async Task RepositoryShould_BeAbleTo_AddNewUsers()
         {
             User user = new() { Name = _guid.ToString() };
-            var result = _repository.Add(user);
+            var result = await _repository.Add(user);
 
-            Assert.IsTrue(result.Item1);
+            Assert.IsNull(result);
         }
         [TestMethod]
-        public void RepositoryShould_BeAbleTo_DeleteNewUsers()
+        public async Task RepositoryShould_BeAbleTo_DeleteNewUsers()
         {
             User user = new() { Name = _guid.ToString() };
-            var result = _repository.Add(user);
-            Assert.IsTrue(result.Item1);
+            var result = await _repository.Add(user);
+            Assert.IsNull(result);
 
-            result = _repository.Delete(user);
-            Assert.IsTrue(result.Item1);
+            result = await _repository.Delete(user);
+            Assert.IsNull(result);
         }
 
         [TestMethod]
-        public void RepositoryShould_BeAbleTo_UpdateNewUsers()
+        public async Task RepositoryShould_BeAbleTo_UpdateNewUsers()
         {
             User user = new() { Name = _guid.ToString() };
-            var result = _repository.Add(user);
-            Assert.IsTrue(result.Item1);
+            var result = await _repository.Add(user);
+            Assert.IsNull(result);
             user.Name = new Guid().ToString();
-            result = _repository.Update(user);
-            Assert.IsTrue(result.Item1);
+            result = await _repository.Update(user);
+            Assert.IsNull(result);
         }
     }
 }

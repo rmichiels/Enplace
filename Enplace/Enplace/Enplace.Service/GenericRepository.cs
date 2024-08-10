@@ -1,10 +1,5 @@
 ﻿using Enplace.Service.Contracts;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Enplace.Service
 {
@@ -12,38 +7,35 @@ namespace Enplace.Service
     {
         private readonly DbContext _context;
         public GenericRepository(DbContext context) { _context = context; }
-
-        public RepositoryMarker Marker { get; set; }
-
-        public (bool, Exception?) Add(TEntity entity)
+        public async Task<Exception?> Add(TEntity entity)
         {
             try
             {
                 _context.Add(entity);
                 _context.SaveChanges();
-                return (true, null);
+                return null;
             }
             catch (Exception ex)
             {
-                return (false, ex);
+                return ex;
             }
         }
 
-        public (bool, Exception?) Delete(TEntity entity)
+        public async Task<Exception?> Delete(TEntity entity)
         {
             try
             {
                 _context.Remove(entity);
                 _context.SaveChanges();
-                return (true, null);
+                return null;
             }
             catch (Exception ex)
             {
-                return (false, ex);
+                return ex;
             }
         }
 
-        public (bool, Exception?) Delete(string name)
+        public async Task<Exception?> Delete(string name)
         {
             try
             {
@@ -55,16 +47,16 @@ namespace Enplace.Service
                 }
                 else
                 {
-                    throw new Exception($"Entity with Name {name} not found.");
+                    return new Exception($"Entity with Name {name} not found.");
                 }
-                return (true, null);
+                return null;
             }
             catch (Exception ex)
             {
-                return (false, ex);
+                return ex;
             }
         }
-        public (bool, Exception?) Delete(int id)
+        public async Task<Exception?> Delete(int id)
         {
             try
             {
@@ -76,64 +68,64 @@ namespace Enplace.Service
                 }
                 else
                 {
-                    throw new Exception($"Entity with ID {id} not found.");
+                    return new Exception($"Entity with ID {id} not found.");
                 }
-                return (true, null);
+                return null;
             }
             catch (Exception ex)
             {
-                return (false, ex);
+                return ex;
             }
         }
-        public TEntity? Get(int id)
+        public async Task<TEntity?> Get(int id)
         {
-            return _context.Find<TEntity>(id);
+            return await _context.FindAsync<TEntity>(id);
         }
-        public TEntity? Get(string name)
+        public async Task<TEntity?> Get(string name)
         {
-            return _context.Set<TEntity>().FirstOrDefault(e => e.Name == name);
+            return await _context.Set<TEntity>().FirstOrDefaultAsync(e => e.Name == name);
         }
-        public ICollection<TEntity> GetAll()
+        public async Task<ICollection<TEntity>> GetAll()
         {
-            return _context.Set<TEntity>().ToList();
+            return await _context.Set<TEntity>().ToListAsync();
         }
-        public (bool, Exception?) MassDelete(ICollection<TEntity> entities)
+        public async Task<Exception?> MassDelete(ICollection<TEntity> entities)
         {
             try
             {
                 _context.RemoveRange(entities);
                 _context.SaveChanges();
-                return (true, null);
+                return null;
             }
             catch (Exception ex)
             {
-                return (false, ex);
+                return ex;
             }
         }
-        public (bool, Exception?) MassUpdate(ICollection<TEntity> entities)
+        public async Task<Exception?> MassUpdate(ICollection<TEntity> entities)
         {
             try
             {
                 _context.UpdateRange(entities);
                 _context.SaveChanges();
-                return (true, null);
+                return null;
             }
             catch (Exception ex)
             {
-                return (false, ex);
+                return ex;
             }
         }
-        public (bool, Exception?) Update(TEntity entity)
+        public async Task<Exception?> Update(TEntity entity)
         {
             try
             {
                 _context.Update(entity);
                 _context.SaveChanges();
-                return (true, null);
+                return null;
             }
             catch (Exception ex)
             {
-                return (false, ex);
+                return ex;
             }
         }
     }

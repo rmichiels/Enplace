@@ -1,0 +1,86 @@
+﻿@page "/recipes/byid/{Id}"
+
+@switch (_currentState)
+{
+    case ComponentState.Loading:
+        <div class="recipe-editor-loading">
+        </div>
+        break;
+    case ComponentState.Edit:
+
+        <div class="recipe-editor-edit card">
+            <div class="card-header">
+            </div>
+            <div class="card-body">
+                <table>
+                    @foreach (RecipeIngredient recipeIngredient in Recipe.RecipeIngredients)
+                    {
+                        <tr>
+                            <td>
+                                @recipeIngredient.Ingredient.Name
+                            </td>
+                            <td>
+                                @recipeIngredient.Ingredient.IngredientCategory.Name
+                            </td>
+                            <td>
+                                @recipeIngredient.Quantity
+                            </td>
+                            <td>
+                                @recipeIngredient.Measurement.Name
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+        break;
+}
+
+
+@code {
+    [Inject]
+    public ICrudable Service { get; set; }
+    [Parameter]
+    public int Id { get; set; }
+
+    [Parameter]
+    public Recipe? Recipe
+    {
+        get => _recipe;
+        set
+        {
+            if (value is not null)
+            {
+                _recipe = value;
+                _currentState = _targetState;
+                StateHasChanged();
+            }
+        }
+    }
+    private Recipe? _recipe;
+    [Parameter]
+    public EventCallback<Recipe?> RecipeChanged { get; set; }
+
+    [Parameter]
+    public ComponentState State
+    {
+        get => _currentState;
+        set
+        {
+            switch (value)
+            {
+                case ComponentState.Create:
+                    Recipe = new();
+                    _targetState = value;
+                    _currentState = value;
+                    StateHasChanged();
+                    break;
+                default:
+                    _targetState = value;
+                    break;
+            }
+        }
+    }
+    private ComponentState _currentState = ComponentState.Loading;
+    private ComponentState _targetState;
+}

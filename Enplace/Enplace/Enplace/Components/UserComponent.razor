@@ -1,0 +1,41 @@
+﻿@switch (_currentState)
+{
+    case ComponentState.Loading:
+        <div class="user-loading">
+        </div>
+        break;
+    case ComponentState.ReadOnly:
+        <div class="user">
+            <p>@User.Id</p>
+            <p>@User.Name</p>
+        </div>
+        break;
+}
+
+@code {
+    [Parameter]
+    public User? User
+    {
+        get => _user;
+        set
+        {
+            if (value is not null)
+            {
+                _user = value;
+                _currentState = _targetState;
+                StateHasChanged();
+            }
+        }
+    }
+    private User _user;
+    [Parameter]
+    public EventCallback<User> UserChanged { get; set; }
+    [Parameter]
+    public ComponentState State { get => _currentState; set => _targetState = value; }
+    private ComponentState _currentState = ComponentState.Loading;
+    private ComponentState _targetState;
+
+    protected override async Task OnInitializedAsync()
+    {
+    }
+}

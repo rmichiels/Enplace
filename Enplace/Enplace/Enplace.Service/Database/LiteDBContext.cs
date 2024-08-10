@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Enplace.Service.Entities;
+﻿using Enplace.Service.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Enplace.Service.Database;
@@ -36,7 +34,8 @@ public partial class LiteDBContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        string liteConstr = @"Data Source=C:\Users\rmichiel\source\repos\Enplace\Enplace\Enplace\Enplace.Service\Database\Enplace.db;";
+        string directory = Directory.GetCurrentDirectory();
+        string liteConstr = $"Data Source={directory}\\Enplace.db;";
         optionsBuilder.UseSqlite(liteConstr);
     }
 

@@ -1,36 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Enplace.Service.Contracts
+﻿namespace Enplace.Service.Contracts
 {
     public interface ICrudable
     {
-        public ICollection<TEntity> GetAll<TEntity>() where TEntity : class, ILabeled;
-        public TEntity? Get<TEntity>(int id) where TEntity : class, ILabeled;
-        public TEntity? Get<TEntity>(string name) where TEntity : class, ILabeled;
-        public (bool, Exception?) Add<TEntity>(TEntity entity) where TEntity : class, ILabeled;
-        public (bool, Exception?) Update<TEntity>(TEntity entity) where TEntity : class, ILabeled;
-        public (bool, Exception?) Delete<TEntity>(TEntity entity) where TEntity : class, ILabeled;
-        public (bool, Exception?) Delete<TEntity>(string name) where TEntity : class, ILabeled;
-        public (bool, Exception?) Delete<TEntity>(int id) where TEntity : class, ILabeled;
-        public (bool, Exception?) MassUpdate<TEntity>(ICollection<TEntity> entities) where TEntity : class, ILabeled;
-        public (bool, Exception?) MassDelete<TEntity>(ICollection<TEntity> entities) where TEntity : class, ILabeled;
+        public Task<ICollection<TEntity>> GetAll<TEntity>() where TEntity : class, ILabeled;
+        public Task<TEntity?> Get<TEntity>(int id) where TEntity : class, ILabeled;
+        public Task<TEntity?> Get<TEntity>(string name) where TEntity : class, ILabeled;
+        public Task<Exception?> Add<TEntity>(TEntity entity) where TEntity : class, ILabeled;
+        public Task<Exception?> Update<TEntity>(TEntity entity) where TEntity : class, ILabeled;
+        public Task<Exception?> Delete<TEntity>(TEntity entity) where TEntity : class, ILabeled;
+        public Task<Exception?> Delete<TEntity>(string name) where TEntity : class, ILabeled;
+        public Task<Exception?> Delete<TEntity>(int id) where TEntity : class, ILabeled;
+        public Task<Exception?> MassUpdate<TEntity>(ICollection<TEntity> entities) where TEntity : class, ILabeled;
+        public Task<Exception?> MassDelete<TEntity>(ICollection<TEntity> entities) where TEntity : class, ILabeled;
     }
     public interface ICrudable<TEntity> where TEntity : class, ILabeled
     {
-        public RepositoryMarker Marker { get; set; }
-        public ICollection<TEntity> GetAll();
-        public TEntity? Get(int id);
-        public TEntity? Get(string name);
-        public (bool, Exception?) Add(TEntity entity);
-        public (bool, Exception?) Update(TEntity entity);
-        public (bool, Exception?) Delete(TEntity entity);
-        public (bool, Exception?) Delete(string name);
-        public (bool, Exception?) Delete(int id);
-        public (bool, Exception?) MassUpdate(ICollection<TEntity> entities);
-        public (bool, Exception?) MassDelete(ICollection<TEntity> entities);
+        public Task<Exception?> Add(TEntity entity);
+        public Task<Exception?> Delete(int id);
+        public Task<Exception?> Delete(string name);
+        public Task<Exception?> Delete(TEntity entity);
+        public Task<TEntity?> Get(int id);
+        public Task<TEntity?> Get(string name);
+        public Task<ICollection<TEntity>> GetAll();
+        public Task<Exception?> MassDelete(ICollection<TEntity> entities);
+        public Task<Exception?> MassUpdate(ICollection<TEntity> entities);
+        public Task<Exception?> Update(TEntity entity);
     }
 }

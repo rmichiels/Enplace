@@ -1,10 +1,8 @@
-﻿using Enplace.Service.Database;
+﻿using Enplace.Service.Contracts;
+using Enplace.Service.Database;
+using Enplace.Service.Entities;
+using Enplace.Service.Services;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Enplace.Service
 {
@@ -12,7 +10,8 @@ namespace Enplace.Service
     {
         public static IServiceCollection AddEnplaceServices(this IServiceCollection services)
         {
-            services.AddDbContext<LiteDBContext>();
+            services.AddScoped<IModelConverter<Recipe, Recipe>, HollowModelConverter<Recipe>>();
+            services.AddScoped<ICrudable, ContextManager>(cman => new([new SSDBContext(), new LiteDBContext()]));
             return services;
         }
     }

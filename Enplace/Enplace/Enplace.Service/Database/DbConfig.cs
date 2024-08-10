@@ -1,16 +1,12 @@
 ﻿using Enplace.Service.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Enplace.Service.Database
 {
     public static class DbConfig
     {
-        public static void Configure(ModelBuilder modelBuilder) {
+        public static void Configure(ModelBuilder modelBuilder)
+        {
             modelBuilder.Entity<DeltaStore>(entity =>
             {
                 entity.ToTable("DeltaStore");
@@ -29,6 +25,7 @@ namespace Enplace.Service.Database
                 entity.HasOne(d => d.IngredientCategory).WithMany(p => p.Ingredients)
                     .HasForeignKey(d => d.IngredientCategoryId)
                     .HasConstraintName("fk_Ingredients_N1_IngredientCategories");
+                entity.Navigation(e => e.IngredientCategory).AutoInclude();
             });
 
             modelBuilder.Entity<IngredientCategory>(entity =>
@@ -56,6 +53,9 @@ namespace Enplace.Service.Database
                     .HasForeignKey(d => d.OwnerUserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Recipes_N1_Users");
+
+                entity.Navigation(e => e.RecipeIngredients).AutoInclude();
+                entity.Navigation(e => e.RecipeSteps).AutoInclude();
             });
 
             modelBuilder.Entity<RecipeIngredient>(entity =>
@@ -78,6 +78,9 @@ namespace Enplace.Service.Database
                 entity.HasOne(d => d.Recipe).WithMany(p => p.RecipeIngredients)
                     .HasForeignKey(d => d.RecipeId)
                     .HasConstraintName("fk_RecipeIngredients_N1_Recipes");
+
+                entity.Navigation(e => e.Measurement).AutoInclude();
+                entity.Navigation(e => e.Ingredient).AutoInclude();
             });
 
             modelBuilder.Entity<RecipeStep>(entity =>

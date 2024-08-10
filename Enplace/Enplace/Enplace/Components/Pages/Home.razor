@@ -1,7 +1,33 @@
 ﻿@page "/"
+@using System.Diagnostics
 
 <PageTitle>Home</PageTitle>
 
 <h1>Hello, world!</h1>
 
 Welcome to your new app.
+
+<UserComponent @bind-User="@_user" State="ComponentState.ReadOnly" />
+<Enplace.Components.Recipes.RecipeEditor @bind-Recipe="@_recipe" State="ComponentState.Edit" />
+
+@code {
+    [Inject]
+    public ICrudable Context { get; set; }
+    private User? _user;
+    private Recipe? _recipe;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _user = await Context.Get<User>(1);
+        if (_user is null)
+        {
+            Debug.WriteLine(":(");
+        }
+        _recipe = await Context.Get<Recipe>(1);
+        
+        if (_recipe is null)
+        {
+            Debug.WriteLine(":(");
+        }
+    }
+}

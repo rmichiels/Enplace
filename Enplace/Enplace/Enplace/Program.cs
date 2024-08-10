@@ -1,4 +1,4 @@
-using Enplace.Client.Pages;
+using Enplace;
 using Enplace.Components;
 using Enplace.Service;
 
@@ -10,6 +10,9 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
 builder.Services.AddEnplaceServices();
+builder.Services.AddControllers();
+builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<EnplaceContext>();
 
 var app = builder.Build();
 
@@ -34,5 +37,12 @@ app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(Enplace.Client._Imports).Assembly);
+app.MapControllers();
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Blazor API V1");
+});
+
 
 app.Run();

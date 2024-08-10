@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Enplace.Service.Entities;
+﻿namespace Enplace.Service.Entities;
 
 public partial class UserMenu
 {
