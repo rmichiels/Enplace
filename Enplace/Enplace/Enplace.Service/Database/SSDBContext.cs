@@ -24,7 +24,9 @@ public partial class SSDBContext : DbContext
 
     public virtual DbSet<Recipe> Recipes { get; set; }
 
+    public virtual DbSet<RecipeCategory> RecipeCategories { get; set; }
     public virtual DbSet<RecipeIngredient> RecipeIngredients { get; set; }
+    public virtual DbSet<RecipeImage> RecipeImages { get; set; }
 
     public virtual DbSet<RecipeStep> RecipeSteps { get; set; }
 

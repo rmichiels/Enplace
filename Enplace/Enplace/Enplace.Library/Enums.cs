@@ -6,6 +6,7 @@
         ReadOnly,
         Edit,
         Create,
-        Disabled
+        Disabled,
+        Error
     }
 }

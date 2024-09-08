@@ -2,13 +2,13 @@
 using Enplace.Service.Database;
 using Microsoft.EntityFrameworkCore;
 
-namespace Enplace.Service
+namespace Enplace.Service.Services.Managers
 {
     public class ContextManager : ICrudable
     {
         private readonly Dictionary<RepositoryMarker, DbContext> _contexts = [];
         private List<ICrudable<ILabeled>> _repositories = [];
-        public ContextManager(List<DbContext> contexts)
+        public ContextManager(DbContext[] contexts)
         {
             bool isPrimaryValidated = false;
             foreach (DbContext context in contexts)

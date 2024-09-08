@@ -4,4 +4,8 @@
     {
         Primary, Secondary
     }
+    public enum ImageSize
+    {
+        Shard
+    }
 }

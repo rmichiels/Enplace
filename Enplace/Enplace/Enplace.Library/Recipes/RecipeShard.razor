@@ -1,0 +1,38 @@
+﻿@inherits RecipeShardBase
+@rendermode RenderMode.InteractiveAuto
+
+<div class="recipe-shard @Recipe.Category.Name">
+    <div class="recipe-shard-header">
+        <img src="data:image/png;base64, @Convert.ToBase64String([])" />
+    </div>
+    <div class="recipe-shard-body">
+        <p class="recipe-shard-body-title">@Recipe.Name</p>
+        <p class="shard-description">@Recipe.Name</p>
+    </div>
+    <div class="recipe-shard-footer">
+        @if (State == ComponentState.Edit)
+        {
+            <button class="btn-icon">
+                <Enplace.Library.Icons.Edit />
+            </button>
+        }
+        else
+        {
+            <button class="btn-icon" @onclick="NavigateToRecipeDetails">
+                <Enplace.Library.Icons.Details />
+            </button>
+        }
+        <button class="btn-icon">
+            <Enplace.Library.Icons.Heart />
+        </button>
+        <div class="pill">
+            <Enplace.Library.Icons.Clock />
+            @Recipe.ApproximateCookingTime
+        </div>
+        <div class="pill">
+            <Enplace.Library.Icons.Silhouette />
+            @Recipe.ApproximateServingSize
+        </div>
+    </div>
+</div>
+

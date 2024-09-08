@@ -1,7 +1,7 @@
 ﻿using Enplace.Service.Contracts;
 using Microsoft.EntityFrameworkCore;
 
-namespace Enplace.Service
+namespace Enplace.Service.Services
 {
     public class GenericRepository<TEntity> : ICrudable<TEntity> where TEntity : class, ILabeled
     {

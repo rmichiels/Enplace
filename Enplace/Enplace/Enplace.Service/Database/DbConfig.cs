@@ -48,14 +48,30 @@ namespace Enplace.Service.Database
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
                 entity.Property(e => e.OwnerUserId).HasColumnName("OwnerUserID");
+                entity.Property(e => e.RecipeCategoryId).HasColumnName("RecipeCategoryID");
 
                 entity.HasOne(d => d.OwnerUser).WithMany(p => p.Recipes)
                     .HasForeignKey(d => d.OwnerUserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Recipes_N1_Users");
 
+                entity.HasMany(e => e.RecipeImages).WithOne(i => i.Recipe)
+                .HasForeignKey(e => e.RecipeId)
+                .HasConstraintName("fk_RecipeImages_N1_Recipe");
+
                 entity.Navigation(e => e.RecipeIngredients).AutoInclude();
                 entity.Navigation(e => e.RecipeSteps).AutoInclude();
+                entity.Navigation(e => e.Category).AutoInclude();
+            });
+
+            modelBuilder.Entity<RecipeCategory>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+                entity.HasKey(e => e.Id);
+
+                entity.HasMany(e => e.Recipes).WithOne(r => r.Category)
+                .HasForeignKey(r => r.RecipeCategoryId)
+                .HasConstraintName("fk_Recipes_N1_RecipeCategory");
             });
 
             modelBuilder.Entity<RecipeIngredient>(entity =>
@@ -81,6 +97,13 @@ namespace Enplace.Service.Database
 
                 entity.Navigation(e => e.Measurement).AutoInclude();
                 entity.Navigation(e => e.Ingredient).AutoInclude();
+            });
+
+            modelBuilder.Entity<RecipeImage>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.HasOne(e => e.Recipe).WithMany(r => r.RecipeImages).HasForeignKey(e => e.RecipeId);
             });
 
             modelBuilder.Entity<RecipeStep>(entity =>

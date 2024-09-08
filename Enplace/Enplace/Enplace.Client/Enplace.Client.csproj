@@ -9,10 +9,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Pages\Recipes\RecipeEditor.razor.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Pages\Recipes\RecipeEditor.razor.css" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.4" />	  
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Enplace.Service\Enplace.Service.csproj" />
+	  <ProjectReference Include="..\Enplace.Library\Enplace.Library.csproj" />
   </ItemGroup>
 </Project>

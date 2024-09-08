@@ -1,81 +1,105 @@
 ﻿using Enplace.Service.Contracts;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Enplace.API
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    public class ApiBase<TEntity, TViewModel> : ControllerBase, ICrudable<TEntity> where TEntity : class, ILabeled
+    public class ApiBase<TEntity, TDTO> : ControllerBase, ICrudable<TDTO> where TEntity : class, ILabeled where TDTO : class, ILabeled
     {
         protected ICrudable _service { get; set; }
-        private readonly IModelConverter<TEntity, TViewModel> _converter;
-        public ApiBase(ICrudable crudService, IModelConverter<TEntity, TViewModel> modelConverter)
+        private readonly IModelConverter<TEntity, TDTO> _converter;
+        public ApiBase(ICrudable crudService, IModelConverter<TEntity, TDTO> modelConverter)
         {
             _service = crudService;
             _converter = modelConverter;
         }
         [Route("list")]
         [HttpGet]
-        public Task<ICollection<TEntity>> GetAll()
+        public async Task<ICollection<TDTO>> GetAll()
         {
-            throw new NotImplementedException();
+            List<TDTO> results = [];
+            var intermediary = await _service.GetAll<TEntity>();
+            foreach (TEntity item in intermediary)
+            {
+                var DTO = await _converter.Convert(item);
+                if (DTO is not null)
+                {
+                    results.Add(DTO);
+                }
+            }
+            return results;
         }
         [Route("add")]
         [HttpPost]
-        public Task<Exception?> Add(TEntity entity)
+        public async Task<Exception?> Add(TDTO DTO)
         {
-            throw new NotImplementedException();
+            TEntity? entity = await _converter.Convert(DTO);
+            if (entity is not null)
+            {
+                return await _service.Add(entity);
+            }
+            else
+            {
+                return new Exception("Entity Conversion Failed & Resulted in 'null'");
+            };
         }
+
         [Route("byid/{id}")]
         [HttpGet]
-        public Task<TEntity?> Get(int id)
+        public async Task<TDTO?> Get(int id)
         {
-            throw new NotImplementedException();
+            var entity = await _service.Get<TEntity>(id);
+            return await _converter.Convert(entity);
         }
         [Route("byid/{id}")]
         [HttpDelete]
         public Task<Exception?> Delete(int id)
         {
-            throw new NotImplementedException();
+            return _service.Delete<TEntity>(id);
         }
         [HttpGet]
         [Route("byname/{name}")]
-        public Task<TEntity?> Get(string name)
+        public async Task<TDTO?> Get(string name)
         {
-            throw new NotImplementedException();
+            var entity = await _service.Get<TEntity>(name);
+            return await _converter.Convert(entity);
         }
         [Route("byname/{name}")]
         [HttpDelete]
         public Task<Exception?> Delete(string name)
         {
-            throw new NotImplementedException();
+            return _service.Delete<TEntity>(name);
         }
         [HttpPatch]
-        public Task<Exception?> Update(TEntity entity)
+        public async Task<Exception?> Update(TDTO DTO)
         {
-            throw new NotImplementedException();
+            var entity = await _converter.Convert(DTO);
+            if (entity is not null)
+            {
+                return await _service.Update(entity);
+            }
+            else
+            {
+                return new Exception("Entity Conversion Failed & Resulted in 'null'");
+            }
         }
         [HttpPatch]
         [Route("range")]
-        public Task<Exception?> MassUpdate(ICollection<TEntity> entities)
+        public Task<Exception?> MassUpdate(ICollection<TDTO> entities)
         {
-            throw new NotImplementedException();
+            return _service.MassUpdate(entities);
         }
         [HttpDelete]
-        public Task<Exception?> Delete(TEntity entity)
+        public Task<Exception?> Delete(TDTO entity)
         {
-            throw new NotImplementedException();
+            return _service.Delete(entity);
         }
         [HttpDelete]
         [Route("range")]
-        public Task<Exception?> MassDelete(ICollection<TEntity> entities)
+        public Task<Exception?> MassDelete(ICollection<TDTO> entities)
         {
-            throw new NotImplementedException();
+            return _service.MassDelete(entities);
         }
     }
 }

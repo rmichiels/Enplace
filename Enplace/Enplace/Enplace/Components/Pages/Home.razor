@@ -1,5 +1,8 @@
 ﻿@page "/"
+@using Enplace.Service.Services.Converters
 @using System.Diagnostics
+@using Enplace.Service.Services
+@using Enplace.Service.Services.Managers
 
 <PageTitle>Home</PageTitle>
 
@@ -8,11 +11,12 @@
 Welcome to your new app.
 
 <UserComponent @bind-User="@_user" State="ComponentState.ReadOnly" />
-<Enplace.Components.Recipes.RecipeEditor @bind-Recipe="@_recipe" State="ComponentState.Edit" />
 
 @code {
     [Inject]
     public ICrudable Context { get; set; }
+    [Inject]
+    public SynchronisationManager SynchronisationManager { get; set; }
     private User? _user;
     private Recipe? _recipe;
 
@@ -24,7 +28,7 @@ Welcome to your new app.
             Debug.WriteLine(":(");
         }
         _recipe = await Context.Get<Recipe>(1);
-        
+
         if (_recipe is null)
         {
             Debug.WriteLine(":(");

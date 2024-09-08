@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Enplace.Service.Services
+namespace Enplace.Service.Services.Converters
 {
     public class HollowModelConverter<TEntity> : IModelConverter<TEntity, TEntity> where TEntity : class, ILabeled
     {

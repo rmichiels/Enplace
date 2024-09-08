@@ -1,6 +1,6 @@
-﻿using Enplace.Service;
-using Enplace.Service.Database;
+﻿using Enplace.Service.Database;
 using Enplace.Service.Entities;
+using Enplace.Service.Services;
 
 namespace Enplace.Tests.Database.SQL_Lite
 {

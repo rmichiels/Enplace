@@ -122,11 +122,60 @@ namespace Enplace.Service.Migrations
                         .HasColumnType("INTEGER")
                         .HasColumnName("OwnerUserID");
 
+                    b.Property<int>("RecipeCategoryId")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("RecipeCategoryID");
+
                     b.HasKey("Id");
 
                     b.HasIndex("OwnerUserId");
 
+                    b.HasIndex("RecipeCategoryId");
+
                     b.ToTable("Recipes");
+                });
+
+            modelBuilder.Entity("Enplace.Service.Entities.RecipeCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("ID");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RecipeCategories");
+                });
+
+            modelBuilder.Entity("Enplace.Service.Entities.RecipeImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<byte[]>("Image")
+                        .IsRequired()
+                        .HasColumnType("BLOB");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("RecipeId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Size")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecipeId");
+
+                    b.ToTable("RecipeImages");
                 });
 
             modelBuilder.Entity("Enplace.Service.Entities.RecipeIngredient", b =>
@@ -138,6 +187,9 @@ namespace Enplace.Service.Migrations
                     b.Property<int>("IngredientId")
                         .HasColumnType("INTEGER")
                         .HasColumnName("IngredientID");
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("MeasurementId")
                         .HasColumnType("INTEGER")
@@ -274,7 +326,28 @@ namespace Enplace.Service.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_Recipes_N1_Users");
 
+                    b.HasOne("Enplace.Service.Entities.RecipeCategory", "Category")
+                        .WithMany("Recipes")
+                        .HasForeignKey("RecipeCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_Recipes_N1_RecipeCategory");
+
+                    b.Navigation("Category");
+
                     b.Navigation("OwnerUser");
+                });
+
+            modelBuilder.Entity("Enplace.Service.Entities.RecipeImage", b =>
+                {
+                    b.HasOne("Enplace.Service.Entities.Recipe", "Recipe")
+                        .WithMany("RecipeImages")
+                        .HasForeignKey("RecipeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_RecipeImages_N1_Recipe");
+
+                    b.Navigation("Recipe");
                 });
 
             modelBuilder.Entity("Enplace.Service.Entities.RecipeIngredient", b =>
@@ -379,9 +452,16 @@ namespace Enplace.Service.Migrations
 
             modelBuilder.Entity("Enplace.Service.Entities.Recipe", b =>
                 {
+                    b.Navigation("RecipeImages");
+
                     b.Navigation("RecipeIngredients");
 
                     b.Navigation("RecipeSteps");
+                });
+
+            modelBuilder.Entity("Enplace.Service.Entities.RecipeCategory", b =>
+                {
+                    b.Navigation("Recipes");
                 });
 
             modelBuilder.Entity("Enplace.Service.Entities.User", b =>

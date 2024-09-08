@@ -1,4 +1,4 @@
-﻿@page "/recipes/byid/{Id}"
+﻿@page "/recipes/byid/{Id:int}"
 
 @switch (_currentState)
 {
@@ -13,14 +13,14 @@
             </div>
             <div class="card-body">
                 <table>
-                    @foreach (RecipeIngredient recipeIngredient in Recipe.RecipeIngredients)
+                    @foreach (IngredientDTO recipeIngredient in Recipe.Ingredients)
                     {
                         <tr>
                             <td>
-                                @recipeIngredient.Ingredient.Name
+                                @recipeIngredient.Name
                             </td>
                             <td>
-                                @recipeIngredient.Ingredient.IngredientCategory.Name
+                                @recipeIngredient.Category.Name
                             </td>
                             <td>
                                 @recipeIngredient.Quantity
@@ -39,12 +39,12 @@
 
 @code {
     [Inject]
-    public ICrudable Service { get; set; }
+    public ApiService<RecipeDTO> Service { get; set; }
     [Parameter]
     public int Id { get; set; }
 
     [Parameter]
-    public Recipe? Recipe
+    public RecipeDTO? Recipe
     {
         get => _recipe;
         set
@@ -57,9 +57,9 @@
             }
         }
     }
-    private Recipe? _recipe;
+    private RecipeDTO? _recipe;
     [Parameter]
-    public EventCallback<Recipe?> RecipeChanged { get; set; }
+    public EventCallback<RecipeDTO?> RecipeChanged { get; set; }
 
     [Parameter]
     public ComponentState State
@@ -82,5 +82,21 @@
         }
     }
     private ComponentState _currentState = ComponentState.Loading;
-    private ComponentState _targetState;
+    private ComponentState _targetState = ComponentState.Edit;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Recipe is null)
+        {
+            Recipe = await Service.Get(Id);
+            if (Recipe is null)
+            {
+                _currentState = ComponentState.Error;
+            }
+            else
+            {
+                _currentState = _targetState;
+            }
+        }
+    }
 }

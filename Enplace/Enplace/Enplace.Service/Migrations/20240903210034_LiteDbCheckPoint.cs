@@ -5,20 +5,11 @@
 namespace Enplace.Service.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class LiteDbCheckPoint : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "__EFMigrationsHistory",
-                columns: table => new
-                {
-                    MigrationId = table.Column<string>(type: "TEXT"),
-                    ProductVersion = table.Column<string>(type: "TEXT")
-                }
-                ); ;
-
             migrationBuilder.CreateTable(
                 name: "DeltaStore",
                 columns: table => new
@@ -139,7 +130,8 @@ namespace Enplace.Service.Migrations
                     RecipeID = table.Column<int>(type: "INTEGER", nullable: false),
                     IngredientID = table.Column<int>(type: "INTEGER", nullable: false),
                     MeasurementID = table.Column<int>(type: "INTEGER", nullable: false),
-                    Quantity = table.Column<decimal>(type: "decimal(10, 4)", nullable: false)
+                    Quantity = table.Column<decimal>(type: "decimal(10, 4)", nullable: false),
+                    Comment = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {

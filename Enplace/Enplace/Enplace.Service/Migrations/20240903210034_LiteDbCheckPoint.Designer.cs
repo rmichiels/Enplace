@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Enplace.Service.Migrations
 {
     [DbContext(typeof(LiteDBContext))]
-    [Migration("20240805200052_Init")]
-    partial class Init
+    [Migration("20240903210034_LiteDbCheckPoint")]
+    partial class LiteDbCheckPoint
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -141,6 +141,9 @@ namespace Enplace.Service.Migrations
                     b.Property<int>("IngredientId")
                         .HasColumnType("INTEGER")
                         .HasColumnName("IngredientID");
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("MeasurementId")
                         .HasColumnType("INTEGER")

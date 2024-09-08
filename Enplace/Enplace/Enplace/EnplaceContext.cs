@@ -6,10 +6,12 @@ namespace Enplace
 {
     public class EnplaceContext
     {
-        public EnplaceContext(ICrudable conman)
+        public EnplaceContext()
         {
-            User = conman.Get<User>(1).Result;
+            
         }
         public User? User { get; set; }
+        public List<Measurement> Measurements { get; set; } = [];
+        public List<IngredientCategory> Categories { get; set; } = [];
     }
 }

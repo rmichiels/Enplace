@@ -1,0 +1,24 @@
+﻿@page "/recipes"
+
+
+<div class="recipe-list">
+    @foreach (RecipeDTO recipe in _recipes)
+    {
+        <RecipeShard Recipe="recipe" State="ComponentState.ReadOnly" />
+    }
+</div>
+
+
+
+
+@code {
+    [Inject]
+    public ApiService<RecipeDTO> Service { get; set; }
+    private List<RecipeDTO> _recipes = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        var recipeResult = await Service.GetAll();
+        _recipes = recipeResult.ToList();
+    }
+}

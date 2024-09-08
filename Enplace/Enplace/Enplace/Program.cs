@@ -1,6 +1,8 @@
 using Enplace;
 using Enplace.Components;
 using Enplace.Service;
+using Enplace.Service.DTO;
+using Enplace.Service.Services.API;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,7 +14,8 @@ builder.Services.AddRazorComponents()
 builder.Services.AddEnplaceServices();
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<EnplaceContext>();
+
+builder.Services.AddScoped<ApiService<RecipeDTO>>(serv => new("https://localhost:7283/api/v1/Recipes"));
 
 var app = builder.Build();
 

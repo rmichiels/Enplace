@@ -1,0 +1,101 @@
+﻿.Standard {
+    --color-primary: #fbe7c6 !important;
+    --color-accent: #ff8b5d !important;
+    --color-primary-alt: white !important;
+    --color-accent-alt: white !important;
+}
+
+.Vegetarian {
+    --color-primary: #88bcb3 !important;
+    --color-accent: #00511f !important;
+    --color-primary-alt: white !important;
+    --color-accent-alt: white !important;
+}
+
+.recipe-shard {
+    --color-primary: #D3D3D3;
+    --color-accent: white;
+    --color-primary-alt: black;
+    --color-accent-alt: white;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-primary);
+    padding: 1rem;
+    border-radius: 10px;
+    justify-content: space-between;
+    width: 300px;
+    gap: 1rem;
+    box-shadow: var(--color-accent) 5px 5px;
+}
+
+.recipe-shard-header {
+}
+
+    .recipe-shard-header img {
+        background: var(--color-accent);
+        border-radius: 10px;
+        height: 100px;
+        width: 100%;
+    }
+
+.recipe-shard-body {
+}
+
+.recipe-shard-body-title {
+    font-weight: bold;
+    vertical-align: top;
+    height: 50px;
+    /*color:var(--color-primary-alt)*/
+}
+
+.shard-description {
+    height: 100px;
+}
+
+.recipe-shard-footer {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+}
+
+.pill {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.25rem;
+    background-color: var(--color-accent);
+    border-radius: 10px;
+    padding: 0.25rem 0.5rem 0.25rem 0.5rem;
+    width: 60px;
+    align-items: center;
+}
+
+    .pill svg path {
+        fill: var(--color-primary-alt) !important;
+    }
+
+.btn-icon {
+    background-color: var(--color-accent);
+    border-radius: 10px;
+    padding: 0.25rem 0.5rem 0.25rem 0.5rem;
+    border-color: transparent;
+}
+
+    .btn-icon svg path {
+        stroke: var(--color-primary-alt);
+    }
+
+    .btn-icon:hover {
+        background-color: var(--color-primary-alt);
+        color: white;
+    }
+
+        .btn-icon:hover svg {
+            fill: white;
+            color: white;
+            stroke: white;
+        }
+
+.recipe-shard-footer img {
+    width: 24px;
+    height: 24px;
+}

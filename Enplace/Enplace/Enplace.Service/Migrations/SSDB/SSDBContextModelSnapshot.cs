@@ -137,11 +137,64 @@ namespace Enplace.Service.Migrations.SSDB
                         .HasColumnType("int")
                         .HasColumnName("OwnerUserID");
 
+                    b.Property<int>("RecipeCategoryId")
+                        .HasColumnType("int")
+                        .HasColumnName("RecipeCategoryID");
+
                     b.HasKey("Id");
 
                     b.HasIndex("OwnerUserId");
 
+                    b.HasIndex("RecipeCategoryId");
+
                     b.ToTable("Recipes");
+                });
+
+            modelBuilder.Entity("Enplace.Service.Entities.RecipeCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RecipeCategories");
+                });
+
+            modelBuilder.Entity("Enplace.Service.Entities.RecipeImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<byte[]>("Image")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RecipeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Size")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecipeId");
+
+                    b.ToTable("RecipeImages");
                 });
 
             modelBuilder.Entity("Enplace.Service.Entities.RecipeIngredient", b =>
@@ -155,7 +208,6 @@ namespace Enplace.Service.Migrations.SSDB
                         .HasColumnName("IngredientID");
 
                     b.Property<string>("Comment")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("MeasurementId")
@@ -299,7 +351,28 @@ namespace Enplace.Service.Migrations.SSDB
                         .IsRequired()
                         .HasConstraintName("FK_Recipes_N1_Users");
 
+                    b.HasOne("Enplace.Service.Entities.RecipeCategory", "Category")
+                        .WithMany("Recipes")
+                        .HasForeignKey("RecipeCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_Recipes_N1_RecipeCategory");
+
+                    b.Navigation("Category");
+
                     b.Navigation("OwnerUser");
+                });
+
+            modelBuilder.Entity("Enplace.Service.Entities.RecipeImage", b =>
+                {
+                    b.HasOne("Enplace.Service.Entities.Recipe", "Recipe")
+                        .WithMany("RecipeImages")
+                        .HasForeignKey("RecipeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_RecipeImages_N1_Recipe");
+
+                    b.Navigation("Recipe");
                 });
 
             modelBuilder.Entity("Enplace.Service.Entities.RecipeIngredient", b =>
@@ -404,9 +477,16 @@ namespace Enplace.Service.Migrations.SSDB
 
             modelBuilder.Entity("Enplace.Service.Entities.Recipe", b =>
                 {
+                    b.Navigation("RecipeImages");
+
                     b.Navigation("RecipeIngredients");
 
                     b.Navigation("RecipeSteps");
+                });
+
+            modelBuilder.Entity("Enplace.Service.Entities.RecipeCategory", b =>
+                {
+                    b.Navigation("Recipes");
                 });
 
             modelBuilder.Entity("Enplace.Service.Entities.User", b =>

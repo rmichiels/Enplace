@@ -23,8 +23,9 @@ public partial class LiteDBContext : DbContext
     public virtual DbSet<Measurement> Measurements { get; set; }
 
     public virtual DbSet<Recipe> Recipes { get; set; }
-
+    public virtual DbSet<RecipeCategory> RecipeCategories { get; set; }
     public virtual DbSet<RecipeIngredient> RecipeIngredients { get; set; }
+    public virtual DbSet<RecipeImage> RecipeImages { get; set; }
 
     public virtual DbSet<RecipeStep> RecipeSteps { get; set; }
 
@@ -35,8 +36,8 @@ public partial class LiteDBContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         string directory = Directory.GetCurrentDirectory();
-        string liteConstr = $"Data Source={directory}\\Enplace.db;";
-        optionsBuilder.UseSqlite(liteConstr);
+        string liteConstr = Path.Combine([directory, "Enplace.db"]);
+        optionsBuilder.UseSqlite($"Data Source={Path.Combine([directory, "Enplace.db"])};");
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enplace.Service", "Enplace\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enplace.Tests", "Enplace\Enplace.Tests\Enplace.Tests.csproj", "{C09FC8C3-55B0-4830-9A3C-3B34CE3561D3}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enplace.Library", "Enplace\Enplace.Library\Enplace.Library.csproj", "{3B4FE8AB-AF71-4BE3-B6E8-8106D4E69C24}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{C09FC8C3-55B0-4830-9A3C-3B34CE3561D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C09FC8C3-55B0-4830-9A3C-3B34CE3561D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C09FC8C3-55B0-4830-9A3C-3B34CE3561D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B4FE8AB-AF71-4BE3-B6E8-8106D4E69C24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B4FE8AB-AF71-4BE3-B6E8-8106D4E69C24}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B4FE8AB-AF71-4BE3-B6E8-8106D4E69C24}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B4FE8AB-AF71-4BE3-B6E8-8106D4E69C24}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
