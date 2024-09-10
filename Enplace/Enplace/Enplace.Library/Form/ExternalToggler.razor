@@ -1,0 +1,38 @@
+﻿@rendermode RenderMode.InteractiveAuto
+
+@if (!Lock)
+{
+    switch (Mode)
+    {
+        case ComponentState.Read:
+            <Enplace.Library.Icons.Edit Size="Size.Small" Color="Color.Dark"
+                                        @onclick="async() => Callback()" />
+            break;
+        case ComponentState.Edit:
+            <Enplace.Library.Icons.Details @onclick="async() => Callback()" />
+            break;
+    }
+}
+
+@code {
+    [Parameter]
+    public ComponentState Mode { get; set; } = ComponentState.Read;
+    [Parameter]
+    public EventCallback<ComponentState> ModeChanged { get; set; }
+
+    [Parameter]
+    public bool Lock { get; set; }
+
+    private async void Callback()
+    {
+        Mode = Mode switch
+        {
+            ComponentState.Read => ComponentState.Edit,
+            ComponentState.Edit => ComponentState.Read,
+            _ => ComponentState.Read
+        };
+        await ModeChanged.InvokeAsync(Mode);
+        StateHasChanged();
+
+    }
+}

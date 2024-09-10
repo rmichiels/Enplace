@@ -1,0 +1,19 @@
+﻿@rendermode RenderMode.InteractiveAuto
+@inherits ToggelableBase<string>
+
+<div class="d-flex gap-2">
+    @switch (State)
+    {
+        case ComponentState.Read:
+            @ChildContent
+            <Enplace.Library.Icons.Edit @onclick="() =>Toggle(ComponentState.Edit)" />
+            break;
+        case ComponentState.Edit:
+            <EditForm EditContext="Context" class="w-100">
+                <InputTextArea class="w-100 form-control" style="min-height:6rem;resize:none;" @bind-Value="Field" />
+
+                <Enplace.Library.Icons.Heart @onclick="() =>Callback()" />
+            </EditForm>
+            break;
+    }
+</div>

@@ -1,6 +1,5 @@
 ﻿using Enplace.Service.Contracts;
 using Enplace.Service.Entities;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Enplace.API

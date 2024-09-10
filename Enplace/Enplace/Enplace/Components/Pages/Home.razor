@@ -1,8 +1,5 @@
 ﻿@page "/"
-@using Enplace.Service.Services.Converters
-@using System.Diagnostics
-@using Enplace.Service.Services
-@using Enplace.Service.Services.Managers
+
 
 <PageTitle>Home</PageTitle>
 
@@ -10,7 +7,7 @@
 
 Welcome to your new app.
 
-<UserComponent @bind-User="@_user" State="ComponentState.ReadOnly" />
+<UserComponent @bind-User="@_user" State="ComponentState.Read" />
 
 @code {
     [Inject]

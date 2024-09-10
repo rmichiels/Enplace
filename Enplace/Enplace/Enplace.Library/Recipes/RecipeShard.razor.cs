@@ -13,7 +13,7 @@ namespace Enplace.Library.Recipes
         [Parameter]
         public RecipeDTO Recipe { get; set; }
         [Parameter]
-        public ComponentState State { get; set; } = ComponentState.ReadOnly;
+        public ComponentState State { get; set; } = ComponentState.Read;
 
         public void NavigateToRecipeDetails()
         {

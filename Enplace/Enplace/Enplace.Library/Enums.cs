@@ -1,12 +1,18 @@
-﻿namespace Enplace
+﻿namespace Enplace.Library
 {
     public enum ComponentState
     {
         Loading,
-        ReadOnly,
+        Read,
         Edit,
         Create,
         Disabled,
         Error
+    }
+
+    public enum StateManagement
+    {
+        Internal,
+        External
     }
 }

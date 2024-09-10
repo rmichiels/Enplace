@@ -4,7 +4,7 @@
 <div class="recipe-list">
     @foreach (RecipeDTO recipe in _recipes)
     {
-        <RecipeShard Recipe="recipe" State="ComponentState.ReadOnly" />
+        <RecipeShard Recipe="recipe" State="ComponentState.Read" />
     }
 </div>
 

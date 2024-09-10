@@ -1,0 +1,24 @@
+﻿@inherits ToggelableBase<int>
+@rendermode RenderMode.InteractiveAuto
+
+<EditForm Context="Context">
+    @switch (State)
+    {
+        case ComponentState.Read:
+            @ChildContent
+            break;
+        case ComponentState.Edit:
+            <InputSelect TValue="int" @bind-Value="Field" @onchange="Callback">
+                @foreach (ILabeled option in Options)
+                {
+                    <option value="@option.Id">@option.Name</option>
+                }
+            </InputSelect>
+            break;
+    }
+</EditForm>
+
+@code {
+    [Parameter]
+    public List<ILabeled> Options { get; set; } = [];
+}

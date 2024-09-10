@@ -1,41 +1,43 @@
 ﻿@page "/recipes/byid/{Id:int}"
 
-@switch (_currentState)
-{
-    case ComponentState.Loading:
-        <div class="recipe-editor-loading">
-        </div>
-        break;
-    case ComponentState.Edit:
 
-        <div class="recipe-editor-edit card">
-            <div class="card-header">
+<EditForm Model="Recipe">
+    @switch (_currentState)
+    {
+        case ComponentState.Loading:
+            <div class="recipe-editor-loading">
             </div>
-            <div class="card-body">
-                <table>
-                    @foreach (IngredientDTO recipeIngredient in Recipe.Ingredients)
-                    {
-                        <tr>
-                            <td>
-                                @recipeIngredient.Name
-                            </td>
-                            <td>
-                                @recipeIngredient.Category.Name
-                            </td>
-                            <td>
-                                @recipeIngredient.Quantity
-                            </td>
-                            <td>
-                                @recipeIngredient.Measurement.Name
-                            </td>
-                        </tr>
-                    }
-                </table>
-            </div>
-        </div>
-        break;
-}
+            break;
+        case ComponentState.Edit:
 
+            <div class="recipe-editor-edit card">
+                <div class="card-header">
+                </div>
+                <div class="card-body">
+                    <table>
+                        @foreach (IngredientDTO recipeIngredient in Recipe.Ingredients)
+                        {
+                            <tr>
+                                <td>
+                                    @recipeIngredient.Name
+                                </td>
+                                <td>
+                                    @recipeIngredient.Category.Name
+                                </td>
+                                <td>
+                                    @recipeIngredient.Quantity
+                                </td>
+                                <td>
+                                    @recipeIngredient.Measurement.Name
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </div>
+            break;
+    }
+</EditForm>
 
 @code {
     [Inject]
@@ -86,7 +88,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        if (Recipe is null)
+        if (Recipe is null && _targetState != ComponentState.Create)
         {
             Recipe = await Service.Get(Id);
             if (Recipe is null)
