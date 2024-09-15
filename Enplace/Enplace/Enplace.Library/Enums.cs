@@ -3,7 +3,7 @@
     public enum ComponentState
     {
         Loading,
-        Read,
+        Details,
         Edit,
         Create,
         Disabled,

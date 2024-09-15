@@ -35,7 +35,10 @@ public partial class SSDBContext : DbContext
     public virtual DbSet<UserMenu> UserMenus { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Server=tcp:swissknife.database.windows.net,1433;Initial Catalog=EnplaceDB;Persist Security Info=False;User ID=dabman;Password=M4st3rk3y;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+    {
+        optionsBuilder.EnableSensitiveDataLogging();
+        optionsBuilder.UseSqlServer("Server=tcp:swissknife.database.windows.net,1433;Initial Catalog=EnplaceDB;Persist Security Info=False;User ID=dabman;Password=M4st3rk3y;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

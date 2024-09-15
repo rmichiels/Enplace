@@ -1,14 +1,15 @@
 ﻿@inherits ToggelableBase<int>
 @rendermode RenderMode.InteractiveAuto
 
-<EditForm Context="Context">
+<EditForm EditContext="EditContext">
     @switch (State)
     {
-        case ComponentState.Read:
+        case ComponentState.Details:
             @ChildContent
             break;
-        case ComponentState.Edit:
-            <InputSelect TValue="int" @bind-Value="Field" @onchange="Callback">
+        default:
+            <InputSelect class="tgl tgl-select" TValue="int" @bind-Value="Field" placeholder="@Placeholder">
+                <option value="0" selected="selected">@Placeholder</option>
                 @foreach (ILabeled option in Options)
                 {
                     <option value="@option.Id">@option.Name</option>

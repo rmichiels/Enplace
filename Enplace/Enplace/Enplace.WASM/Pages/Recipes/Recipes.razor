@@ -1,10 +1,9 @@
 ﻿@page "/recipes"
 
-
 <div class="recipe-list">
     @foreach (RecipeDTO recipe in _recipes)
     {
-        <RecipeShard Recipe="recipe" State="ComponentState.Read" />
+        <RecipeShard Recipe="recipe" State="ComponentState.Details" />
     }
 </div>
 

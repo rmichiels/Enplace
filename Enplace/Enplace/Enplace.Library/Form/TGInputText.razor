@@ -4,15 +4,23 @@
 <div class="d-flex gap-2">
     @switch (State)
     {
-        case ComponentState.Read:
+        case ComponentState.Details:
+            <span>@Field</span>
             @ChildContent
             <Enplace.Library.Icons.Edit @onclick="() =>Toggle(ComponentState.Edit)" />
             break;
-        case ComponentState.Edit:
-            <EditForm EditContext="Context">
-                <InputText @bind-Value="Field" />
-                <Enplace.Library.Icons.Details @onclick="() =>Callback()" />
+        default:
+            <EditForm EditContext="EditContext">
+                <InputText class="tgl tgl-text" @bind-Value="Field" placeholder="@Placeholder" />
+                @if (StateManagement == StateManagement.Internal)
+                {
+                    <Enplace.Library.Icons.Details @onclick="() =>Callback()" />
+                }
             </EditForm>
             break;
     }
 </div>
+
+@code {
+   
+}

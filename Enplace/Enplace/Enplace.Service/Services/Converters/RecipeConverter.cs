@@ -25,13 +25,17 @@ namespace Enplace.Service.Services.Converters
                 ApproximateCookingTime = viewModel.ApproximateCookingTime,
                 ApproximateServingSize = viewModel.ApproximateServingSize,
                 RecipeCategoryId = viewModel.Category.Id,
-                Category = viewModel.Category
+                Comment = viewModel.Comment
             };
 
             foreach (IngredientDTO dto in viewModel.Ingredients)
             {
                 var recipeIngredient = await _ingredientConverter.Convert(dto);
-                if (recipeIngredient != null) { recipe.RecipeIngredients.Add(recipeIngredient); };
+                if (recipeIngredient != null)
+                {
+                    recipeIngredient.RecipeId = viewModel.Id;
+                    recipe.RecipeIngredients.Add(recipeIngredient);
+                };
             };
 
             foreach (RecipeStepDTO dto in viewModel.RecipeSteps)
@@ -39,6 +43,12 @@ namespace Enplace.Service.Services.Converters
                 var recipeStep = await _stepConverter.Convert(dto);
                 if (recipeStep != null) { recipe.RecipeSteps.Add(recipeStep); };
             };
+
+            foreach (RecipeImage recipeImage in viewModel.RecipeImages)
+            {
+                recipeImage.RecipeId = viewModel.Id;
+                recipe.RecipeImages.Add(recipeImage);
+            }
 
             return recipe;
         }
@@ -53,7 +63,8 @@ namespace Enplace.Service.Services.Converters
                 ApproximateCookingTime = entity.ApproximateCookingTime,
                 ApproximateServingSize = entity.ApproximateServingSize,
                 Owner = await _userConverter.Convert(entity.OwnerUser),
-                Category = entity.Category
+                Category = entity.Category,
+                Comment = entity.Comment
             };
             foreach (RecipeIngredient recipeIngredient in entity.RecipeIngredients)
             {
@@ -69,6 +80,8 @@ namespace Enplace.Service.Services.Converters
                 var step = await _stepConverter.Convert(recipeStep);
                 if (step != null) { dto.RecipeSteps.Add(step); };
             };
+
+            dto.RecipeImages = entity.RecipeImages.ToList();
 
             return dto;
         }

@@ -13,11 +13,11 @@ namespace Enplace.Library.Recipes
         [Parameter]
         public RecipeDTO Recipe { get; set; }
         [Parameter]
-        public ComponentState State { get; set; } = ComponentState.Read;
+        public ComponentState State { get; set; } = ComponentState.Details;
 
         public void NavigateToRecipeDetails()
         {
-            Navigation.NavigateTo($"/recipes/byid/{Recipe.Id}");
+            Navigation.NavigateTo($"/recipes/{Recipe.Id}/details");
         }
     }
 }

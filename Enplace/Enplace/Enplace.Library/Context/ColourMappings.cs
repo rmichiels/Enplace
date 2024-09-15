@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Enplace.Library
+namespace Enplace.Library.Context
 {
     public static class ColourMappings
     {

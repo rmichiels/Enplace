@@ -8,16 +8,29 @@ using System.Threading.Tasks;
 
 namespace Enplace.Library.Form
 {
-    public class ToggelableBase<TField> : ComponentBase
+    public partial class ToggelableBase<TField> : ComponentBase where TField : IComparable
     {
         [CascadingParameter]
-        public EditContext Context { get; set; }
+        public EditContext EditContext { get; set; }
 
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
         [Parameter]
-        public TField Field { get; set; }
+        public TField Field
+        {
+            get => _field;
+            set
+            {
+                // Make comparsion to avoid 2-way-binding loop
+                if (Comparer<TField>.Default.Compare(_field, value) != 0)
+                {
+                    _field = value;
+                    FieldChanged.InvokeAsync(value);
+                }
+            }
+        }
+        private TField _field;
         [Parameter]
         public EventCallback<TField> FieldChanged { get; set; }
 
@@ -26,6 +39,11 @@ namespace Enplace.Library.Form
         [Parameter]
         public EventCallback<ComponentState> StateChanged { get; set; }
 
+        [Parameter]
+        public string Placeholder { get; set; } = string.Empty;
+
+        [Parameter]
+        public StateManagement StateManagement { get; set; } = StateManagement.External;
         protected virtual async void Callback()
         {
             await FieldChanged.InvokeAsync(Field);

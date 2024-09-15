@@ -25,6 +25,7 @@ namespace Enplace.Service.Services.Managers
                     case LiteDBContext sqlLite:
                         if (sqlLite.Database.CanConnect())
                         {
+                            sqlLite.Database.Migrate();
                             if (isPrimaryValidated)
                             {
                                 _contexts.Add(RepositoryMarker.Secondary, sqlLite);
@@ -94,9 +95,21 @@ namespace Enplace.Service.Services.Managers
             throw new NotImplementedException();
         }
 
-        public Task<Exception?> Update<TEntity>(TEntity entity) where TEntity : class, ILabeled
+        public async Task<Exception?> Update<TEntity>(TEntity entity) where TEntity : class, ILabeled
         {
-            throw new NotImplementedException();
+            try
+            {
+                foreach (var kvp in _contexts)
+                {
+                    kvp.Value.Update<TEntity>(entity);
+                    kvp.Value.SaveChanges();
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return ex;
+            }
         }
     }
 }

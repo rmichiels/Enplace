@@ -1,0 +1,99 @@
+﻿@page "/recipes/{Id:int}/{Action}"
+@page "/recipes/{Action}"
+@using Enplace.Library.Context
+@using Enplace.Service.Services.Converters
+
+@switch (State)
+{
+    case ComponentState.Loading:
+        <div class="recipe-editor-loading">
+            ... loading ...
+        </div>
+        break;
+    // case ComponentState.Edit:
+    default:
+        <EditForm EditContext="@Context" OnSubmit="PostRecipe">
+            <div class="recipe-editor-edit card">
+                <div class="card-header">
+                    @State
+                </div>
+                <div class="card-body">
+                    <Enplace.Library.Ingredients.IngredientList @bind-Ingredients="Recipe.Ingredients" @bind-State="State" />
+                </div>
+                <div class="card-footer">
+                    <button class="btn-icon" type="submit">
+                        <Enplace.Library.Icons.Save />
+                    </button>
+                </div>
+            </div>
+        </EditForm>
+        break;
+}
+
+
+@code {
+    [Inject]
+    public ApiService<RecipeDTO> Service { get; set; }
+    [Inject]
+    public EnplaceContext ApplicationContext { get; set; }
+    public EditContext Context { get; set; } = new(new RecipeDTO());
+
+    [Parameter]
+    public int Id { get; set; }
+    [Parameter]
+    public string Action { get; set; } = string.Empty;
+
+    [Parameter]
+    public RecipeDTO? Recipe { get; set; }
+    [Parameter]
+    public EventCallback<RecipeDTO?> RecipeChanged { get; set; }
+
+    [Parameter]
+    public ComponentState State { get; set; }
+    [Parameter]
+    public EventCallback<ComponentState> StateChanged { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Action == "edit" || Action == "details")
+        {
+            Recipe = await Service.Get(Id);
+            if (Recipe is null)
+            {
+                State = ComponentState.Error;
+            }
+            else
+            {
+                Context = new(Recipe);
+                State = Enum.Parse<ComponentState>(Action, true);
+            }
+        }
+    }
+
+    public async Task PostRecipe(EditContext context)
+    {
+        Exception? result = null;
+        UserConverter userConverter = new();
+        Recipe.Owner = await userConverter.Convert(ApplicationContext.User);
+        Console.WriteLine("Submit triggered...");
+        switch (State)
+        {
+            case ComponentState.Edit:
+                result = await Service.Update(Recipe);
+                break;
+            case ComponentState.Create:
+                result = await Service.Add(Recipe);
+                break;
+            default:
+                break;
+        }
+        if (result is null)
+        {
+            Console.WriteLine("...no exception returned from the server.");
+        }
+        else
+        {
+            Console.WriteLine(result.Message);
+        }
+    }
+}

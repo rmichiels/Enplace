@@ -114,6 +114,10 @@ namespace Enplace.Service.Migrations
                     b.Property<int?>("ApproximateServingSize")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Comment")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");

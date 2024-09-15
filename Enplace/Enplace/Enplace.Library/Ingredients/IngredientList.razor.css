@@ -1,0 +1,26 @@
+﻿.Aromatic {
+    --color-category-underline: #88bcb3;
+}
+
+.Carbohydrate {
+    --color-category-underline: #ffeacf;
+}
+
+.Fruit {
+    --color-category-underline: #ff8888;
+}
+
+.Protein {
+    --color-category-underline: #c35256;
+}
+
+.Seasoning {
+    --color-category-underline: #c3fcf1;
+}
+
+.ingredient-category {
+    margin: 0;
+    padding: 0;
+    font-size: 1.2rem;
+    box-shadow: inset 0 -0.4rem 0 0 var(--color-category-underline);
+}

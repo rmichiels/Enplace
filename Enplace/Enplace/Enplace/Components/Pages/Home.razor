@@ -1,13 +1,14 @@
 ﻿@page "/"
 
 
+
 <PageTitle>Home</PageTitle>
 
 <h1>Hello, world!</h1>
 
 Welcome to your new app.
 
-<UserComponent @bind-User="@_user" State="ComponentState.Read" />
+<UserComponent @bind-User="@_user" State="ComponentState.Details" />
 
 @code {
     [Inject]
@@ -17,8 +18,16 @@ Welcome to your new app.
     private User? _user;
     private Recipe? _recipe;
 
+    [Inject]
+    public EnplaceContext ApplicationContext { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
+        ConfigurationService provider = new("https://localhost:7283/api/v1/Configuration");
+        EnplaceContext context = await provider.GetContextAsync();
+        ApplicationContext = context;
+
+
         _user = await Context.Get<User>(1);
         if (_user is null)
         {

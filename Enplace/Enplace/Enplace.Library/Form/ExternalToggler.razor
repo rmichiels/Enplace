@@ -4,7 +4,7 @@
 {
     switch (Mode)
     {
-        case ComponentState.Read:
+        case ComponentState.Details:
             <Enplace.Library.Icons.Edit Size="Size.Small" Color="Color.Dark"
                                         @onclick="async() => Callback()" />
             break;
@@ -16,7 +16,7 @@
 
 @code {
     [Parameter]
-    public ComponentState Mode { get; set; } = ComponentState.Read;
+    public ComponentState Mode { get; set; } = ComponentState.Details;
     [Parameter]
     public EventCallback<ComponentState> ModeChanged { get; set; }
 
@@ -27,9 +27,9 @@
     {
         Mode = Mode switch
         {
-            ComponentState.Read => ComponentState.Edit,
-            ComponentState.Edit => ComponentState.Read,
-            _ => ComponentState.Read
+            ComponentState.Details => ComponentState.Edit,
+            ComponentState.Edit => ComponentState.Details,
+            _ => ComponentState.Details
         };
         await ModeChanged.InvokeAsync(Mode);
         StateHasChanged();

@@ -129,6 +129,10 @@ namespace Enplace.Service.Migrations.SSDB
                     b.Property<int?>("ApproximateServingSize")
                         .HasColumnType("int");
 
+                    b.Property<string>("Comment")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");

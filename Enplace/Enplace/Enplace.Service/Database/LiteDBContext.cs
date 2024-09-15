@@ -1,5 +1,6 @@
 ﻿using Enplace.Service.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace Enplace.Service.Database;
 
@@ -35,8 +36,10 @@ public partial class LiteDBContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
+        optionsBuilder.EnableSensitiveDataLogging();
         string directory = Directory.GetCurrentDirectory();
         string liteConstr = Path.Combine([directory, "Enplace.db"]);
+        Debug.WriteLine(liteConstr);
         optionsBuilder.UseSqlite($"Data Source={Path.Combine([directory, "Enplace.db"])};");
     }
 

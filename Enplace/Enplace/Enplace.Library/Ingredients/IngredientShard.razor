@@ -1,0 +1,114 @@
+﻿@using Enplace.Service.Entities
+@using System.Diagnostics
+@rendermode RenderMode.InteractiveAuto
+@if (EditContext is not null)
+{
+    <EditForm EditContext="EditContext">
+        @switch (State)
+        {
+            case ComponentState.Create:
+                <div class="ingredient-shard-create">
+                    <TGLSelect Field="Ingredient.CategoryId" FieldChanged="GetOptions" @bind-State="State" Options="ApplicationContext.IngredientCategories.ToList<ILabeled>()" Placeholder="Category">
+                        @ApplicationContext.IngredientCategories[Ingredient.CategoryId].Name
+                    </TGLSelect>
+                    <TGLSelect Field="Ingredient.Id" FieldChanged="GetIngredient" @bind-State="State" Options="_ingredientOptions.ToList<ILabeled>()" Placeholder="Ingredient">
+                        @Ingredient.Name
+                    </TGLSelect>
+                    <TGLSelect Field="Ingredient.MeasurementId" FieldChanged="GetMeasurement" @bind-State="State" Options="ApplicationContext.Measurements.ToList<ILabeled>()" Placeholder="Measurement">
+                        @Ingredient.Measurement.Name
+                    </TGLSelect>
+                    <TGInputNumber @bind-Field="Ingredient.Quantity" Placeholder="Enter Quantity" />
+                    <TGInputText @bind-Field="Ingredient.Comment" Placeholder="Comment" />
+                    <button class="btn-icon" @onclick="(e) => OnSave.InvokeAsync(Ingredient)">
+                        <Enplace.Library.Icons.Add />
+                    </button>
+                </div>
+                break;
+            default:
+                <div class="ingredient-shard">
+                    <TGInputNumber @bind-Field="Ingredient.Quantity" @bind-State="State" />
+                    <TGLSelect @bind-Field="Ingredient.MeasurementId" Options="ApplicationContext.Measurements.ToList<ILabeled>()" @bind-State="State">
+                        <span>@Ingredient.Measurement.Name </span>
+                    </TGLSelect>
+                    <span class="ingredient-name">
+                        @Ingredient.Name
+                    </span>
+                    <span class="ingredient-comment">
+                        @Ingredient.Comment
+                    </span>
+                    @if (State == ComponentState.Edit || State == ComponentState.Create)
+                    {
+                        <button class="btn-icon" @onclick="async () => await OnSave.InvokeAsync(Ingredient)">
+                            <Enplace.Library.Icons.Add />
+                        </button>
+                    }
+                </div>
+                break;
+        }
+    </EditForm>
+}
+
+
+@code {
+    [CascadingParameter]
+    public EditContext EditContext { get; set; }
+    [Inject]
+    public EnplaceContext ApplicationContext { get; set; }
+    [Inject]
+    public ConfigurationService ConfigurationService { get; set; }
+
+    [Parameter]
+    public IngredientDTO Ingredient { get; set; }
+    [Parameter]
+    public EventCallback<IngredientDTO> IngredientChanged { get; set; }
+
+    [Parameter]
+    public ComponentState State { get; set; } = ComponentState.Details;
+    [Parameter]
+    public EventCallback<ComponentState> StateChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<IngredientDTO> OnSave { get; set; }
+
+    private List<Ingredient>? _ingredientOptions = [];
+
+    private void GetIngredient(int ingredientId)
+    {
+        var ingredient = _ingredientOptions.First(i => i.Id == ingredientId);
+        Ingredient.Id = ingredient.Id;
+        Ingredient.Name = ingredient.Name;
+    }
+
+    private void GetMeasurement(int measurementId)
+    {
+        var measurement = ApplicationContext.Measurements.First(m => m.Id == measurementId);
+        Ingredient.Measurement = measurement;
+        Ingredient.MeasurementId = measurementId;
+    }
+
+    private async Task GetOptions(int categoryId)
+    {
+        Debug.WriteLine($"Getting ingredients for {categoryId}");
+        Console.WriteLine($"Getting ingredients for {categoryId} - From {Ingredient.CategoryId} to {categoryId}");
+        if (categoryId != Ingredient.CategoryId)
+        {
+            Console.WriteLine("...getting ingredients...");
+
+            try
+            {
+                Console.WriteLine("...checking cache...");
+                _ingredientOptions = ApplicationContext.GetIngredients(categoryId);
+            }
+            catch (DataNotCachedException ex)
+            {
+                Console.WriteLine("...ingredients not cached, getting from service...");
+                _ingredientOptions = await ConfigurationService.GetIngredientsForCategory(categoryId);
+                Console.WriteLine("...results from service integrated.");
+            }
+            Ingredient.CategoryId = categoryId;
+            Ingredient.Category = ApplicationContext.IngredientCategories.First(cat => cat.Id == categoryId);
+            Ingredient.Id = _ingredientOptions.First().Id;
+            StateHasChanged();
+        }
+    }
+}

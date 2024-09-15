@@ -1,0 +1,30 @@
+﻿@using Enplace.Service.Entities
+@rendermode RenderMode.InteractiveAuto
+@inherits IngredientListBase
+
+@if (EditContext is not null)
+{
+    <EditForm EditContext="EditContext">
+        @foreach (IngredientCategory category in ApplicationContext.IngredientCategories)
+        {
+            if (Ingredients is not null)
+            {
+                var result = Ingredients.Where(i => i.Category.Id == category.Id).OrderBy(i => i.Name).ToList();
+                if (result.Any())
+                {
+                    <span class="ingredient-category @category.Name">@category.Name</span>
+                    foreach (IngredientDTO ingredient in result)
+                    {
+                        <IngredientShard @bind-Ingredient="Ingredients[Ingredients.IndexOf(ingredient)]" />
+                    }
+                }
+            }
+        }
+        @if (State == ComponentState.Edit || State == ComponentState.Create)
+        {
+            <hr />
+            <IngredientShard @bind-Ingredient="NewIngredient" State="ComponentState.Create" OnSave="AddIngredientAsync" />
+        }
+    </EditForm>
+}
+

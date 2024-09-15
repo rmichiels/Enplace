@@ -12,7 +12,7 @@ namespace Enplace.Service.Services.Converters
             {
                 RecipeId = viewModel.RecipeId,
                 IngredientId = viewModel.Id,
-                MeasurementId = viewModel.Measurement.Id,
+                MeasurementId = viewModel.MeasurementId,
                 Quantity = viewModel.Quantity,
                 Comment = viewModel.Comment
             };
@@ -26,6 +26,7 @@ namespace Enplace.Service.Services.Converters
                 Name = entity.Ingredient.Name,
                 RecipeId = entity.RecipeId,
                 Category = entity.Ingredient.IngredientCategory,
+                MeasurementId = entity.MeasurementId,
                 Measurement = entity.Measurement,
                 Quantity = entity.Quantity,
                 Comment = entity.Comment,
