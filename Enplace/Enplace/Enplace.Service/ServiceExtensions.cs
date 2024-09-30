@@ -1,7 +1,5 @@
 ﻿using Enplace.Service.Contracts;
 using Enplace.Service.Database;
-using Enplace.Service.DTO;
-using Enplace.Service.Entities;
 using Enplace.Service.Services.Managers;
 using Microsoft.Extensions.DependencyInjection;
 

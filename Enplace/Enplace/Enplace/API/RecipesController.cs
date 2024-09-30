@@ -3,6 +3,7 @@ using Enplace.Service.DTO;
 using Enplace.Service.Entities;
 using Enplace.Service.Services;
 using Enplace.Service.Services.Converters;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 
 namespace Enplace.API

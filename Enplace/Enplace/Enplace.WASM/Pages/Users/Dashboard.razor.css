@@ -1,0 +1,27 @@
+﻿.user-dashboard {
+    height:100%;
+    display: grid;
+    grid-template-rows: [menus] 25fr [recipes] 37.5fr [inspiration] 37.5fr;
+    gap: 1rem;
+}
+
+.section-menu {
+    display: grid;
+    grid-template-columns: [splash]300px [content] 1fr;
+    gap: 1rem;
+}
+
+.menu-splash {
+    border-radius:16px;
+    background: rgba(255,255,255,0.7);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.35);
+}
+
+.section-recipe {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    flex-wrap: wrap;
+}

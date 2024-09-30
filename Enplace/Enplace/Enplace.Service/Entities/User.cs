@@ -5,7 +5,7 @@ namespace Enplace.Service.Entities;
 public partial class User : ILabeled
 {
     public int Id { get; set; }
-
+    public Guid SKID { get; set; }
     public string Name { get; set; } = null!;
 
     public virtual ICollection<Recipe> Recipes { get; set; } = [];

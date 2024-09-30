@@ -1,6 +1,7 @@
-﻿using Enplace.Library.Context;
+﻿using Enplace.Service;
 using Enplace.Service.DTO;
 using Enplace.Service.Entities;
+using Enplace.Service.Services.API;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 
@@ -9,7 +10,8 @@ namespace Enplace.Library.Ingredients
     public class IngredientListBase : ComponentBase
     {
         [Inject]
-        public EnplaceContext ApplicationContext { get; set; }
+        public ConfigurationService ConfigurationService { get; set; }
+
         [CascadingParameter]
         public EditContext EditContext { get; set; }
         [Parameter]
@@ -24,6 +26,14 @@ namespace Enplace.Library.Ingredients
         public Dictionary<IngredientCategory, List<IngredientDTO>> IngredientsPerCategory { get; set; } = [];
         protected IngredientDTO NewIngredient { get; set; } = new() { Id = 0 };
 
+        protected override async Task OnInitializedAsync()
+        {
+            if(EnplaceContext.RecipeCategories.Count == 0 || EnplaceContext.IngredientCategories.Count == 0)
+            {
+                await ConfigurationService.GetBaseResources();
+            }
+        }
+
         protected virtual async void Callback()
         {
             await IngredientsChanged.InvokeAsync(Ingredients);
@@ -33,9 +43,7 @@ namespace Enplace.Library.Ingredients
         protected virtual async void AddIngredientAsync(IngredientDTO ingredient)
         {
             Console.WriteLine(ingredient.Id);
-            Console.WriteLine(NewIngredient.Id);
             Ingredients.Add(ingredient);
-            NewIngredient = new() { Id = 0 };
             await IngredientsChanged.InvokeAsync(Ingredients);
             StateHasChanged();
         }

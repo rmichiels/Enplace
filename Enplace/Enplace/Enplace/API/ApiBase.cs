@@ -5,7 +5,7 @@ namespace Enplace.API
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    public class ApiBase<TEntity, TDTO> : ControllerBase, ICrudable<TDTO> where TEntity : class, ILabeled where TDTO : class, ILabeled
+    public class ApiBase<TEntity, TDTO> : ControllerBase where TEntity : class, ILabeled where TDTO : class, ILabeled
     {
         protected ICrudable _service { get; set; }
         private readonly IModelConverter<TEntity, TDTO> _converter;
@@ -45,31 +45,34 @@ namespace Enplace.API
             };
         }
 
-        [Route("byid/{id}")]
         [HttpGet]
-        public async Task<TDTO?> Get(int id)
+        [Route("{param}")]
+        public async Task<TDTO?> Get(string param)
         {
-            var entity = await _service.Get<TEntity>(id);
+            TEntity? entity;
+            if (int.TryParse(param, out var id))
+            {
+                entity = await _service.Get<TEntity>(id);
+            }
+            else
+            {
+                entity = await _service.Get<TEntity>(param);
+            }
+
             return await _converter.Convert(entity);
         }
-        [Route("byid/{id}")]
+        [Route("{param}")]
         [HttpDelete]
-        public Task<Exception?> Delete(int id)
+        public async Task<Exception?> Delete(string param)
         {
-            return _service.Delete<TEntity>(id);
-        }
-        [HttpGet]
-        [Route("byname/{name}")]
-        public async Task<TDTO?> Get(string name)
-        {
-            var entity = await _service.Get<TEntity>(name);
-            return await _converter.Convert(entity);
-        }
-        [Route("byname/{name}")]
-        [HttpDelete]
-        public Task<Exception?> Delete(string name)
-        {
-            return _service.Delete<TEntity>(name);
+            if (int.TryParse(param, out var id))
+            {
+                return await _service.Delete<TEntity>(id);
+            }
+            else
+            {
+                return await _service.Delete<TEntity>(param);
+            }
         }
         [HttpPatch]
         public async Task<Exception?> Update(TDTO DTO)
@@ -84,22 +87,10 @@ namespace Enplace.API
                 return new Exception("Entity Conversion Failed & Resulted in 'null'");
             }
         }
-        [HttpPatch]
-        [Route("range")]
-        public Task<Exception?> MassUpdate(ICollection<TDTO> entities)
-        {
-            return _service.MassUpdate(entities);
-        }
         [HttpDelete]
         public Task<Exception?> Delete(TDTO entity)
         {
             return _service.Delete(entity);
-        }
-        [HttpDelete]
-        [Route("range")]
-        public Task<Exception?> MassDelete(ICollection<TDTO> entities)
-        {
-            return _service.MassDelete(entities);
         }
     }
 }

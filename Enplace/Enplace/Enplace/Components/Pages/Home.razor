@@ -1,4 +1,6 @@
-﻿@page "/"
+﻿@page "/home"
+@using Enplace.Service
+@using Enplace.Service.Services.API
 
 
 
@@ -8,36 +10,5 @@
 
 Welcome to your new app.
 
-<UserComponent @bind-User="@_user" State="ComponentState.Details" />
-
-@code {
-    [Inject]
-    public ICrudable Context { get; set; }
-    [Inject]
-    public SynchronisationManager SynchronisationManager { get; set; }
-    private User? _user;
-    private Recipe? _recipe;
-
-    [Inject]
-    public EnplaceContext ApplicationContext { get; set; }
-
-    protected override async Task OnInitializedAsync()
-    {
-        ConfigurationService provider = new("https://localhost:7283/api/v1/Configuration");
-        EnplaceContext context = await provider.GetContextAsync();
-        ApplicationContext = context;
 
 
-        _user = await Context.Get<User>(1);
-        if (_user is null)
-        {
-            Debug.WriteLine(":(");
-        }
-        _recipe = await Context.Get<Recipe>(1);
-
-        if (_recipe is null)
-        {
-            Debug.WriteLine(":(");
-        }
-    }
-}

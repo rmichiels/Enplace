@@ -1,5 +1,7 @@
 ﻿using Enplace.Library.Context;
+using Enplace.Service;
 using Enplace.Service.Contracts;
+using Enplace.Service.DTO;
 using Enplace.Service.Entities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,23 +16,27 @@ namespace Enplace.API
         {
             _service = crudService;
         }
-        [HttpGet]
-        public async Task<EnplaceContext> GetBaseContext()
-        {
 
-            return new()
-            {
-                IngredientCategories = _service.GetAll<IngredientCategory>().Result.ToList(),
-                Measurements = _service.GetAll<Measurement>().Result.ToList(),
-                User = await _service.Get<User>(1)
-            };
-        }
         [HttpGet]
         [Route("ingredientsPerCategory/{categoryId:int}")]
         public async Task<List<Ingredient>> GetIngredientsPerCategory(int categoryId)
         {
             var intermediary = await _service.GetAll<Ingredient>();
             return intermediary.Where(i => i.IngredientCategoryId == categoryId).ToList();
+        }
+
+        [HttpGet]
+        [Route("resourcebase")]
+        public async Task<IActionResult> GetResourceBase()
+        {
+            var resourceBase = new ResourceDTO
+            {
+                IngredientCategories = await _service.GetAll<IngredientCategory>(),
+                RecipeCategories = await _service.GetAll<RecipeCategory>(),
+                Measurements = await _service.GetAll<Measurement>()
+            };
+
+            return Ok(resourceBase);
         }
     }
 }

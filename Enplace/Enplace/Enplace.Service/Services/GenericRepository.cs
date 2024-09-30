@@ -85,36 +85,16 @@ namespace Enplace.Service.Services
         {
             return await _context.Set<TEntity>().FirstOrDefaultAsync(e => e.Name == name);
         }
-        public async Task<ICollection<TEntity>> GetAll()
+        public async Task<List<TEntity>> GetAll()
         {
             return await _context.Set<TEntity>().ToListAsync();
         }
-        public async Task<Exception?> MassDelete(ICollection<TEntity> entities)
+
+        public async Task<List<TEntity>> GetWhere(Func<TEntity, bool> predicate)
         {
-            try
-            {
-                _context.RemoveRange(entities);
-                _context.SaveChanges();
-                return null;
-            }
-            catch (Exception ex)
-            {
-                return ex;
-            }
+            return _context.Set<TEntity>().Where(predicate).OrderBy(e => e.Name).ToList();
         }
-        public async Task<Exception?> MassUpdate(ICollection<TEntity> entities)
-        {
-            try
-            {
-                _context.UpdateRange(entities);
-                _context.SaveChanges();
-                return null;
-            }
-            catch (Exception ex)
-            {
-                return ex;
-            }
-        }
+
         public async Task<Exception?> Update(TEntity entity)
         {
             try

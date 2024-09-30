@@ -16,10 +16,16 @@ namespace Enplace.Service.Services.Managers
                 switch (context)
                 {
                     case SSDBContext sqlServer:
+
                         if (sqlServer.Database.CanConnect())
                         {
                             isPrimaryValidated = true;
                             _contexts.Add(RepositoryMarker.Primary, sqlServer);
+                        }
+                        else
+                        {
+                            sqlServer.Database.OpenConnection();
+                            sqlServer.Database.CloseConnection();
                         }
                         break;
                     case LiteDBContext sqlLite:
@@ -79,20 +85,10 @@ namespace Enplace.Service.Services.Managers
             return await repo.Get(name);
         }
 
-        public async Task<ICollection<TEntity>> GetAll<TEntity>() where TEntity : class, ILabeled
+        public async Task<List<TEntity>> GetAll<TEntity>() where TEntity : class, ILabeled
         {
             var repo = new GenericRepository<TEntity>(_contexts[RepositoryMarker.Primary]);
             return await repo.GetAll();
-        }
-
-        public Task<Exception?> MassDelete<TEntity>(ICollection<TEntity> entities) where TEntity : class, ILabeled
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Exception?> MassUpdate<TEntity>(ICollection<TEntity> entities) where TEntity : class, ILabeled
-        {
-            throw new NotImplementedException();
         }
 
         public async Task<Exception?> Update<TEntity>(TEntity entity) where TEntity : class, ILabeled
@@ -110,6 +106,12 @@ namespace Enplace.Service.Services.Managers
             {
                 return ex;
             }
+        }
+
+        public async Task<List<TEntity>> GetWhere<TEntity>(Func<TEntity, bool> predicate) where TEntity : class, ILabeled
+        {
+            var repo = new GenericRepository<TEntity>(_contexts[RepositoryMarker.Primary]);
+            return await repo.GetWhere(predicate);
         }
     }
 }

@@ -239,10 +239,6 @@ namespace Enplace.Service.Migrations.SSDB
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("RecipeId")
-                        .HasColumnType("int")
-                        .HasColumnName("RecipeID");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -252,7 +248,11 @@ namespace Enplace.Service.Migrations.SSDB
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.HasKey("Id", "RecipeId");
+                    b.Property<int>("RecipeId")
+                        .HasColumnType("int")
+                        .HasColumnName("RecipeID");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("RecipeId");
 
@@ -270,9 +270,18 @@ namespace Enplace.Service.Migrations.SSDB
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<Guid>("SKID")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.HasIndex("SKID")
+                        .IsUnique();
 
                     b.ToTable("Users");
                 });

@@ -218,10 +218,6 @@ namespace Enplace.Service.Migrations
                         .HasColumnType("INTEGER")
                         .HasColumnName("ID");
 
-                    b.Property<int>("RecipeId")
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("RecipeID");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -231,7 +227,11 @@ namespace Enplace.Service.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id", "RecipeId");
+                    b.Property<int>("RecipeId")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("RecipeID");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("RecipeId");
 
@@ -249,7 +249,16 @@ namespace Enplace.Service.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid>("SKID")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.HasIndex("SKID")
+                        .IsUnique();
 
                     b.ToTable("Users");
                 });

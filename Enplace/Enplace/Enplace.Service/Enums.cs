@@ -8,4 +8,15 @@
     {
         Shard
     }
+
+    public enum ResultStatus
+    {
+        Success,
+        Error
+    }
+
+    public enum ErrorType
+    {
+        Unknown,
+    }
 }

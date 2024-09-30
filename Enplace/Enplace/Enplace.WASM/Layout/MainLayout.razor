@@ -1,16 +1,25 @@
-﻿@inherits LayoutComponentBase
+﻿@using Blazored.LocalStorage
+@inherits LayoutComponentBase
 <div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
-
+    <aside class="sidebar">
+        <Enplace.Library.Layout.ControlBar />
+    </aside>
     <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
-
-        <article class="content px-4">
+        <Enplace.Library.Layout.TopBar />
+        <article>
             @Body
         </article>
     </main>
 </div>
+
+
+
+@code {
+    [Inject]
+    public ILocalStorageService Storage { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        EnplaceContext.Token = await Storage.GetItemAsStringAsync("skid.enplace") ?? string.Empty;
+    }
+}

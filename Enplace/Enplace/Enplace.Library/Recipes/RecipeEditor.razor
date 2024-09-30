@@ -1,14 +1,37 @@
 ﻿@page "/recipes/{Id:int}/{Action}"
 @page "/recipes/{Action}"
-@using Enplace.Library.Context
+@using Blazored.Modal
 @using Enplace.Service.Services.Converters
 
 @switch (State)
 {
     case ComponentState.Loading:
+        // TODO : Add Skeleton version of the component
         <div class="recipe-editor-loading">
             ... loading ...
         </div>
+        break;
+    case ComponentState.Create:
+        <EditForm EditContext="@Context" OnSubmit="PostRecipe">
+            <div class="recipe-editor-edit card">
+                <div class="card-header">
+                    
+                </div>
+                <div class="card-body">
+                    <InputText @bind-Value="Recipe.Name" />
+                    <InputTextArea @bind-Value="Recipe.Description" />
+                    <Enplace.Library.Ingredients.IngredientList @bind-Ingredients="Recipe.Ingredients" @bind-State="State" />
+                </div>
+                <div class="card-footer">
+                    <button class="btn-icon" type="submit">
+                        <Enplace.Library.Icons.Save />
+                    </button>
+                    <button class="btn-icon" type="button" @onclick="() => Close()">
+                        <Enplace.Library.Icons.Save />
+                    </button>
+                </div>
+            </div>
+        </EditForm>
         break;
     // case ComponentState.Edit:
     default:
@@ -32,10 +55,10 @@
 
 
 @code {
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
+    private async Task Close() => await BlazoredModal.CloseAsync();
     [Inject]
     public ApiService<RecipeDTO> Service { get; set; }
-    [Inject]
-    public EnplaceContext ApplicationContext { get; set; }
     public EditContext Context { get; set; } = new(new RecipeDTO());
 
     [Parameter]
@@ -44,7 +67,7 @@
     public string Action { get; set; } = string.Empty;
 
     [Parameter]
-    public RecipeDTO? Recipe { get; set; }
+    public RecipeDTO? Recipe { get; set; } = new();
     [Parameter]
     public EventCallback<RecipeDTO?> RecipeChanged { get; set; }
 
@@ -74,7 +97,7 @@
     {
         Exception? result = null;
         UserConverter userConverter = new();
-        Recipe.Owner = await userConverter.Convert(ApplicationContext.User);
+        Recipe.Owner = await userConverter.Convert(EnplaceContext.User);
         Console.WriteLine("Submit triggered...");
         switch (State)
         {

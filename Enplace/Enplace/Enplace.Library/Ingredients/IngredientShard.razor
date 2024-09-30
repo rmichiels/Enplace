@@ -1,6 +1,4 @@
-﻿@using Enplace.Service.Entities
-@using System.Diagnostics
-@rendermode RenderMode.InteractiveAuto
+﻿@rendermode RenderMode.InteractiveAuto
 @if (EditContext is not null)
 {
     <EditForm EditContext="EditContext">
@@ -8,13 +6,13 @@
         {
             case ComponentState.Create:
                 <div class="ingredient-shard-create">
-                    <TGLSelect Field="Ingredient.CategoryId" FieldChanged="GetOptions" @bind-State="State" Options="ApplicationContext.IngredientCategories.ToList<ILabeled>()" Placeholder="Category">
-                        @ApplicationContext.IngredientCategories[Ingredient.CategoryId].Name
+                    <TGLSelect Field="Ingredient.CategoryId" FieldChanged="GetOptions" @bind-State="State" Options="EnplaceContext.IngredientCategories.ToList<ILabeled>()" Placeholder="Category">
+                        @EnplaceContext.IngredientCategories[Ingredient.CategoryId].Name
                     </TGLSelect>
                     <TGLSelect Field="Ingredient.Id" FieldChanged="GetIngredient" @bind-State="State" Options="_ingredientOptions.ToList<ILabeled>()" Placeholder="Ingredient">
                         @Ingredient.Name
                     </TGLSelect>
-                    <TGLSelect Field="Ingredient.MeasurementId" FieldChanged="GetMeasurement" @bind-State="State" Options="ApplicationContext.Measurements.ToList<ILabeled>()" Placeholder="Measurement">
+                    <TGLSelect Field="Ingredient.MeasurementId" FieldChanged="GetMeasurement" @bind-State="State" Options="EnplaceContext.Measurements.ToList<ILabeled>()" Placeholder="Measurement">
                         @Ingredient.Measurement.Name
                     </TGLSelect>
                     <TGInputNumber @bind-Field="Ingredient.Quantity" Placeholder="Enter Quantity" />
@@ -27,7 +25,7 @@
             default:
                 <div class="ingredient-shard">
                     <TGInputNumber @bind-Field="Ingredient.Quantity" @bind-State="State" />
-                    <TGLSelect @bind-Field="Ingredient.MeasurementId" Options="ApplicationContext.Measurements.ToList<ILabeled>()" @bind-State="State">
+                    <TGLSelect @bind-Field="Ingredient.MeasurementId" Options="EnplaceContext.Measurements.ToList<ILabeled>()" @bind-State="State">
                         <span>@Ingredient.Measurement.Name </span>
                     </TGLSelect>
                     <span class="ingredient-name">
@@ -53,8 +51,6 @@
     [CascadingParameter]
     public EditContext EditContext { get; set; }
     [Inject]
-    public EnplaceContext ApplicationContext { get; set; }
-    [Inject]
     public ConfigurationService ConfigurationService { get; set; }
 
     [Parameter]
@@ -72,6 +68,12 @@
 
     private List<Ingredient>? _ingredientOptions = [];
 
+    protected override async Task OnInitializedAsync()
+    {
+        
+    }
+
+
     private void GetIngredient(int ingredientId)
     {
         var ingredient = _ingredientOptions.First(i => i.Id == ingredientId);
@@ -81,7 +83,7 @@
 
     private void GetMeasurement(int measurementId)
     {
-        var measurement = ApplicationContext.Measurements.First(m => m.Id == measurementId);
+        var measurement = EnplaceContext.Measurements.First(m => m.Id == measurementId);
         Ingredient.Measurement = measurement;
         Ingredient.MeasurementId = measurementId;
     }
@@ -97,7 +99,7 @@
             try
             {
                 Console.WriteLine("...checking cache...");
-                _ingredientOptions = ApplicationContext.GetIngredients(categoryId);
+                _ingredientOptions = EnplaceContext.GetIngredients(categoryId);
             }
             catch (DataNotCachedException ex)
             {
@@ -106,7 +108,7 @@
                 Console.WriteLine("...results from service integrated.");
             }
             Ingredient.CategoryId = categoryId;
-            Ingredient.Category = ApplicationContext.IngredientCategories.First(cat => cat.Id == categoryId);
+            Ingredient.Category = EnplaceContext.IngredientCategories.First(cat => cat.Id == categoryId);
             Ingredient.Id = _ingredientOptions.First().Id;
             StateHasChanged();
         }

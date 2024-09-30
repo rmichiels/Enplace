@@ -1,0 +1,84 @@
+﻿
+<div class="ingredient-selector">
+    @*     <EditForm Model="_ingredient"> *@
+    <div class="input-blade">
+        <InputText @bind-Value="_searchIngredient" @oninput="(c) => QueryIngredients((string)c.Value)" @onchange="(c) => QueryIngredients((string)c.Value)" />
+        <TGLSelect @bind-Field="_measurementId" Options="EnplaceContext.Measurements.ToList<ILabeled>()" />
+        <InputNumber style="min-width:0" @bind-Value="_quantity" />
+        <button class="btn-icon" @onclick="async () => await Callback()">
+            <Enplace.Library.Icons.Add />
+        </button>
+    </div>
+    @*     </EditForm> *@
+    @if (_searchIngredient.Length > 2 && _searchIngredient != _ingredient.Name)
+    {
+        <div class="ingredient-options">
+            @if (_options.Count == 0)
+            {
+                <p>
+                    no ingredients found
+                </p>
+            }
+            else
+            {
+                foreach (var opt in _options)
+                {
+                    <button @onclick="() => SelectIngredient(opt)">
+                        <h5>@opt.Name</h5> <span>@opt.Category.Name</span>
+                    </button>
+                }
+            }
+            <p>
+                Not what you're looking for? Request a new ingredient!
+            </p>
+        </div>
+    }
+
+</div>
+
+
+@code {
+    [Inject]
+    public IResource<IngredientDTO> Resource { get; set; }
+
+    private IngredientDTO _ingredient = new();
+
+    [Parameter]
+    public EventCallback<IngredientDTO> OnSave { get; set; }
+
+    private string _searchIngredient { get; set; } = string.Empty;
+    private int _measurementId { get; set; } = 0;
+    private decimal _quantity { get; set; } = 0;
+    private List<IngredientDTO> _options { get; set; } = [];
+
+    private async Task QueryIngredients(string str)
+    {
+        if (str.Length > 2)
+        {
+            _searchIngredient = str;
+            _options = await Resource.Query(str);
+        }
+        StateHasChanged();
+    }
+
+    private async Task SelectIngredient(IngredientDTO ingredient)
+    {
+        _ingredient = ingredient;
+        _searchIngredient = ingredient.Name;
+        StateHasChanged();
+    }
+
+    private async Task Callback()
+    {
+        _ingredient.MeasurementId = _measurementId;
+        _ingredient.Measurement = EnplaceContext.Measurements.FirstOrDefault(m => m.Id == _measurementId);
+        _ingredient.Quantity = _quantity;
+        await OnSave.InvokeAsync(_ingredient);
+
+        _ingredient = new();
+        _measurementId = 0;
+        _quantity = 0;
+        _searchIngredient = string.Empty;
+        StateHasChanged();
+    }
+}

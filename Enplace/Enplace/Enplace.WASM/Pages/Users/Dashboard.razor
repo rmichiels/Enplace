@@ -1,0 +1,36 @@
+﻿@page "/"
+@page "/dashboard"
+
+<div id="user-dashboard" class="user-dashboard">
+    <section class="section-menu">
+        <aside class="menu-splash">
+            <p>
+                what will you be cooking today {username}?
+            </p>
+        </aside>
+        <details class="menu-carrousel">
+        </details>
+    </section>
+    <section class="section-recipe">
+        <RecipeShard Recipe="_newRecipe" State="ComponentState.Create" />
+        @foreach (RecipeDTO recipe in _recipes)
+        {
+            <RecipeShard Recipe="recipe" State="ComponentState.Details" />
+        }
+    </section>
+    <section class="section-inspiration">
+    </section>
+</div>
+
+@code {
+    [Inject]
+    public ApiService<RecipeDTO> Service { get; set; }
+    private List<RecipeDTO> _recipes = [];
+    private RecipeDTO _newRecipe = new() { Category = new() { Id = 1, Name = "Standard" } };
+
+    protected override async Task OnInitializedAsync()
+    {
+        var recipeResult = await Service.GetAll();
+        _recipes = recipeResult.ToList();
+    }
+}

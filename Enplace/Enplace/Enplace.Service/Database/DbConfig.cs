@@ -108,7 +108,7 @@ namespace Enplace.Service.Database
 
             modelBuilder.Entity<RecipeStep>(entity =>
             {
-                entity.HasKey(e => new { e.Id, e.RecipeId });
+                entity.HasKey(e => new { e.Id});
 
                 entity.Property(e => e.Id)
                     .ValueGeneratedOnAdd()
@@ -124,6 +124,8 @@ namespace Enplace.Service.Database
             modelBuilder.Entity<User>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
+                entity.HasIndex(e => e.SKID).IsUnique();
+                entity.HasIndex(e => e.Name).IsUnique();
 
                 entity.HasMany(d => d.RecipesNavigation).WithMany(p => p.Users)
                     .UsingEntity<Dictionary<string, object>>(

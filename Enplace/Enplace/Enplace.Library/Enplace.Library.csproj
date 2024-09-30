@@ -6,12 +6,25 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Auth\AccountManager.razor.css" />
+    <None Remove="Ingredients\IngredientSelector.razor.css" />
+    <None Remove="Recipes\RecipeEditor.razor.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Auth\AccountManager.razor.css" />
+    <Content Include="Ingredients\IngredientSelector.razor.css" />
+    <Content Include="Recipes\RecipeEditor.razor.css" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <SupportedPlatform Include="browser" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Blazored.Modal" Version="7.3.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.8" />
   </ItemGroup>
 

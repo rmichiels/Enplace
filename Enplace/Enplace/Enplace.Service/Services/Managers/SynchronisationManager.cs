@@ -1,11 +1,6 @@
 ﻿using Enplace.Service.Database;
 using Enplace.Service.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Enplace.Service.Services.Managers
 {

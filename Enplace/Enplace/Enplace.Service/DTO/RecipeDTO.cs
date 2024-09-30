@@ -1,10 +1,5 @@
 ﻿using Enplace.Service.Contracts;
 using Enplace.Service.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Enplace.Service.DTO
 {
@@ -12,6 +7,7 @@ namespace Enplace.Service.DTO
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public string Description { get; set; }
         public UserDTO Owner { get; set; }
         public int? ApproximateServingSize { get; set; }
         public int? ApproximateCookingTime { get; set; }

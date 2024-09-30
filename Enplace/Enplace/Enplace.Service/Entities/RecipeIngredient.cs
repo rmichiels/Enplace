@@ -9,7 +9,7 @@ public partial class RecipeIngredient
     public int MeasurementId { get; set; }
 
     public decimal Quantity { get; set; }
-    public string? Comment {  get; set; }
+    public string? Comment { get; set; }
 
     public virtual Ingredient Ingredient { get; set; } = null!;
 

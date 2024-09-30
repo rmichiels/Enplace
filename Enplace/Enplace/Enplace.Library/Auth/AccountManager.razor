@@ -1,0 +1,47 @@
+﻿
+@if(User is null)
+{
+    <div class="account-manager-no-user">
+        <button class="btn-icon" @onclick="() => NavigateToLogin()">
+            <Enplace.Library.Icons.Login/>
+        </button>
+    </div>
+}
+else
+{
+    <div id="accountManager" class="account-manager-user">
+        <div class="user-container">
+            <div class="user-name">@User.Name</div>
+            <button class="btn-icon" @onclick="() => _showMenu = !_showMenu">
+                <Enplace.Library.Icons.UserSettings />
+            </button>
+        </div>
+        @if (_showMenu)
+        {
+            <div class="user-options">
+                <a href="#home">Home</a>
+                <a href="#about">About</a>
+                <a href="#contact">Contact</a>
+                <button class="btn-icon" @onclick = "() => User = null">
+                    Logout
+                    <Enplace.Library.Icons.Logout/>
+                </button>
+            </div>
+        }
+    </div>
+}
+
+
+@code {
+    [Parameter]
+    public UserDTO? User { get; set; }
+
+    [Inject]
+    public NavigationManager Navigation { get; set; }
+    private bool _showMenu = false;
+
+    public void NavigateToLogin()
+    {
+        Navigation.NavigateTo("/login");
+    }
+}

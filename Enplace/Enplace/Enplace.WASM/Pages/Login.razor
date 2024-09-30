@@ -1,0 +1,74 @@
+﻿@page "/login"
+@using Blazored.LocalStorage
+
+<div class="account-login">
+    <EditForm Model="_model">
+        <InputText @bind-Value="_model.Email" DisplayName="Email" />
+        <InputText @bind-Value="_model.Credentials" DisplayName="Password" />
+        <button class="btn btn-primary" @onclick="() => AuthorizeUser()">
+            Log In
+        </button>
+        <button class="btn btn-secondary" @onclick="() => RegisterUser()">
+            Create New Account
+        </button>
+    </EditForm>
+</div>
+
+
+@code {
+    [Inject]
+    public AuthService Auth { get; set; }
+
+    [Inject]
+    public NavigationManager NavigationManager { get; set; }
+
+    [Inject]
+    public ILocalStorageService Storage { get; set; }
+
+    private AuthRequest _model = new();
+
+    public async void AuthorizeUser()
+    {
+        var response = await Auth.AuthenticateUser(_model);
+        if (response is not null)
+        {
+            Console.WriteLine("response not null, handling token...");
+            HandleToken(response.Token);
+        }
+        else
+        {
+            // Notify User
+        }
+    }
+
+    public async void RegisterUser()
+    {
+        var response = await Auth.RegisterUser(_model);
+        if (response is not null)
+        {
+            HandleToken(response.Token);
+        }
+        else
+        {
+            // Notify User
+        }
+    }
+
+    private void HandleToken(string token)
+    {
+        if (Auth.IsTokenValid(token))
+        {
+            Console.WriteLine("Token is valid, asigning token...");
+            EnplaceContext.Token = token;
+            Console.WriteLine(EnplaceContext.Token);
+            Storage.SetItemAsStringAsync("skid.enplace", token);
+
+            StateHasChanged();
+            NavigationManager.NavigateTo("/recipes");
+        }
+        else
+        {
+            // Notify user
+        }
+    }
+}

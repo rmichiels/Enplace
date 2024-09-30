@@ -5,7 +5,7 @@
 @if (EditContext is not null)
 {
     <EditForm EditContext="EditContext">
-        @foreach (IngredientCategory category in ApplicationContext.IngredientCategories)
+        @foreach (IngredientCategory category in EnplaceContext.IngredientCategories)
         {
             if (Ingredients is not null)
             {
@@ -23,7 +23,7 @@
         @if (State == ComponentState.Edit || State == ComponentState.Create)
         {
             <hr />
-            <IngredientShard @bind-Ingredient="NewIngredient" State="ComponentState.Create" OnSave="AddIngredientAsync" />
+            <IngredientSelector OnSave="AddIngredientAsync" />
         }
     </EditForm>
 }
