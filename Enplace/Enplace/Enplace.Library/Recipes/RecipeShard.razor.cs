@@ -27,5 +27,8 @@ namespace Enplace.Library.Recipes
                 .Add(nameof(RecipeEditor.Action), "create");
             Modal.Show<RecipeEditor>("Add New Recipe", modalParams);
         }
+
+        protected string _imgShardB64 => $"data:{Recipe.RecipeImages.FirstOrDefault(img => img.Size == Service.ImageSize.Header)?.MIME ?? string.Empty};base64," +
+            $" {Convert.ToBase64String(Recipe.RecipeImages.FirstOrDefault(img => img.Size == Service.ImageSize.Header)?.Data ?? [])}";
     }
 }

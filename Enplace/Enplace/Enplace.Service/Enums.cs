@@ -6,7 +6,7 @@
     }
     public enum ImageSize
     {
-        Shard
+        Header
     }
 
     public enum ResultStatus
@@ -18,5 +18,13 @@
     public enum ErrorType
     {
         Unknown,
+    }
+
+    public enum NotificationType
+    {
+        Message,
+        Confirmation,
+        Warning,
+        Error
     }
 }

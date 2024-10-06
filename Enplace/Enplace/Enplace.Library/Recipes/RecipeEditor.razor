@@ -2,6 +2,7 @@
 @page "/recipes/{Action}"
 @using Blazored.Modal
 @using Enplace.Service.Services.Converters
+@using Enplace.Service.Services.Managers
 
 @switch (State)
 {
@@ -14,19 +15,29 @@
     case ComponentState.Create:
         <EditForm EditContext="@Context" OnSubmit="PostRecipe">
             <div class="recipe-editor-edit card">
+                <ImageDropper @bind-Image="@_recipeHeaderImg" />
                 <div class="card-header">
-                    
                 </div>
                 <div class="card-body">
-                    <InputText @bind-Value="Recipe.Name" />
-                    <InputTextArea @bind-Value="Recipe.Description" />
-                    <Enplace.Library.Ingredients.IngredientList @bind-Ingredients="Recipe.Ingredients" @bind-State="State" />
+                    <div class="input-blade">
+                        <span class="subtitle">Title</span>
+                        <span class="subtitle">Category</span>
+                    </div>
+                    <div class="input-blade">
+                        <InputText @bind-Value="Recipe.Name" placeholder="Recipe Name..." />
+                        <TGLSelect Field="@_recipeCategoryId" FieldChanged="(i) => AssignCategory(i)" Options="EnplaceContext.RecipeCategories.ToList<ILabeled>()" />
+                    </div>
+                    <div class="flex-col flex-start">
+                        <span class="subtitle">Description</span>
+                        <InputTextArea style="width:100%;" @bind-Value="Recipe.Description" />
+                    </div>
+                    <div class="flex-col flex-start">
+                        <span class="subtitle">Ingredients</span>
+                        <Enplace.Library.Ingredients.IngredientList @bind-Ingredients="Recipe.Ingredients" @bind-State="State" />
+                    </div>
                 </div>
-                <div class="card-footer">
+                <div class="card-footer flex-row flex-start">
                     <button class="btn-icon" type="submit">
-                        <Enplace.Library.Icons.Save />
-                    </button>
-                    <button class="btn-icon" type="button" @onclick="() => Close()">
                         <Enplace.Library.Icons.Save />
                     </button>
                 </div>
@@ -59,6 +70,9 @@
     private async Task Close() => await BlazoredModal.CloseAsync();
     [Inject]
     public ApiService<RecipeDTO> Service { get; set; }
+    [Inject]
+    public ConfigurationService ConfigurationService { get; set; }
+
     public EditContext Context { get; set; } = new(new RecipeDTO());
 
     [Parameter]
@@ -76,8 +90,21 @@
     [Parameter]
     public EventCallback<ComponentState> StateChanged { get; set; }
 
+    private ImageDTO _recipeHeaderImg;
+    private int _recipeCategoryId;
+    private async Task AssignCategory(int categoryId)
+    {
+        _recipeCategoryId = categoryId;
+        Recipe.Category = EnplaceContext.RecipeCategories.First(cat => cat.Id == categoryId);
+    }
+
     protected override async Task OnParametersSetAsync()
     {
+        if (EnplaceContext.RecipeCategories.Count == 0 || EnplaceContext.IngredientCategories.Count == 0)
+        {
+            await ConfigurationService.GetBaseResources();
+        }
+
         if (Action == "edit" || Action == "details")
         {
             Recipe = await Service.Get(Id);
@@ -88,8 +115,13 @@
             else
             {
                 Context = new(Recipe);
+                _recipeHeaderImg = Recipe.RecipeImages.FirstOrDefault(img => img.Size == ImageSize.Header) ?? new();
                 State = Enum.Parse<ComponentState>(Action, true);
             }
+        }
+        else if (Action == "create")
+        {
+            _recipeHeaderImg = new();
         }
     }
 
@@ -97,7 +129,7 @@
     {
         Exception? result = null;
         UserConverter userConverter = new();
-        Recipe.Owner = await userConverter.Convert(EnplaceContext.User);
+        Recipe.Owner = EnplaceContext.User;
         Console.WriteLine("Submit triggered...");
         switch (State)
         {
@@ -105,7 +137,17 @@
                 result = await Service.Update(Recipe);
                 break;
             case ComponentState.Create:
+                if (Recipe.RecipeImages.Any(i => i.Size == ImageSize.Header))
+                {
+                    Recipe.RecipeImages.Remove(Recipe.RecipeImages.First(i => i.Size == ImageSize.Header));
+                    Recipe.RecipeImages.Add(_recipeHeaderImg);
+                }
+                else
+                {
+                    Recipe.RecipeImages.Add(_recipeHeaderImg);
+                }
                 result = await Service.Add(Recipe);
+                EventManager.TriggerOnSubmit();
                 break;
             default:
                 break;

@@ -115,7 +115,6 @@ namespace Enplace.Service.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Comment")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
@@ -164,6 +163,10 @@ namespace Enplace.Service.Migrations
                     b.Property<byte[]>("Image")
                         .IsRequired()
                         .HasColumnType("BLOB");
+
+                    b.Property<string>("MIME")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()

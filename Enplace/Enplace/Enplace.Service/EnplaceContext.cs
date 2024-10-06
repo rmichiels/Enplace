@@ -1,10 +1,11 @@
-﻿using Enplace.Service.Entities;
+﻿using Enplace.Service.DTO;
+using Enplace.Service.Entities;
 
 namespace Enplace.Service
 {
     public static class EnplaceContext
     {
-        public static User? User { get; set; }
+        public static UserDTO User { get; set; }
         public static string Token { get; set; }
         public static List<Measurement> Measurements { get; set; } = [];
         public static List<IngredientCategory> IngredientCategories { get; set; } = [];

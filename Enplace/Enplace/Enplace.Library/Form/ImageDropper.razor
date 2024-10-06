@@ -1,0 +1,39 @@
+﻿<div class="img-dropper">
+    <img src="@_b64img" onerror="this.style.display='none'">
+    <InputFile OnChange="FileChanged" />
+</div>
+
+@code {
+    [CascadingParameter]
+    public EditContext Context { get; set; }
+
+    [Parameter]
+    public ImageDTO Image { get; set; } = new();
+    [Parameter]
+    public EventCallback<ImageDTO> ImageChanged { get; set; }
+
+    private string _b64img;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Image?.Data?.Count() > 0)
+        {
+            var b64 = Convert.ToBase64String(Image.Data);
+            _b64img = $"data: {Image.MIME}; base64,{b64}";
+        }
+    }
+
+    private async Task FileChanged(InputFileChangeEventArgs args)
+    {
+        using (MemoryStream streamReader = new())
+        {
+            await args.File.OpenReadStream(50000000).CopyToAsync(streamReader);
+            Image.MIME = $"image/{args.File.Name.Split('.').Last()}";
+            Image.Data = streamReader.ToArray();
+            var b64 = Convert.ToBase64String(Image.Data);
+            _b64img = $"data: {Image.MIME}; base64,{b64}";
+        }
+        await ImageChanged.InvokeAsync(Image);
+        StateHasChanged();
+    }
+}

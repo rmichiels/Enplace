@@ -32,7 +32,10 @@
         var response = await Auth.AuthenticateUser(_model);
         if (response is not null)
         {
-            Console.WriteLine("response not null, handling token...");
+            var dto = await Auth.AuthenticateAPI(response.Token);
+            Console.WriteLine(dto.Name);
+            Console.WriteLine(dto.Id);
+            EnplaceContext.User = dto;
             HandleToken(response.Token);
         }
         else
@@ -46,6 +49,7 @@
         var response = await Auth.RegisterUser(_model);
         if (response is not null)
         {
+            EnplaceContext.User = await Auth.RegisterAPI(response.Token);
             HandleToken(response.Token);
         }
         else
@@ -58,13 +62,12 @@
     {
         if (Auth.IsTokenValid(token))
         {
-            Console.WriteLine("Token is valid, asigning token...");
             EnplaceContext.Token = token;
-            Console.WriteLine(EnplaceContext.Token);
             Storage.SetItemAsStringAsync("skid.enplace", token);
 
+
             StateHasChanged();
-            NavigationManager.NavigateTo("/recipes");
+            NavigationManager.NavigateTo("/");
         }
         else
         {

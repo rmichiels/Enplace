@@ -1,5 +1,6 @@
 ﻿@page "/"
 @page "/dashboard"
+@using Enplace.Service.Services.Managers
 
 <div id="user-dashboard" class="user-dashboard">
     <section class="section-menu">
@@ -8,8 +9,7 @@
                 what will you be cooking today {username}?
             </p>
         </aside>
-        <details class="menu-carrousel">
-        </details>
+        <Enplace.Library.Menus.MenuCarrousel />
     </section>
     <section class="section-recipe">
         <RecipeShard Recipe="_newRecipe" State="ComponentState.Create" />
@@ -32,5 +32,22 @@
     {
         var recipeResult = await Service.GetAll();
         _recipes = recipeResult.ToList();
+
+        EventManager.OnSubmit += RefreshDashboard;
+        EventManager.MenuSelection.OnEventTriggered += MenuSelected;
+    }
+
+    private async Task RefreshDashboard()
+    {
+        Console.WriteLine("Triggered Dashboard Refresh...");
+        var recipeResult = await Service.GetAll();
+        _recipes = recipeResult.ToList();
+        StateHasChanged();
+        Console.WriteLine("...Dashboard Refreshed.");
+    }
+
+    private async Task MenuSelected(MenuDTO menu)
+    {
+
     }
 }

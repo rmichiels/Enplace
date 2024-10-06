@@ -10,12 +10,16 @@
     <None Remove="Auth\AccountManager.razor.css" />
     <None Remove="Ingredients\IngredientSelector.razor.css" />
     <None Remove="Recipes\RecipeEditor.razor.css" />
+    <None Remove="Swissknife.css" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Auth\AccountManager.razor.css" />
     <Content Include="Ingredients\IngredientSelector.razor.css" />
     <Content Include="Recipes\RecipeEditor.razor.css" />
+    <Content Include="Swissknife.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 

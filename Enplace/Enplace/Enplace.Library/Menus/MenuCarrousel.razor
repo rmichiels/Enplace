@@ -1,0 +1,20 @@
+﻿@using Enplace.Service.Services.Managers
+<section class="menu-carrousel">
+    @foreach (MenuDTO menu in Menus)
+    {
+        <MenuCard @bind-Menu="@Menus[Menus.IndexOf(menu)]" OnMenuSelected="(m) => SelectMenu(m)" />
+    }
+</section>
+
+@code {
+    public List<MenuDTO> Menus { get; set; } = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+    }
+
+    protected async Task SelectMenu(MenuDTO menu)
+    {
+        EventManager.MenuSelection.TriggerEvent(menu);
+    }
+}

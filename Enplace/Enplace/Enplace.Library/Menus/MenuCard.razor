@@ -1,0 +1,11 @@
+﻿<h3>MenuCard</h3>
+
+@code {
+    [Parameter]
+    public MenuDTO Menu { get; set; }
+    [Parameter]
+    public EventCallback<MenuDTO> MenuChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<MenuDTO> OnMenuSelected { get; set; }
+}

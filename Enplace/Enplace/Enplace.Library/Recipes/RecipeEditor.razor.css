@@ -3,3 +3,15 @@
 
 .recipe-editor-edit {
 }
+
+.input-blade {
+    display: grid;
+    grid-template-columns: [ingredient] 5fr [measurement] 3fr [quantity] 1fr [button] 1fr;
+    gap: 0.5rem;
+}
+
+    .input-blade input,
+    .input-blade select,
+    .input-blade button {
+        min-width: 0;
+    }

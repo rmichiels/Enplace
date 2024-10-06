@@ -20,7 +20,7 @@ namespace Enplace.Service.Services.Converters
                 ApproximateCookingTime = viewModel.ApproximateCookingTime,
                 ApproximateServingSize = viewModel.ApproximateServingSize,
                 RecipeCategoryId = viewModel.Category.Id,
-                Comment = viewModel.Comment
+                Comment = viewModel.Comment,
             };
 
             foreach (IngredientDTO dto in viewModel.Ingredients)
@@ -39,10 +39,16 @@ namespace Enplace.Service.Services.Converters
                 if (recipeStep != null) { recipe.RecipeSteps.Add(recipeStep); };
             };
 
-            foreach (RecipeImage recipeImage in viewModel.RecipeImages)
+            foreach (ImageDTO recipeImage in viewModel.RecipeImages)
             {
-                recipeImage.RecipeId = viewModel.Id;
-                recipe.RecipeImages.Add(recipeImage);
+                recipe.RecipeImages.Add(new RecipeImage()
+                {
+                    RecipeId = viewModel.Id,
+                    Name = $"{viewModel.Name}_{recipeImage.Size}",
+                    Image = recipeImage.Data,
+                    MIME = recipeImage.MIME,
+                    Recipe = recipe
+                });
             }
 
             return recipe;
@@ -59,7 +65,7 @@ namespace Enplace.Service.Services.Converters
                 ApproximateServingSize = entity.ApproximateServingSize,
                 Owner = await _userConverter.Convert(entity.OwnerUser),
                 Category = entity.Category,
-                Comment = entity.Comment
+                Comment = entity.Comment,
             };
             foreach (RecipeIngredient recipeIngredient in entity.RecipeIngredients)
             {
@@ -76,7 +82,10 @@ namespace Enplace.Service.Services.Converters
                 if (step != null) { dto.RecipeSteps.Add(step); };
             };
 
-            dto.RecipeImages = entity.RecipeImages.ToList();
+            foreach (RecipeImage image in entity.RecipeImages)
+            {
+                dto.RecipeImages.Add(new() { Data = image.Image, MIME = image.MIME, Size = image.Size });
+            }
 
             return dto;
         }

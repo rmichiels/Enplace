@@ -62,6 +62,7 @@ namespace Enplace.Service.Database
                 entity.Navigation(e => e.RecipeIngredients).AutoInclude();
                 entity.Navigation(e => e.RecipeSteps).AutoInclude();
                 entity.Navigation(e => e.Category).AutoInclude();
+                entity.Navigation(e => e.OwnerUser).AutoInclude();
             });
 
             modelBuilder.Entity<RecipeCategory>(entity =>
@@ -108,7 +109,7 @@ namespace Enplace.Service.Database
 
             modelBuilder.Entity<RecipeStep>(entity =>
             {
-                entity.HasKey(e => new { e.Id});
+                entity.HasKey(e => new { e.Id });
 
                 entity.Property(e => e.Id)
                     .ValueGeneratedOnAdd()

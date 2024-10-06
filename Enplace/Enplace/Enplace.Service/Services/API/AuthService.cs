@@ -7,7 +7,8 @@ namespace Enplace.Service.Services.API
 {
     public class AuthService
     {
-        private readonly HttpClient _httpClient;
+        private readonly HttpClient _serviceClient;
+        private readonly HttpClient _apiClient;
         private string _token;
         private static AuthenticationState _notAuthenticatedState = new(new System.Security.Claims.ClaimsPrincipal());
         public Dictionary<string, string> Claims { get; set; }
@@ -15,7 +16,11 @@ namespace Enplace.Service.Services.API
 
         private int _retryLimit = 3;
 
-        public AuthService(IHttpClientFactory clientFactory) { _httpClient = clientFactory.CreateClient("auth"); }
+        public AuthService(IHttpClientFactory clientFactory)
+        {
+            _serviceClient = clientFactory.CreateClient("auth:service");
+            _apiClient = clientFactory.CreateClient("auth:api");
+        }
 
         public async Task<AuthResponse?> RegisterUser(AuthRequest request)
         {
@@ -23,7 +28,7 @@ namespace Enplace.Service.Services.API
             // request loop to deal w/ cold-start timeouts in the dependency chain
             while (attemptedRequests < _retryLimit)
             {
-                var result = await _httpClient.PostAsJsonAsync($"register", request);
+                var result = await _serviceClient.PostAsJsonAsync($"register", request);
                 if (result.StatusCode == System.Net.HttpStatusCode.Accepted)
                 {
                     return await JsonSerializer.DeserializeAsync<AuthResponse>(await result.Content.ReadAsStreamAsync());
@@ -48,7 +53,7 @@ namespace Enplace.Service.Services.API
             // request loop to deal w/ cold-start timeouts in the dependency chain
             while (attemptedRequests < _retryLimit)
             {
-                var result = await _httpClient.PostAsJsonAsync($"login", request);
+                var result = await _serviceClient.PostAsJsonAsync($"login", request);
                 if (result.StatusCode == System.Net.HttpStatusCode.Accepted)
                 {
                     return await JsonSerializer.DeserializeAsync<AuthResponse>(await result.Content.ReadAsStreamAsync());
@@ -65,6 +70,20 @@ namespace Enplace.Service.Services.API
                 }
             }
             return null;
+        }
+
+        public async Task<UserDTO> RegisterAPI(string token)
+        {
+            _apiClient.DefaultRequestHeaders.Authorization = new("Bearer", token);
+            var result = await _apiClient.PostAsJsonAsync("register", string.Empty);
+            return await JsonSerializer.DeserializeAsync<UserDTO>(await result.Content.ReadAsStreamAsync());
+        }
+
+        public async Task<UserDTO> AuthenticateAPI(string token)
+        {
+            _apiClient.DefaultRequestHeaders.Authorization = new("Bearer", token);
+            var result = await _apiClient.PostAsJsonAsync("login", string.Empty);
+            return await JsonSerializer.DeserializeAsync<UserDTO>(await result.Content.ReadAsStreamAsync()); ;
         }
 
         public bool IsTokenValid(string token)
