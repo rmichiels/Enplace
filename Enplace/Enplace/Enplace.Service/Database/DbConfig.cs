@@ -156,24 +156,20 @@ namespace Enplace.Service.Database
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_UserMenus_N1_Users");
+            });
 
-                entity.HasMany(d => d.Recipes).WithMany(p => p.Menus)
-                    .UsingEntity<Dictionary<string, object>>(
-                        "UserMenuRecipe",
-                        r => r.HasOne<Recipe>().WithMany()
-                            .HasForeignKey("RecipeId")
-                            .HasConstraintName("fk_UserMenuRecipes_N1_Recipes"),
-                        l => l.HasOne<UserMenu>().WithMany()
-                            .HasForeignKey("MenuId")
-                            .OnDelete(DeleteBehavior.ClientSetNull)
-                            .HasConstraintName("fk_UserMenuRecipes_N1_UserMenus"),
-                        j =>
-                        {
-                            j.HasKey("MenuId", "RecipeId").HasName("PK_MenuRecipes");
-                            j.ToTable("UserMenuRecipes");
-                            j.IndexerProperty<int>("MenuId").HasColumnName("MenuID");
-                            j.IndexerProperty<int>("RecipeId").HasColumnName("RecipeID");
-                        });
+            modelBuilder.Entity<UserMenuRecipe>(entity =>
+            {
+                entity.ToTable("UserMenuRecipes");
+                entity.HasKey(umr => new { umr.MenuID, umr.RecipeID });
+
+                entity.HasOne(umr => umr.Recipe)
+                .WithMany(r => r.MenuRecipes)
+                .HasForeignKey(umr => umr.RecipeID);
+
+                entity.HasOne(umr => umr.Menu)
+                .WithMany(m => m.MenuRecipes)
+                .HasForeignKey(umr => umr.MenuID);
             });
         }
     }

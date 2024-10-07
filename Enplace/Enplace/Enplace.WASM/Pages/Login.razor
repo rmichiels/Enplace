@@ -1,5 +1,5 @@
 ﻿@page "/login"
-@using Blazored.LocalStorage
+@attribute [AllowAnonymous]
 
 <div class="account-login">
     <EditForm Model="_model">
@@ -18,6 +18,8 @@
 @code {
     [Inject]
     public AuthService Auth { get; set; }
+    [Inject]
+    public AuthenticationStateProvider AuthProvider { get; set; }
 
     [Inject]
     public NavigationManager NavigationManager { get; set; }
@@ -67,6 +69,7 @@
 
 
             StateHasChanged();
+            AuthProvider.GetAuthenticationStateAsync();
             NavigationManager.NavigateTo("/");
         }
         else

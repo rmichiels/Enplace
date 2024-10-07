@@ -7,7 +7,7 @@ namespace Enplace.Service.DTO
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Description { get; set; }
+        public string? Description { get; set; } = string.Empty;
         public UserDTO Owner { get; set; }
         public int? ApproximateServingSize { get; set; }
         public int? ApproximateCookingTime { get; set; }

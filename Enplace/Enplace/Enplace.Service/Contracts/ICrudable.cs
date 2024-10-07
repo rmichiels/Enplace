@@ -11,6 +11,9 @@
         public Task<Exception?> Delete<TEntity>(TEntity entity) where TEntity : class, ILabeled;
         public Task<Exception?> Delete<TEntity>(string name) where TEntity : class, ILabeled;
         public Task<Exception?> Delete<TEntity>(int id) where TEntity : class, ILabeled;
+        public Task<IQueryable<TEntity>> Query<TEntity>() where TEntity : class, ILabeled;
+        public Task Link<TBridge>(TBridge bridge) where TBridge : class;
+        public Task UnLink<TBridge>(TBridge bridge) where TBridge : class;
     }
     public interface ICrudable<TEntity> where TEntity : class, ILabeled
     {
@@ -23,5 +26,6 @@
         public Task<List<TEntity>> GetAll();
         public Task<List<TEntity>> GetWhere(Func<TEntity, bool> predicate);
         public Task<Exception?> Update(TEntity entity);
+        public Task<IQueryable<TEntity>> Query();
     }
 }

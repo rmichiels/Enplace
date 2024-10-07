@@ -1,5 +1,6 @@
 ﻿using Enplace.Service.Contracts;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace Enplace.Service.Services
 {
@@ -93,6 +94,11 @@ namespace Enplace.Service.Services
         public async Task<List<TEntity>> GetWhere(Func<TEntity, bool> predicate)
         {
             return _context.Set<TEntity>().Where(predicate).OrderBy(e => e.Name).ToList();
+        }
+
+        public async Task<IQueryable<TEntity>> Query()
+        {
+            return _context.Set<TEntity>();
         }
 
         public async Task<Exception?> Update(TEntity entity)

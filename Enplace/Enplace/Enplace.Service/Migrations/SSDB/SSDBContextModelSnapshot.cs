@@ -298,6 +298,10 @@ namespace Enplace.Service.Migrations.SSDB
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("UserId")
                         .HasColumnType("int")
                         .HasColumnName("UserID");
@@ -312,20 +316,17 @@ namespace Enplace.Service.Migrations.SSDB
                     b.ToTable("UserMenus");
                 });
 
-            modelBuilder.Entity("UserMenuRecipe", b =>
+            modelBuilder.Entity("Enplace.Service.Entities.UserMenuRecipe", b =>
                 {
-                    b.Property<int>("MenuId")
-                        .HasColumnType("int")
-                        .HasColumnName("MenuID");
+                    b.Property<int>("MenuID")
+                        .HasColumnType("int");
 
-                    b.Property<int>("RecipeId")
-                        .HasColumnType("int")
-                        .HasColumnName("RecipeID");
+                    b.Property<int>("RecipeID")
+                        .HasColumnType("int");
 
-                    b.HasKey("MenuId", "RecipeId")
-                        .HasName("PK_MenuRecipes");
+                    b.HasKey("MenuID", "RecipeID");
 
-                    b.HasIndex("RecipeId");
+                    b.HasIndex("RecipeID");
 
                     b.ToTable("UserMenuRecipes", (string)null);
                 });
@@ -444,20 +445,23 @@ namespace Enplace.Service.Migrations.SSDB
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("UserMenuRecipe", b =>
+            modelBuilder.Entity("Enplace.Service.Entities.UserMenuRecipe", b =>
                 {
-                    b.HasOne("Enplace.Service.Entities.UserMenu", null)
-                        .WithMany()
-                        .HasForeignKey("MenuId")
-                        .IsRequired()
-                        .HasConstraintName("fk_UserMenuRecipes_N1_UserMenus");
-
-                    b.HasOne("Enplace.Service.Entities.Recipe", null)
-                        .WithMany()
-                        .HasForeignKey("RecipeId")
+                    b.HasOne("Enplace.Service.Entities.UserMenu", "Menu")
+                        .WithMany("MenuRecipes")
+                        .HasForeignKey("MenuID")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_UserMenuRecipes_N1_Recipes");
+                        .IsRequired();
+
+                    b.HasOne("Enplace.Service.Entities.Recipe", "Recipe")
+                        .WithMany("MenuRecipes")
+                        .HasForeignKey("RecipeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Menu");
+
+                    b.Navigation("Recipe");
                 });
 
             modelBuilder.Entity("UserRecipe", b =>
@@ -493,6 +497,8 @@ namespace Enplace.Service.Migrations.SSDB
 
             modelBuilder.Entity("Enplace.Service.Entities.Recipe", b =>
                 {
+                    b.Navigation("MenuRecipes");
+
                     b.Navigation("RecipeImages");
 
                     b.Navigation("RecipeIngredients");
@@ -510,6 +516,11 @@ namespace Enplace.Service.Migrations.SSDB
                     b.Navigation("Recipes");
 
                     b.Navigation("UserMenus");
+                });
+
+            modelBuilder.Entity("Enplace.Service.Entities.UserMenu", b =>
+                {
+                    b.Navigation("MenuRecipes");
                 });
 #pragma warning restore 612, 618
         }

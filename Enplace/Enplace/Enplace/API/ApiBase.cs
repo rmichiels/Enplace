@@ -8,7 +8,7 @@ namespace Enplace.API
     public class ApiBase<TEntity, TDTO> : ControllerBase where TEntity : class, ILabeled where TDTO : class, ILabeled
     {
         protected ICrudable _service { get; set; }
-        private readonly IModelConverter<TEntity, TDTO> _converter;
+        protected readonly IModelConverter<TEntity, TDTO> _converter;
         public ApiBase(ICrudable crudService, IModelConverter<TEntity, TDTO> modelConverter)
         {
             _service = crudService;
@@ -16,7 +16,7 @@ namespace Enplace.API
         }
         [Route("list")]
         [HttpGet]
-        public async Task<ICollection<TDTO>> GetAll()
+        public virtual async Task<ICollection<TDTO>> GetAll()
         {
             List<TDTO> results = [];
             var intermediary = await _service.GetAll<TEntity>();
@@ -75,7 +75,7 @@ namespace Enplace.API
             }
         }
         [HttpPatch]
-        public async Task<Exception?> Update(TDTO DTO)
+        public virtual async Task<Exception?> Update(TDTO DTO)
         {
             var entity = await _converter.Convert(DTO);
             if (entity is not null)

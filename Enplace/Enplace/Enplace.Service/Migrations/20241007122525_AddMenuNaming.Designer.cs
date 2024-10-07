@@ -3,6 +3,7 @@ using System;
 using Enplace.Service.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Enplace.Service.Migrations
 {
     [DbContext(typeof(LiteDBContext))]
-    partial class LiteDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241007122525_AddMenuNaming")]
+    partial class AddMenuNaming
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.7");
@@ -291,17 +294,20 @@ namespace Enplace.Service.Migrations
                     b.ToTable("UserMenus");
                 });
 
-            modelBuilder.Entity("Enplace.Service.Entities.UserMenuRecipe", b =>
+            modelBuilder.Entity("UserMenuRecipe", b =>
                 {
-                    b.Property<int>("MenuID")
-                        .HasColumnType("INTEGER");
+                    b.Property<int>("MenuId")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("MenuID");
 
-                    b.Property<int>("RecipeID")
-                        .HasColumnType("INTEGER");
+                    b.Property<int>("RecipeId")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("RecipeID");
 
-                    b.HasKey("MenuID", "RecipeID");
+                    b.HasKey("MenuId", "RecipeId")
+                        .HasName("PK_MenuRecipes");
 
-                    b.HasIndex("RecipeID");
+                    b.HasIndex("RecipeId");
 
                     b.ToTable("UserMenuRecipes", (string)null);
                 });
@@ -420,23 +426,20 @@ namespace Enplace.Service.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Enplace.Service.Entities.UserMenuRecipe", b =>
+            modelBuilder.Entity("UserMenuRecipe", b =>
                 {
-                    b.HasOne("Enplace.Service.Entities.UserMenu", "Menu")
-                        .WithMany("MenuRecipes")
-                        .HasForeignKey("MenuID")
+                    b.HasOne("Enplace.Service.Entities.UserMenu", null)
+                        .WithMany()
+                        .HasForeignKey("MenuId")
+                        .IsRequired()
+                        .HasConstraintName("fk_UserMenuRecipes_N1_UserMenus");
+
+                    b.HasOne("Enplace.Service.Entities.Recipe", null)
+                        .WithMany()
+                        .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Enplace.Service.Entities.Recipe", "Recipe")
-                        .WithMany("MenuRecipes")
-                        .HasForeignKey("RecipeID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Menu");
-
-                    b.Navigation("Recipe");
+                        .IsRequired()
+                        .HasConstraintName("fk_UserMenuRecipes_N1_Recipes");
                 });
 
             modelBuilder.Entity("UserRecipe", b =>
@@ -472,8 +475,6 @@ namespace Enplace.Service.Migrations
 
             modelBuilder.Entity("Enplace.Service.Entities.Recipe", b =>
                 {
-                    b.Navigation("MenuRecipes");
-
                     b.Navigation("RecipeImages");
 
                     b.Navigation("RecipeIngredients");
@@ -491,11 +492,6 @@ namespace Enplace.Service.Migrations
                     b.Navigation("Recipes");
 
                     b.Navigation("UserMenus");
-                });
-
-            modelBuilder.Entity("Enplace.Service.Entities.UserMenu", b =>
-                {
-                    b.Navigation("MenuRecipes");
                 });
 #pragma warning restore 612, 618
         }

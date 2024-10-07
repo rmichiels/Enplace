@@ -1,11 +1,30 @@
-﻿<h3>MenuCard</h3>
+﻿<article class="menu-card @State @Class" @onclick="() => OnMenuSelected.InvokeAsync(Menu)">
+    @switch (State)
+    {
+        case ComponentState.Create:
+            <button class="btn-icon icon-large" @onclick="() => {}">
+                <Enplace.Library.Icons.Add>
 
+                </Enplace.Library.Icons.Add>
+            </button>
+            break;
+        case ComponentState.Details:
+            <span class="subtitle">@Menu?.Name</span>
+            break;
+    }
+</article>
 @code {
     [Parameter]
-    public MenuDTO Menu { get; set; }
+    public MenuDTO Menu { get; set; } = new();
     [Parameter]
     public EventCallback<MenuDTO> MenuChanged { get; set; }
 
     [Parameter]
+    public ComponentState State { get; set; } = ComponentState.Details;
+
+    [Parameter]
     public EventCallback<MenuDTO> OnMenuSelected { get; set; }
+
+    [Parameter]
+    public string Class { get; set; } = string.Empty;
 }

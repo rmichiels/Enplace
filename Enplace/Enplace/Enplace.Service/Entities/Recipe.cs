@@ -1,4 +1,5 @@
 ﻿using Enplace.Service.Contracts;
+using System.Text.Json.Serialization;
 
 namespace Enplace.Service.Entities;
 
@@ -22,8 +23,8 @@ public partial class Recipe : ILabeled
 
     public virtual ICollection<RecipeStep> RecipeSteps { get; set; } = [];
     public virtual ICollection<RecipeImage> RecipeImages { get; set; } = [];
-
-    public virtual ICollection<UserMenu> Menus { get; set; } = [];
-
+    [JsonIgnore]
+    public virtual ICollection<UserMenuRecipe> MenuRecipes { get; set; } = [];
+    [JsonIgnore]
     public virtual ICollection<User> Users { get; set; } = [];
 }

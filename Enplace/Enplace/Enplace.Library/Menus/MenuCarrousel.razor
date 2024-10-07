@@ -1,20 +1,54 @@
 ﻿@using Enplace.Service.Services.Managers
+@using System.Globalization
+
 <section class="menu-carrousel">
+    <MenuCard State="ComponentState.Create" />
     @foreach (MenuDTO menu in Menus)
     {
-        <MenuCard @bind-Menu="@Menus[Menus.IndexOf(menu)]" OnMenuSelected="(m) => SelectMenu(m)" />
+        <MenuCard @bind-Menu="@Menus[Menus.IndexOf(menu)]" OnMenuSelected="(m) => SelectMenu(m)" State="@ComponentState.Details" Class="@(menu == _selectedMenu ? "ActiveMenu" : string.Empty)" />
     }
 </section>
 
 @code {
+    [Inject]
+    public MenuAPI API { get; set; }
+
     public List<MenuDTO> Menus { get; set; } = [];
+    private int _currentWeek;
+    private MenuDTO _selectedMenu;
 
     protected override async Task OnInitializedAsync()
     {
+        var user = EnplaceContext.User;
+        Menus = await API.GetAll();
+
+        _currentWeek = CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(DateTime.Now,
+           CultureInfo.CurrentCulture.DateTimeFormat.CalendarWeekRule,
+           CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek
+       );
+
+        // Check if current collection of menus
+        // Contains a menu for the current week
+        if (!Menus.Any(m => m.Name == $"{DateTime.Now.Year}W{_currentWeek}U{user.Id}"))
+        {
+            var result = await API.Add(new()
+                {
+                    Name = $"{DateTime.Now.Year}W{_currentWeek}U{user.Id}",
+                    UserId = user.Id,
+                    Week = _currentWeek
+                });
+            // refresh menus after creating current weekly menu
+            // ensures menu id is synced w/ db
+            Menus = await API.GetAll();
+        }
+        _selectedMenu = Menus.First();
+        EventManager.MenuSelection.TriggerEvent(_selectedMenu);
     }
 
     protected async Task SelectMenu(MenuDTO menu)
     {
+        _selectedMenu = menu;
         EventManager.MenuSelection.TriggerEvent(menu);
+        StateHasChanged();
     }
 }

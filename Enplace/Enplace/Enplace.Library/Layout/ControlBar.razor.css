@@ -35,7 +35,7 @@
         max-width: 360px;
     }
 
-        .ctrl-bar container {
+        .ctrl-bar .container {
             flex-direction: row;
         }
 }

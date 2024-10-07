@@ -1,4 +1,5 @@
-﻿@inherits RecipeShardBase
+﻿@using Enplace.Service.Services.Managers
+@inherits RecipeShardBase
 @rendermode RenderMode.InteractiveAuto
 
 <div class="recipe-shard @Recipe.Category.Name">
@@ -8,7 +9,7 @@
             <div class="recipe-shard-body shard-create">
                 <button class="btn-icon icon-large" @onclick="() => ShowRecipeCreator()">
                     <Enplace.Library.Icons.Add>
-                        
+
                     </Enplace.Library.Icons.Add>
                 </button>
             </div>
@@ -34,6 +35,9 @@
                         <Enplace.Library.Icons.Details />
                     </button>
                 }
+                <button class="btn-icon" @onclick="() => ShowMenuSelector()">
+                    <Enplace.Library.Icons.AddRecipe />
+                </button>
                 <button class="btn-icon">
                     <Enplace.Library.Icons.Heart />
                 </button>

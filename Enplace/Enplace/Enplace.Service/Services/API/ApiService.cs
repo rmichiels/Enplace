@@ -6,19 +6,11 @@ namespace Enplace.Service.Services.API
 {
     public class ApiService<TEntity> where TEntity : class, ILabeled
     {
-        private readonly HttpClient _client;
-        public ApiService(IHttpClientFactory clientFactory, ILocalStorageService storageService)
+        protected readonly HttpClient _client;
+        public ApiService(IHttpClientFactory clientFactory)
         {
-            _client = clientFactory.CreateClient("data");
-            if (_client.DefaultRequestHeaders.Authorization is null)
-            {
-                /*
-                var token = storageService.GetItemAsStringAsync("skid.enplace").AsTask().Result;
-                if (token is not null)
-                {
-                    _client.DefaultRequestHeaders.Authorization = new("Bearer", token);
-                }*/
-            }
+            string clientName = $"data:{typeof(TEntity).Name}";
+            _client = clientFactory.CreateClient(clientName);
         }
         public async Task<Exception?> Add(TEntity entity)
         {
@@ -72,9 +64,9 @@ namespace Enplace.Service.Services.API
             return await _client.GetFromJsonAsync<TEntity>($" byname/ {name}");
         }
 
-        public async Task<ICollection<TEntity>> GetAll()
+        public async Task<List<TEntity>> GetAll()
         {
-            var result = await _client.GetFromJsonAsync<ICollection<TEntity>>($"list");
+            var result = await _client.GetFromJsonAsync<List<TEntity>>($"list") ?? [];
             return result;
         }
 

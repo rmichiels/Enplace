@@ -1,5 +1,7 @@
 ﻿@page "/"
 @page "/dashboard"
+@attribute [Authorize]
+
 @using Enplace.Service.Services.Managers
 
 <div id="user-dashboard" class="user-dashboard">
@@ -9,23 +11,40 @@
                 what will you be cooking today {username}?
             </p>
         </aside>
+        <header>
+            <span class="subtitle">Your menus</span>
+        </header>
         <Enplace.Library.Menus.MenuCarrousel />
     </section>
-    <section class="section-recipe">
-        <RecipeShard Recipe="_newRecipe" State="ComponentState.Create" />
-        @foreach (RecipeDTO recipe in _recipes)
-        {
-            <RecipeShard Recipe="recipe" State="ComponentState.Details" />
-        }
+    <section class="flex-col flex-start">
+        <span class="subtitle">On the menu...</span>
+        <section class="section-recipe">
+            @foreach (RecipeDTO recipe in _selectedMenu.MenuRecipes)
+            {
+                <RecipeShard Recipe="recipe" State="ComponentState.Details" />
+            }
+        </section>
     </section>
     <section class="section-inspiration">
+        <span class="subtitle">Pick up where you left off!</span>
+        <section class="section-recipe">
+            <RecipeShard Recipe="_newRecipe" State="ComponentState.Create" />
+            @foreach (RecipeDTO recipe in _recipes)
+            {
+                <RecipeShard Recipe="recipe" State="ComponentState.Details" />
+            }
+        </section>
     </section>
 </div>
 
 @code {
     [Inject]
     public ApiService<RecipeDTO> Service { get; set; }
+    [Inject]
+    public MenuAPI MenuAPI { get; set; }
+
     private List<RecipeDTO> _recipes = [];
+    private MenuDTO _selectedMenu = new();
     private RecipeDTO _newRecipe = new() { Category = new() { Id = 1, Name = "Standard" } };
 
     protected override async Task OnInitializedAsync()
@@ -42,12 +61,29 @@
         Console.WriteLine("Triggered Dashboard Refresh...");
         var recipeResult = await Service.GetAll();
         _recipes = recipeResult.ToList();
+        _selectedMenu.MenuRecipes = await MenuAPI.GetMenuRecipes(_selectedMenu.Id);
         StateHasChanged();
         Console.WriteLine("...Dashboard Refreshed.");
     }
 
     private async Task MenuSelected(MenuDTO menu)
     {
+        _selectedMenu = menu;
+        _selectedMenu.MenuRecipes = await MenuAPI.GetMenuRecipes(menu.Id);
+        StateHasChanged();
+    }
 
+    private async Task AddRecipeToMenu(RecipeDTO recipe)
+    {
+        if (_selectedMenu.MenuRecipes.Contains(recipe))
+        {
+            _selectedMenu.MenuRecipes.Remove(recipe);
+        }
+        else
+        {
+            _selectedMenu.MenuRecipes.Add(recipe);
+        }
+        var response = await MenuAPI.Update(_selectedMenu);
+        StateHasChanged();
     }
 }

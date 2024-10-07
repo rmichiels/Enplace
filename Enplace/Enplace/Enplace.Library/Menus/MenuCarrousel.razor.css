@@ -1,3 +1,4 @@
-﻿body
-{
+﻿.menu-carrousel {
+    display: flex;
+    gap: 1rem;
 }

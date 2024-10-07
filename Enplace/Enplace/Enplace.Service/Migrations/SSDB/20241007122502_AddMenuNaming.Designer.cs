@@ -3,32 +3,42 @@ using System;
 using Enplace.Service.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Enplace.Service.Migrations
+namespace Enplace.Service.Migrations.SSDB
 {
-    [DbContext(typeof(LiteDBContext))]
-    partial class LiteDBContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(SSDBContext))]
+    [Migration("20241007122502_AddMenuNaming")]
+    partial class AddMenuNaming
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.7");
+            modelBuilder
+                .HasAnnotation("ProductVersion", "8.0.7")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("Enplace.Service.Entities.DeltaStore", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("int")
                         .HasColumnName("ID");
 
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
                     b.Property<int?>("Command")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<int>("Target")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -39,17 +49,19 @@ namespace Enplace.Service.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("int")
                         .HasColumnName("ID");
 
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
                     b.Property<int>("IngredientCategoryId")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("int")
                         .HasColumnName("IngredientCategoryID");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
@@ -65,13 +77,15 @@ namespace Enplace.Service.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("int")
                         .HasColumnName("ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -85,13 +99,15 @@ namespace Enplace.Service.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("int")
                         .HasColumnName("ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -105,28 +121,30 @@ namespace Enplace.Service.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("int")
                         .HasColumnName("ID");
 
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
                     b.Property<int?>("ApproximateCookingTime")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<int?>("ApproximateServingSize")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<string>("Comment")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("OwnerUserId")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("int")
                         .HasColumnName("OwnerUserID");
 
                     b.Property<int>("RecipeCategoryId")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("int")
                         .HasColumnName("RecipeCategoryID");
 
                     b.HasKey("Id");
@@ -142,12 +160,14 @@ namespace Enplace.Service.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("int")
                         .HasColumnName("ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -158,25 +178,27 @@ namespace Enplace.Service.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<byte[]>("Image")
                         .IsRequired()
-                        .HasColumnType("BLOB");
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("MIME")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("RecipeId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<int>("Size")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -188,18 +210,18 @@ namespace Enplace.Service.Migrations
             modelBuilder.Entity("Enplace.Service.Entities.RecipeIngredient", b =>
                 {
                     b.Property<int>("RecipeId")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("int")
                         .HasColumnName("RecipeID");
 
                     b.Property<int>("IngredientId")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("int")
                         .HasColumnName("IngredientID");
 
                     b.Property<string>("Comment")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("MeasurementId")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("int")
                         .HasColumnName("MeasurementID");
 
                     b.Property<decimal>("Quantity")
@@ -218,20 +240,22 @@ namespace Enplace.Service.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("int")
                         .HasColumnName("ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("RecipeId")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("int")
                         .HasColumnName("RecipeID");
 
                     b.HasKey("Id");
@@ -245,15 +269,17 @@ namespace Enplace.Service.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("int")
                         .HasColumnName("ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<Guid>("SKID")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -270,19 +296,21 @@ namespace Enplace.Service.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("int")
                         .HasColumnName("ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("int")
                         .HasColumnName("UserID");
 
                     b.Property<int>("Week")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -291,17 +319,20 @@ namespace Enplace.Service.Migrations
                     b.ToTable("UserMenus");
                 });
 
-            modelBuilder.Entity("Enplace.Service.Entities.UserMenuRecipe", b =>
+            modelBuilder.Entity("UserMenuRecipe", b =>
                 {
-                    b.Property<int>("MenuID")
-                        .HasColumnType("INTEGER");
+                    b.Property<int>("MenuId")
+                        .HasColumnType("int")
+                        .HasColumnName("MenuID");
 
-                    b.Property<int>("RecipeID")
-                        .HasColumnType("INTEGER");
+                    b.Property<int>("RecipeId")
+                        .HasColumnType("int")
+                        .HasColumnName("RecipeID");
 
-                    b.HasKey("MenuID", "RecipeID");
+                    b.HasKey("MenuId", "RecipeId")
+                        .HasName("PK_MenuRecipes");
 
-                    b.HasIndex("RecipeID");
+                    b.HasIndex("RecipeId");
 
                     b.ToTable("UserMenuRecipes", (string)null);
                 });
@@ -309,11 +340,11 @@ namespace Enplace.Service.Migrations
             modelBuilder.Entity("UserRecipe", b =>
                 {
                     b.Property<int>("UserId")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("int")
                         .HasColumnName("UserID");
 
                     b.Property<int>("RecipeId")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("int")
                         .HasColumnName("RecipeID");
 
                     b.HasKey("UserId", "RecipeId");
@@ -420,23 +451,20 @@ namespace Enplace.Service.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Enplace.Service.Entities.UserMenuRecipe", b =>
+            modelBuilder.Entity("UserMenuRecipe", b =>
                 {
-                    b.HasOne("Enplace.Service.Entities.UserMenu", "Menu")
-                        .WithMany("MenuRecipes")
-                        .HasForeignKey("MenuID")
+                    b.HasOne("Enplace.Service.Entities.UserMenu", null)
+                        .WithMany()
+                        .HasForeignKey("MenuId")
+                        .IsRequired()
+                        .HasConstraintName("fk_UserMenuRecipes_N1_UserMenus");
+
+                    b.HasOne("Enplace.Service.Entities.Recipe", null)
+                        .WithMany()
+                        .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Enplace.Service.Entities.Recipe", "Recipe")
-                        .WithMany("MenuRecipes")
-                        .HasForeignKey("RecipeID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Menu");
-
-                    b.Navigation("Recipe");
+                        .IsRequired()
+                        .HasConstraintName("fk_UserMenuRecipes_N1_Recipes");
                 });
 
             modelBuilder.Entity("UserRecipe", b =>
@@ -472,8 +500,6 @@ namespace Enplace.Service.Migrations
 
             modelBuilder.Entity("Enplace.Service.Entities.Recipe", b =>
                 {
-                    b.Navigation("MenuRecipes");
-
                     b.Navigation("RecipeImages");
 
                     b.Navigation("RecipeIngredients");
@@ -491,11 +517,6 @@ namespace Enplace.Service.Migrations
                     b.Navigation("Recipes");
 
                     b.Navigation("UserMenus");
-                });
-
-            modelBuilder.Entity("Enplace.Service.Entities.UserMenu", b =>
-                {
-                    b.Navigation("MenuRecipes");
                 });
 #pragma warning restore 612, 618
         }

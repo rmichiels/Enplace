@@ -1,5 +1,6 @@
 ﻿using Blazored.Modal;
 using Blazored.Modal.Services;
+using Enplace.Library.Menus;
 using Enplace.Service.DTO;
 using Microsoft.AspNetCore.Components;
 
@@ -26,6 +27,17 @@ namespace Enplace.Library.Recipes
                 .Add(nameof(RecipeEditor.State), ComponentState.Create)
                 .Add(nameof(RecipeEditor.Action), "create");
             Modal.Show<RecipeEditor>("Add New Recipe", modalParams);
+        }
+
+        public void ShowMenuSelector()
+        {
+            var modalParams = new ModalParameters()
+                .Add(nameof(MenuSelector.Recipe), Recipe);
+            var options = new ModalOptions()
+            {
+                Size = ModalSize.Small,
+            };
+            Modal.Show<MenuSelector>("Select menu", modalParams, options);
         }
 
         protected string _imgShardB64 => $"data:{Recipe.RecipeImages.FirstOrDefault(img => img.Size == Service.ImageSize.Header)?.MIME ?? string.Empty};base64," +
