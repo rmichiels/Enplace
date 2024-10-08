@@ -1,4 +1,6 @@
 ﻿.menu-carrousel {
     display: flex;
     gap: 1rem;
+    width: min-content;
+    min-height: 0;
 }

@@ -60,17 +60,38 @@ namespace Enplace.Service.Services.Managers
 
         public async Task<Exception?> Delete<TEntity>(TEntity entity) where TEntity : class, ILabeled
         {
-            throw new NotImplementedException();
+            Exception? exception = null;
+            foreach (var kvp in _contexts)
+            {
+                var repo = new GenericRepository<TEntity>(kvp.Value);
+                exception = await repo.Delete(entity);
+                if (exception != null) { return exception; }
+            }
+            return exception;
         }
 
-        public Task<Exception?> Delete<TEntity>(string name) where TEntity : class, ILabeled
+        public async Task<Exception?> Delete<TEntity>(string name) where TEntity : class, ILabeled
         {
-            throw new NotImplementedException();
+            Exception? exception = null;
+            foreach (var kvp in _contexts)
+            {
+                var repo = new GenericRepository<TEntity>(kvp.Value);
+                exception = await repo.Delete(name);
+                if (exception != null) { return exception; }
+            }
+            return exception;
         }
 
-        public Task<Exception?> Delete<TEntity>(int id) where TEntity : class, ILabeled
+        public async Task<Exception?> Delete<TEntity>(int id) where TEntity : class, ILabeled
         {
-            throw new NotImplementedException();
+            Exception? exception = null;
+            foreach (var kvp in _contexts)
+            {
+                var repo = new GenericRepository<TEntity>(kvp.Value);
+                exception = await repo.Delete(id);
+                if (exception != null) { return exception; }
+            }
+            return exception;
         }
 
         public async Task<TEntity?> Get<TEntity>(int id) where TEntity : class, ILabeled

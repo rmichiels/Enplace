@@ -21,19 +21,21 @@
         <section class="section-recipe">
             @foreach (RecipeDTO recipe in _selectedMenu.MenuRecipes)
             {
-                <RecipeShard Recipe="recipe" State="ComponentState.Details" />
+                <RecipeCard Item="recipe" State="ComponentState.Details" />
             }
         </section>
     </section>
     <section class="section-inspiration">
         <span class="subtitle">Pick up where you left off!</span>
-        <section class="section-recipe">
-            <RecipeShard Recipe="_newRecipe" State="ComponentState.Create" />
+
+       @*  <section class="section-recipe">
+            <RecipeCard Item="_newRecipe" State="ComponentState.Create" />
             @foreach (RecipeDTO recipe in _recipes)
             {
-                <RecipeShard Recipe="recipe" State="ComponentState.Details" />
+                <RecipeCard Item="recipe" State="ComponentState.Details" />
             }
-        </section>
+        </section> *@
+        <CachedCarrousel TItem="RecipeDTO" TComponent="RecipeCard" Class="section-recipe" />
     </section>
 </div>
 
@@ -70,6 +72,7 @@
     {
         _selectedMenu = menu;
         _selectedMenu.MenuRecipes = await MenuAPI.GetMenuRecipes(menu.Id);
+        EnplaceContext.Menu = _selectedMenu;
         StateHasChanged();
     }
 

@@ -1,4 +1,6 @@
 ﻿@using Enplace.Library.Icons
+@inject NavigationManager nav
+
 
 <div class="ctrl-bar">
     <Enplace.Library.Shapes.SlantedCorner Class="corner-a" />
@@ -6,19 +8,19 @@
         <NavLink class="a-icon" href="" Match="NavLinkMatch.All">
             <Home />
         </NavLink>
-        <button class="btn-icon">
+        <NavLinkOverride class="a-icon" href="/groceries" Match="NavLinkMatch.Prefix" @onclick="@(() => nav.NavigateTo($"/groceries/{EnplaceContext.Menu?.Id}"))">
             <Groceries />
-        </button>
-        <button class="btn-icon">
+        </NavLinkOverride>
+        <button class="btn-icon" disabled>
             <Recipe />
         </button>
-        <button class="btn-icon">
+        <button class="btn-icon" disabled>
             <RecipeMenu />
         </button>
-        <button class="btn-icon">
+        <button class="btn-icon" disabled>
             <Inspiration />
         </button>
-        <button class="btn-icon">
+        <button class="btn-icon" disabled>
             <UserSettings />
         </button>
     </div>

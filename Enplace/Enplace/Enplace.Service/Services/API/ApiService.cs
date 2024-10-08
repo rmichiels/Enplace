@@ -29,7 +29,7 @@ namespace Enplace.Service.Services.API
         {
             try
             {
-                await _client.DeleteAsync($"byid/{id}");
+                await _client.DeleteAsync($"{id}");
                 return null;
             }
             catch (Exception ex)
@@ -42,7 +42,7 @@ namespace Enplace.Service.Services.API
         {
             try
             {
-                await _client.DeleteAsync($"byname/{name}");
+                await _client.DeleteAsync($"{name}");
                 return null;
             }
             catch (Exception ex)
@@ -51,17 +51,13 @@ namespace Enplace.Service.Services.API
             }
         }
 
-        public async Task<Exception?> Delete(TEntity entity)
-        {
-            throw new NotImplementedException();
-        }
         public async Task<TEntity?> Get(int id)
         {
-            return await _client.GetFromJsonAsync<TEntity>($"byid/{id}");
+            return await _client.GetFromJsonAsync<TEntity>($"{id}");
         }
         public async Task<TEntity?> Get(string name)
         {
-            return await _client.GetFromJsonAsync<TEntity>($" byname/ {name}");
+            return await _client.GetFromJsonAsync<TEntity>($"{name}");
         }
 
         public async Task<List<TEntity>> GetAll()

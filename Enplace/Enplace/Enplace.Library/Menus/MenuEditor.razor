@@ -1,0 +1,40 @@
+﻿@using Blazored.Modal
+@using Enplace.Service.Services.Managers
+<article class="menu-editor">
+    @switch (State)
+    {
+        case ComponentState.Details:
+            <h1>oopsie</h1>
+            break;
+        case ComponentState.Create:
+            <EditForm Model="Menu" class="flex-row flex-start" OnSubmit="CreateRecipe">
+                <InputText @bind-Value="Menu.Name" />
+                <button class="btn-icon" type="submit">
+                    <Enplace.Library.Icons.Add />
+                </button>
+            </EditForm>
+            break;
+    }
+</article>
+
+@code {
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
+    private async Task Close() => await BlazoredModal.CloseAsync();
+
+    [Inject]
+    public MenuAPI API { get; set; }
+
+    [Parameter]
+    public ComponentState State { get; set; } = ComponentState.Details;
+
+    [Parameter]
+    public MenuDTO Menu { get; set; } = new();
+
+    public async Task CreateRecipe()
+    {
+        Menu.UserId = EnplaceContext.User.Id;
+        await API.Add(Menu);
+        EventManager.MenuCreated.TriggerEvent(Menu);
+        await Close();
+    }
+}

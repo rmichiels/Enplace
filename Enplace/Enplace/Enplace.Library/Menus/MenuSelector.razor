@@ -1,9 +1,9 @@
 ﻿@using Blazored.Modal
 @using Enplace.Service.Services.Managers
 
-<article class="menu-selector">
+<article class="menu-selector flex-row flex-start">
     <TGLSelect Field="Menu.Id" FieldChanged="(i) => SelectMenu(i)" Options="_menuOptions.ToList<ILabeled>()" />
-    <button class="btn-icn" @onclick="() => AddRecipeToMenu()">
+    <button class="btn-icon" @onclick="() => AddRecipeToMenu()">
         <Enplace.Library.Icons.Add />
     </button>
 </article>

@@ -18,6 +18,7 @@ namespace Enplace.Service.Services.Managers
         }
 
         public static AsyncEventManager<MenuDTO> MenuSelection { get; set; } = new();
+        public static AsyncEventManager<MenuDTO> MenuCreated { get; set; } = new();
         public static event Action<string, NotificationType> OnNotification;
     }
 

@@ -1,0 +1,71 @@
+﻿@using Enplace.Service.Services.Managers
+@implements IAsyncDisposable
+@typeparam TItem where TItem : class, ILabeled
+@typeparam TComponent where TComponent : BaseTile<TItem>
+
+<section class="generic-carrousel @_class">
+    @if (ShowCreationTile)
+    {
+        <DynamicComponent Type="typeof(TComponent)" Parameters="@(new Dictionary<string, object>(){{"State", ComponentState.Create}})" />
+    }
+    @foreach (TItem item in Items)
+    {
+        <DynamicComponent Type="typeof(TComponent)"
+                          Parameters="@(new Dictionary<string, object>()
+                            {
+                                {"State", ComponentState.Details},
+                                {"Item", Items[Items.IndexOf(item)]}
+                            }
+                )" />
+    }
+</section>
+
+@code {
+    [Inject]
+    public ApiService<TItem> API { get; set; }
+    [Inject]
+    public AsyncEventManager<TItem> EventManager { get; set; }
+
+    [Parameter]
+    public string Class
+    {
+        get => _class;
+        set
+        {
+            _class = value;
+            StateHasChanged();
+        }
+    }
+    private string _class = string.Empty;
+
+    [Parameter]
+    public bool ShowCreationTile { get; set; } = true;
+
+    public static List<TItem> Items { get; set; } = [];
+    private static DateTime _timeStamp = DateTime.Now;
+    public static readonly double MinutesToCacheInvalidation = 10;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var freshStamp = DateTime.Now;
+        // if intermediate stamp exceeds cached stamp by n time
+        // or there are 0 cached items
+        // refresh collection
+        if (freshStamp > _timeStamp.AddMinutes(MinutesToCacheInvalidation) || Items.Count == 0)
+        {
+            Console.WriteLine($"Refreshing Cached {typeof(TItem).Name} Carrousel...");
+            Items = await API.GetAll();
+            _timeStamp = freshStamp;
+        }
+        EventManager.OnEventTriggered += ForceCarrouselRefresh;
+    }
+    public async System.Threading.Tasks.ValueTask DisposeAsync()
+    {
+        EventManager.OnEventTriggered -= ForceCarrouselRefresh;
+    }
+
+    private async Task ForceCarrouselRefresh(TItem item)
+    {
+        Items = await API.GetAll();
+    }
+}

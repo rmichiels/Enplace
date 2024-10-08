@@ -1,3 +1,9 @@
+:root {
+    --gap-s: 0.5rem;
+    --gap-m: 1rem;
+    --border-radius: 10px;
+}
+
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
@@ -20,14 +26,37 @@ html, body {
     --color-base-alt: black !important;
 }
 
+.Aromatic {
+    --color-category-underline: #88bcb3;
+}
+
+.Carbohydrate {
+    --color-category-underline: #ffeacf;
+}
+
+.Fruit {
+    --color-category-underline: #ff8888;
+}
+
+.Protein {
+    --color-category-underline: #c35256;
+}
+
+.Seasoning {
+    --color-category-underline: #c3fcf1;
+}
+
+.xb-category {
+    border: 2px solid var(--color-category-underline);
+}
+
 .pill {
     display: flex;
     justify-content: space-between;
-    gap: 0.25rem;
+    gap: var(--gap-s);
     background-color: var(--color-accent);
-    border-radius: 10px;
-    padding: 0.25rem 0.5rem 0.25rem 0.5rem;
-    width: 60px;
+    border-radius: var(--border-radius);
+    padding: 0.4rem 0.7rem 0.4rem 0.7rem;
     align-items: center;
     color: var(--color-base);
 }
@@ -101,6 +130,7 @@ html, body {
     .icon-large svg {
         width: calc(24px * 8);
         height: calc(24px * 8);
+        max-width: 100%;
     }
 
 .tgl {
@@ -254,8 +284,24 @@ code {
     justify-content: space-around;
 }
 
+.gap-s {
+    gap: var(--gap-s)
+}
+
+.gap-m {
+    gap: var(--gap-m)
+}
+
 .subtitle {
     margin: 0;
     padding: 0;
     font-size: 1.2rem;
+    width: fit-content;
+}
+
+.section-recipe {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    flex: 1;
 }

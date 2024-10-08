@@ -5,6 +5,7 @@ using Enplace.Service;
 using Enplace.Service.DTO;
 using Enplace.Service.Migrations;
 using Enplace.Service.Services.API;
+using Enplace.Service.Services.Managers;
 using Enplace.WASM;
 using Enplace.WASM.Services;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -14,6 +15,9 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
+
+// Event Managers
+builder.Services.AddSingleton<AsyncEventManager<RecipeDTO>>();
 
 // Base services
 builder.Services.AddSingleton<ClientConfigurationMap>();
@@ -28,6 +32,10 @@ builder.Services.AddScoped<AuthenticationStateProvider, SwissknifeAuthStateProvi
 // Top services
 builder.Services.AddSingleton<ConfigurationService>();
 builder.Services.AddScoped<ApiService<RecipeDTO>>();
+builder.Services.AddScoped<ApiService<MenuDTO>>();
+
+// besides the base implementation
+// MenuAPI has some unique methods
 builder.Services.AddScoped<MenuAPI>();
 builder.Services.AddScoped<IResource<IngredientDTO>, IngredientResourceService>();
 builder.Services.AddScoped<AuthService>();

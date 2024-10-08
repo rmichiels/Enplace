@@ -22,11 +22,13 @@ main {
     flex-direction: column;
     gap: 1rem;
     flex: 1;
+    min-width: 0;
 }
 
 article {
     flex: 1;
-    min-height:0;
+    min-height: 0;
+    min-width: 0;
 }
 
 @media(max-width: 500px) {

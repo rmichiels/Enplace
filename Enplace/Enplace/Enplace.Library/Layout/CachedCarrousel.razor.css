@@ -1,0 +1,32 @@
+﻿.generic-carrousel {
+    overflow-x: scroll;
+    overflow-y: hidden;
+    min-height: 0;
+    max-height: 100%;
+    --sb-track-color: Transparent;
+    --sb-thumb-color: Black;
+    --sb-border-color: Transparent;
+    --sb-size: 15px;
+    scrollbar-gutter: stable;
+}
+
+    .generic-carrousel::-webkit-scrollbar {
+        width: var(--sb-size)
+    }
+
+    .generic-carrousel::-webkit-scrollbar-track {
+        background: var(--sb-track-color);
+        border-radius: 15px;
+    }
+
+    .generic-carrousel::-webkit-scrollbar-thumb {
+        background: var(--sb-thumb-color);
+        border-radius: 15px;
+        border: 5px solid var(--sb-border-color);
+    }
+
+@supports not selector(::-webkit-scrollbar) {
+    .generic-carrousel {
+        scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
+    }
+}

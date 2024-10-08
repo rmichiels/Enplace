@@ -1,24 +1,17 @@
 ﻿using Blazored.Modal;
 using Blazored.Modal.Services;
+using Enplace.Library.Layout;
 using Enplace.Library.Menus;
 using Enplace.Service.DTO;
 using Microsoft.AspNetCore.Components;
 
 namespace Enplace.Library.Recipes
 {
-    public class RecipeShardBase : ComponentBase
+    public class RecipeCardBase : BaseTile<RecipeDTO>
     {
-        [Inject]
-        public required NavigationManager Navigation { get; set; }
-        [CascadingParameter] public IModalService Modal { get; set; } = default!;
-        [Parameter]
-        public RecipeDTO? Recipe { get; set; }
-        [Parameter]
-        public ComponentState State { get; set; } = ComponentState.Details;
-
         public void NavigateToRecipeDetails()
         {
-            Navigation.NavigateTo($"/recipes/{Recipe?.Id}/details");
+            Navigation.NavigateTo($"/recipes/{Item?.Id}/details");
         }
 
         public void ShowRecipeCreator()
@@ -32,7 +25,7 @@ namespace Enplace.Library.Recipes
         public void ShowMenuSelector()
         {
             var modalParams = new ModalParameters()
-                .Add(nameof(MenuSelector.Recipe), Recipe);
+                .Add(nameof(MenuSelector.Recipe), Item);
             var options = new ModalOptions()
             {
                 Size = ModalSize.Small,
@@ -40,7 +33,7 @@ namespace Enplace.Library.Recipes
             Modal.Show<MenuSelector>("Select menu", modalParams, options);
         }
 
-        protected string _imgShardB64 => $"data:{Recipe.RecipeImages.FirstOrDefault(img => img.Size == Service.ImageSize.Header)?.MIME ?? string.Empty};base64," +
-            $" {Convert.ToBase64String(Recipe.RecipeImages.FirstOrDefault(img => img.Size == Service.ImageSize.Header)?.Data ?? [])}";
+        protected string _imgShardB64 => $"data:{Item?.RecipeImages?.FirstOrDefault(img => img.Size == Service.ImageSize.Header)?.MIME ?? string.Empty};base64," +
+            $" {Convert.ToBase64String(Item?.RecipeImages?.FirstOrDefault(img => img.Size == Service.ImageSize.Header)?.Data ?? [])}";
     }
 }

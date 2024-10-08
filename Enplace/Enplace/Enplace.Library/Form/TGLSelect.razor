@@ -2,23 +2,28 @@
 @rendermode RenderMode.InteractiveAuto
 
 
-    @switch (State)
-    {
-        case ComponentState.Details:
-            @ChildContent
-            break;
-        default:
-            <InputSelect class="tgl tgl-select" TValue="int" @bind-Value="Field" placeholder="@Placeholder" style="height:100%">
+@switch (State)
+{
+    case ComponentState.Details:
+        @ChildContent
+        break;
+    default:
+        <InputSelect class="tgl tgl-select" TValue="int" @bind-Value="Field" placeholder="@Placeholder" style="height:100%">
+            @if (Placeholder is not null)
+            {
                 <option value="0" selected="selected">@Placeholder</option>
-                @foreach (ILabeled option in Options)
-                {
-                    <option value="@option.Id">@option.Name</option>
-                }
-            </InputSelect>
-            break;
-    }
+            }
+            @foreach (ILabeled option in Options)
+            {
+                <option value="@option.Id">@option.Name</option>
+            }
+        </InputSelect>
+        break;
+}
 
 @code {
     [Parameter]
     public List<ILabeled> Options { get; set; } = [];
+
+
 }

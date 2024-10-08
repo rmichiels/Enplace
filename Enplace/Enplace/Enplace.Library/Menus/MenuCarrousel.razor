@@ -1,21 +1,26 @@
-﻿@using Enplace.Service.Services.Managers
+﻿@using Blazored.Modal
+@using Blazored.Modal.Services
+@using Enplace.Service.Services.Managers
 @using System.Globalization
 
 <section class="menu-carrousel">
-    <MenuCard State="ComponentState.Create" />
+    <MenuCard State="ComponentState.Create" OnMenuSelected="(m) => ShowMenuEditor()" />
     @foreach (MenuDTO menu in Menus)
     {
-        <MenuCard @bind-Menu="@Menus[Menus.IndexOf(menu)]" OnMenuSelected="(m) => SelectMenu(m)" State="@ComponentState.Details" Class="@(menu == _selectedMenu ? "ActiveMenu" : string.Empty)" />
+        <MenuCard @bind-Menu="@Menus[Menus.IndexOf(menu)]" OnMenuSelected="(m) => SelectMenu(m)" State="@ComponentState.Details" Class="@(menu.Id == _selectedMenu?.Id ? "ActiveMenu" : string.Empty)" />
     }
 </section>
 
 @code {
     [Inject]
+    public IModalService Modal { get; set; }
+
+    [Inject]
     public MenuAPI API { get; set; }
 
     public List<MenuDTO> Menus { get; set; } = [];
     private int _currentWeek;
-    private MenuDTO _selectedMenu;
+    private static MenuDTO _selectedMenu = null;
 
     protected override async Task OnInitializedAsync()
     {
@@ -41,8 +46,13 @@
             // ensures menu id is synced w/ db
             Menus = await API.GetAll();
         }
-        _selectedMenu = Menus.First();
+        if (_selectedMenu is null)
+        {
+            _selectedMenu = Menus.First();
+            
+        }
         EventManager.MenuSelection.TriggerEvent(_selectedMenu);
+        EventManager.MenuCreated.OnEventTriggered += ForceRefresh;
     }
 
     protected async Task SelectMenu(MenuDTO menu)
@@ -50,5 +60,19 @@
         _selectedMenu = menu;
         EventManager.MenuSelection.TriggerEvent(menu);
         StateHasChanged();
+    }
+
+    protected async Task ForceRefresh(MenuDTO menu)
+    {
+        Menus = await API.GetAll();
+        StateHasChanged();
+    }
+
+    protected async Task ShowMenuEditor()
+    {
+        Console.WriteLine("Show Menu Editor Modal...");
+        var opt = new ModalOptions() { Size = ModalSize.Medium };
+        var param = new ModalParameters().Add(nameof(MenuEditor.State), ComponentState.Create);
+        Modal.Show<MenuEditor>("Create new menu", param, opt);
     }
 }

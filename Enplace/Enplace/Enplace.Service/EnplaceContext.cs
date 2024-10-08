@@ -6,6 +6,7 @@ namespace Enplace.Service
     public static class EnplaceContext
     {
         public static UserDTO User { get; set; }
+        public static MenuDTO Menu { get; set; }
         public static string Token { get; set; }
         public static List<Measurement> Measurements { get; set; } = [];
         public static List<IngredientCategory> IngredientCategories { get; set; } = [];

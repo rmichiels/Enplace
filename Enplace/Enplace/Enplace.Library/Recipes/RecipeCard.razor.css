@@ -9,18 +9,36 @@
     padding: 1rem;
     border-radius: 10px;
     justify-content: space-between;
-    width: 300px;
-    gap: 1rem;
+    width: 250px;
     box-shadow: var(--color-accent) 5px 5px;
+    margin-bottom: 0.5rem;
+    min-height: 0;
+    max-height: 100%;
 }
 
+.Create {
+    position: sticky;
+    left: 0;
+    box-shadow: Black 5px 5px;
+    min-width: 150px;
+    gap: 0;
+    padding: 0;
+}
+
+    .Create::deep svg {
+        max-width: 90%;
+    }
+
 .recipe-shard-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
     .recipe-shard-header img {
         background: var(--color-accent);
         border-radius: 10px;
-        height: 100px;
+        height: 150px;
         width: 100%;
     }
 
@@ -37,12 +55,15 @@
 .recipe-shard-title {
     font-weight: bold;
     vertical-align: top;
-    height: 50px;
+    height: fit-content;
+    margin: 0;
     /*color:var(--color-primary-alt)*/
 }
 
 .shard-description {
+    margin: 0;
     max-height: 100px;
+    overflow: hidden;
 }
 
 .recipe-shard-footer {

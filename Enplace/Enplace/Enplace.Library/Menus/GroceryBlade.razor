@@ -1,0 +1,36 @@
+﻿<article class="grocery-blade @_class">
+    <InputCheckbox class="xb-category" style="width: 1.2rem; accent-color:var(--color-category-underline);border-color:var(--color-category-underline);" @bind-Value="ActiveState" />
+    <label class="ingredient">@Item.Name</label>
+    @if (!Item.Measurement.Contains("Unit", StringComparison.CurrentCultureIgnoreCase))
+    {
+        <label>@Item.Measurement</label>
+    }
+    <label>@Item.Quantity.ToString("G29")</label>
+</article>
+
+@code {
+    [Parameter]
+    public GroceryListItem Item { get; set; }
+    [Parameter]
+    public EventCallback<GroceryListItem> ItemChanged { get; set; }
+
+    private string _class;
+    public bool ActiveState
+    {
+        get => _activeState;
+        set
+        {
+            _activeState = value;
+            if (value)
+            {
+                _class = "active";
+            }
+            else
+            {
+                _class = string.Empty;
+            }
+            StateHasChanged();
+        }
+    }
+    private bool _activeState = false;
+}

@@ -1,26 +1,35 @@
 ﻿@using Enplace.Service.Services.Managers
-@inherits RecipeShardBase
+@inherits RecipeCardBase
 @rendermode RenderMode.InteractiveAuto
 
-<div class="recipe-shard @Recipe.Category.Name">
+<div class="recipe-shard @Item?.Category.Name @State">
     @switch (State)
     {
         case ComponentState.Create:
             <div class="recipe-shard-body shard-create">
                 <button class="btn-icon icon-large" @onclick="() => ShowRecipeCreator()">
-                    <Enplace.Library.Icons.Add>
-
-                    </Enplace.Library.Icons.Add>
+                    <Enplace.Library.Icons.Add />
                 </button>
             </div>
             break;
         default:
             <div class="recipe-shard-header">
                 <img src="@_imgShardB64" />
-                <p class="recipe-shard-title">@Recipe.Name</p>
+                <div class="flex-row flex-start gap-s">
+                    <div class="pill">
+                        <Enplace.Library.Icons.Clock />
+                        @Item?.ApproximateCookingTime
+                    </div>
+                    <div class="pill">
+                        <Enplace.Library.Icons.Silhouette />
+                        @Item?.ApproximateServingSize
+                    </div>
+                </div>
+                <p class="recipe-shard-title">@Item?.Name</p>
+
             </div>
             <div class="recipe-shard-body">
-                <p class="shard-description">@Recipe.Name</p>
+                <p class="shard-description">@Item?.Name</p>
             </div>
             <div class="recipe-shard-footer">
                 @if (State == ComponentState.Edit)
@@ -41,14 +50,6 @@
                 <button class="btn-icon">
                     <Enplace.Library.Icons.Heart />
                 </button>
-                <div class="pill">
-                    <Enplace.Library.Icons.Clock />
-                    @Recipe.ApproximateCookingTime
-                </div>
-                <div class="pill">
-                    <Enplace.Library.Icons.Silhouette />
-                    @Recipe.ApproximateServingSize
-                </div>
             </div>
             break;
     }

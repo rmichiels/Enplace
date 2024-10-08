@@ -1,0 +1,34 @@
+﻿@page "/groceries/{Id:int}"
+@using Enplace.Library.Menus
+@attribute [Authorize]
+
+<div class="menu-groceries">
+    <div class="category-wrapper">
+        @foreach (var kvp in _groceriesPerCategory)
+        {
+            <article class="section-wrapper @kvp.Key">
+                <header><h5>@kvp.Key</h5></header>
+                <section>
+                    @foreach (GroceryListItem item in kvp.Value)
+                    {
+                        <GroceryBlade @bind-Item="@kvp.Value[kvp.Value.IndexOf(item)]" />
+                    }
+                </section>
+            </article>
+        }
+    </div>
+</div>
+
+@code {
+    [Inject]
+    public MenuAPI API { get; set; }
+    [Parameter]
+    public int Id { get; set; }
+
+    private Dictionary<string, List<GroceryListItem>> _groceriesPerCategory = [];
+
+    protected async override Task OnInitializedAsync()
+    {
+        _groceriesPerCategory = await API.GetGroceriesFor(Id);
+    }
+}

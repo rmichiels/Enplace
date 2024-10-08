@@ -5,6 +5,7 @@ using Enplace.Service.Services.Converters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Swashbuckle.AspNetCore.Annotations;
 using System.Security.Claims;
 
 namespace Enplace.API
@@ -36,6 +37,63 @@ namespace Enplace.API
 
             return returnRecipes;
         }
+
+        [HttpGet]
+        [Route("{id}/shoppinglist")]
+        [SwaggerResponse(200, "Request Executed w/o any issues.")]
+        [SwaggerResponse(404, "Either the menu does not exist, or there are no recipes associated w/ the menu.")]
+        public async Task<IActionResult> GetMenuShoppingList(int id)
+        {
+            Dictionary<string, List<GroceryListItem>> shoppingList = [];
+            var query = await _service.Query<Recipe>();
+            var recipes = await query
+                .Include(r => r.MenuRecipes)
+                .Include(r => r.RecipeIngredients)
+                .ThenInclude(ri => ri.Ingredient)
+                .Where(r => r.MenuRecipes.Any(m => m.MenuID == id)).ToListAsync();
+
+            // Early return if no recipes are found/menu doesn't exist
+            if (recipes.Count == 0)
+            {
+                return NotFound();
+            }
+
+            RecipeConverter recipeConverter = new();
+            var recipeIngredients = new List<IngredientDTO>();
+            recipes.ForEach(async recipe =>
+            {
+                var recipeToAdd = await recipeConverter.Convert(recipe);
+                if (recipeToAdd != null)
+                {
+                    recipeIngredients.AddRange(recipeToAdd.Ingredients);
+                }
+            });
+
+            var itemsWithCategory = recipeIngredients.GroupBy(ri => new
+            {
+                ri.Measurement,
+                ri.Category,
+                ri.Name
+            }).Select(group => new
+            {
+                Item = new GroceryListItem()
+                {
+                    Name = group.Key.Name,
+                    Measurement = group.Key.Measurement.Name,
+                    Quantity = group.Sum(ri => ri.Quantity)
+                },
+                Category = group.Key.Category.Name,
+            }).ToList();
+
+            foreach (string cat in itemsWithCategory.Select(item => item.Category).Distinct().ToList())
+            {
+                var itemsForCategory = itemsWithCategory.Where(item => item.Category == cat).Select(i => i.Item).ToList();
+                shoppingList.Add(cat, itemsForCategory);
+            }
+
+            return Ok(shoppingList);
+        }
+
 
         [Route("list")]
         [HttpGet]
