@@ -1,5 +1,4 @@
-﻿using Blazored.LocalStorage;
-using Enplace.Service.Contracts;
+﻿using Enplace.Service.Contracts;
 using System.Net.Http.Json;
 
 namespace Enplace.Service.Services.API

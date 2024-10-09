@@ -1,5 +1,4 @@
 ﻿using Enplace.Service.DTO;
-using Enplace.Service.Entities;
 
 namespace Enplace.Service.Services.API
 {

@@ -28,7 +28,7 @@ namespace Enplace.Library.Ingredients
 
         protected override async Task OnInitializedAsync()
         {
-            if(EnplaceContext.RecipeCategories.Count == 0 || EnplaceContext.IngredientCategories.Count == 0)
+            if (EnplaceContext.RecipeCategories.Count == 0 || EnplaceContext.IngredientCategories.Count == 0)
             {
                 await ConfigurationService.GetBaseResources();
             }

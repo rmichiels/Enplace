@@ -1,9 +1,7 @@
 ﻿using Blazored.Modal;
-using Blazored.Modal.Services;
 using Enplace.Library.Layout;
 using Enplace.Library.Menus;
 using Enplace.Service.DTO;
-using Microsoft.AspNetCore.Components;
 
 namespace Enplace.Library.Recipes
 {

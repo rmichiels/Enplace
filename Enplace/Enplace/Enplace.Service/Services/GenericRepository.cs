@@ -1,6 +1,5 @@
 ﻿using Enplace.Service.Contracts;
 using Microsoft.EntityFrameworkCore;
-using System.Diagnostics;
 
 namespace Enplace.Service.Services
 {

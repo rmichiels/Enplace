@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace Enplace.Service.DTO
 {
@@ -15,7 +10,7 @@ namespace Enplace.Service.DTO
         public ResultStatus Status { get; set; }
         public ResultError? Error { get; set; } = null;
     }
-    public class Result 
+    public class Result
     {
         public static Result<TEntity> WrapOk<TEntity>(TEntity entity)
         {
