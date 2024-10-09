@@ -1,0 +1,61 @@
+﻿@using System.Text.RegularExpressions
+@typeparam TOptionSet where TOptionSet : struct, System.Enum
+
+@*
+    This Component enumerates the options available to an enum,
+    and formats the enum 'string'
+    based on either preset 'delimiters'
+    or a user provided delimiter or pattern.
+*@
+
+<section class="tab-list">
+    @foreach (TOptionSet option in System.Enum.GetValues(typeof(TOptionSet)))
+    {
+        <button class="tab-list-item @(option.ToString() == OptionSet.ToString() ? "ActiveTab": string.Empty)" type="button" @onclick="() => SelectTab(option)">
+            <h5>
+                @GetFormattedValue(option)
+            </h5>
+        </button>
+    }
+</section>
+
+
+@code {
+    [Parameter]
+    public TOptionSet OptionSet { get; set; }
+    [Parameter]
+    public EventCallback<TOptionSet> OptionSetChanged { get; set; }
+
+    [Parameter]
+    public required OptionSetDelimiter Delimiter { get; set; } = OptionSetDelimiter.CapitalLetters;
+
+    [Parameter]
+    public string CustomDelimiter { get; set; } = string.Empty;
+    [Parameter]
+    public string CustomPattern { get; set; } = string.Empty;
+
+    private Dictionary<OptionSetDelimiter, Regex> _presets = new()
+    {
+        // CapitalLetters should split 'CapitalLetters' into 'Capital Letters',
+        // but ignore Acronyms
+        { OptionSetDelimiter.CapitalLetters, RegexDefinitions.CapitalizedWords() }
+    };
+
+    public async Task SelectTab(TOptionSet e)
+    {
+        Console.WriteLine($"Selecting Tab: {nameof(e)} - {e.ToString()}");
+        await OptionSetChanged.InvokeAsync(e);
+        StateHasChanged();
+    }
+
+    public string GetFormattedValue(TOptionSet option)
+    {
+        return Delimiter switch
+        {
+            OptionSetDelimiter.CapitalLetters => string.Join(" ", _presets[OptionSetDelimiter.CapitalLetters].Split(option.ToString())).Trim(),
+            OptionSetDelimiter.Custom => string.Join(" ", option.ToString().Split(CustomDelimiter)).Trim(),
+            _ => string.Empty
+        };
+    }
+
+}

@@ -15,4 +15,10 @@
         Internal,
         External
     }
+
+    public enum OptionSetDelimiter
+    {
+        CapitalLetters,
+        Custom
+    }
 }

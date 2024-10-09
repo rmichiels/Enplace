@@ -1,0 +1,5 @@
+﻿.tab-list {
+    display: flex;
+    flex-direction: row;
+    gap: var(--gap-m);
+}

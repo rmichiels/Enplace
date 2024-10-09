@@ -28,12 +28,12 @@
     <section class="section-inspiration">
         <span class="subtitle">Pick up where you left off!</span>
 
-       @*  <section class="section-recipe">
-            <RecipeCard Item="_newRecipe" State="ComponentState.Create" />
-            @foreach (RecipeDTO recipe in _recipes)
-            {
-                <RecipeCard Item="recipe" State="ComponentState.Details" />
-            }
+        @*  <section class="section-recipe">
+        <RecipeCard Item="_newRecipe" State="ComponentState.Create" />
+        @foreach (RecipeDTO recipe in _recipes)
+        {
+        <RecipeCard Item="recipe" State="ComponentState.Details" />
+        }
         </section> *@
         <CachedCarrousel TItem="RecipeDTO" TComponent="RecipeCard" Class="section-recipe" />
     </section>
@@ -51,11 +51,11 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var recipeResult = await Service.GetAll();
-        _recipes = recipeResult.ToList();
-
         EventManager.OnSubmit += RefreshDashboard;
         EventManager.MenuSelection.OnEventTriggered += MenuSelected;
+
+        var recipeResult = await Service.GetAll();
+        _recipes = recipeResult.ToList();
     }
 
     private async Task RefreshDashboard()
@@ -70,6 +70,7 @@
 
     private async Task MenuSelected(MenuDTO menu)
     {
+        Console.WriteLine($"User Dashboard - Menu Selected: {menu.Name}");
         _selectedMenu = menu;
         _selectedMenu.MenuRecipes = await MenuAPI.GetMenuRecipes(menu.Id);
         EnplaceContext.Menu = _selectedMenu;

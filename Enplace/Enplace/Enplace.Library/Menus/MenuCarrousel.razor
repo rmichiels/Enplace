@@ -7,7 +7,7 @@
     <MenuCard State="ComponentState.Create" OnMenuSelected="(m) => ShowMenuEditor()" />
     @foreach (MenuDTO menu in Menus)
     {
-        <MenuCard @bind-Menu="@Menus[Menus.IndexOf(menu)]" OnMenuSelected="(m) => SelectMenu(m)" State="@ComponentState.Details" Class="@(menu.Id == _selectedMenu?.Id ? "ActiveMenu" : string.Empty)" />
+            <MenuCard @bind-Menu="@Menus[Menus.IndexOf(menu)]" OnMenuSelected="(m) => SelectMenu(m)" State="@ComponentState.Details" Class="@(menu.Id == _selectedMenu?.Id ? "ActiveMenu" : string.Empty)" />
     }
 </section>
 
@@ -49,7 +49,7 @@
         if (_selectedMenu is null)
         {
             _selectedMenu = Menus.First();
-            
+            Console.WriteLine($"Menu Carrousel - Selected Menu: {_selectedMenu.Name}");
         }
         EventManager.MenuSelection.TriggerEvent(_selectedMenu);
         EventManager.MenuCreated.OnEventTriggered += ForceRefresh;

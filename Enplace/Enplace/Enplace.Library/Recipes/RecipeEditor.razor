@@ -8,59 +8,69 @@
 {
     case ComponentState.Loading:
         // TODO : Add Skeleton version of the component
-                        <div class="recipe-editor-loading">
-                            ... loading ...
-                        </div>
+        <div class="recipe-editor-loading">
+            ... loading ...
+        </div>
         break;
     case ComponentState.Create:
-                        <EditForm EditContext="@Context" OnSubmit="PostRecipe">
-                            <div class="recipe-editor-edit card">
-                                <ImageDropper @bind-Image="@_recipeHeaderImg" />
-                                <div class="card-header">
-                                </div>
-                                <div class="card-body">
-                                    <div class="input-blade">
-                                        <span class="subtitle">Title</span>
-                                        <span class="subtitle">Category</span>
-                                    </div>
-                                    <div class="input-blade">
-                                        <InputText @bind-Value="Recipe.Name" placeholder="Recipe Name..." />
-                                        <TGLSelect Field="@_recipeCategoryId" FieldChanged="(i) => AssignCategory(i)" Options="EnplaceContext.RecipeCategories.ToList<ILabeled>()" />
-                                    </div>
-                                    <div class="flex-col flex-start">
-                                        <span class="subtitle">Description</span>
-                                        <InputTextArea style="width:100%;" @bind-Value="Recipe.Description" />
-                                    </div>
-                                    <div class="flex-col flex-start">
-                                        <span class="subtitle">Ingredients</span>
-                                        <Enplace.Library.Ingredients.IngredientList @bind-Ingredients="Recipe.Ingredients" @bind-State="State" />
-                                    </div>
-                                </div>
-                                <div class="card-footer flex-row flex-start">
-                                    <button class="btn-icon" type="submit">
-                                        <Enplace.Library.Icons.Save />
-                                    </button>
-                                </div>
+        <EditForm EditContext="@Context" OnSubmit="PostRecipe">
+            <div class="recipe-editor-edit card">
+                <ImageDropper @bind-Image="@_recipeHeaderImg" />
+                <div class="card-header">
+                </div>
+                <div class="card-body">
+                    <TabList @bind-OptionSet="ActiveSection" Delimiter="OptionSetDelimiter.CapitalLetters" />
+                    @switch (ActiveSection)
+                    {
+                        case EditorSection.General:
+                            <div class="input-blade">
+                                <span class="subtitle">Title</span>
+                                <span class="subtitle">Category</span>
                             </div>
-                        </EditForm>
+                            <div class="input-blade">
+                                <InputText @bind-Value="Recipe.Name" placeholder="Recipe Name..." />
+                                <TGLSelect Field="@_recipeCategoryId" FieldChanged="(i) => AssignCategory(i)" Options="EnplaceContext.RecipeCategories.ToList<ILabeled>()" />
+                            </div>
+                            <div class="flex-col flex-start">
+                                <span class="subtitle">Description</span>
+                                <InputTextArea style="width:100%;" @bind-Value="Recipe.Description" />
+                            </div>
+                            break;
+                        case EditorSection.Ingredients:
+                            <div class="flex-col flex-start">
+                                <span class="subtitle">Ingredients</span>
+                                <Enplace.Library.Ingredients.IngredientList @bind-Ingredients="Recipe.Ingredients" @bind-State="State" />
+                            </div>
+                            break;
+                        case EditorSection.Steps:
+                            break;
+                    }
+                </div>
+                <div class="card-footer flex-row flex-start">
+                    <button class="btn-icon" type="submit">
+                        <Enplace.Library.Icons.Save />
+                    </button>
+                </div>
+            </div>
+        </EditForm>
         break;
     // case ComponentState.Edit:
     default:
-                        <EditForm EditContext="@Context" OnSubmit="PostRecipe">
-                            <div class="recipe-editor-edit card">
-                                <div class="card-header">
+        <EditForm EditContext="@Context" OnSubmit="PostRecipe">
+            <div class="recipe-editor-edit card">
+                <div class="card-header">
                     @State
-                                </div>
-                                <div class="card-body">
-                                    <Enplace.Library.Ingredients.IngredientList @bind-Ingredients="Recipe.Ingredients" @bind-State="State" />
-                                </div>
-                                <div class="card-footer">
-                                    <button class="btn-icon" type="submit">
-                                        <Enplace.Library.Icons.Save />
-                                    </button>
-                                </div>
-                            </div>
-                        </EditForm>
+                </div>
+                <div class="card-body">
+                    <Enplace.Library.Ingredients.IngredientList @bind-Ingredients="Recipe.Ingredients" @bind-State="State" />
+                </div>
+                <div class="card-footer">
+                    <button class="btn-icon" type="submit">
+                        <Enplace.Library.Icons.Save />
+                    </button>
+                </div>
+            </div>
+        </EditForm>
         break;
 }
 
@@ -91,6 +101,15 @@
     public ComponentState State { get; set; }
     [Parameter]
     public EventCallback<ComponentState> StateChanged { get; set; }
+
+    public enum EditorSection
+    {
+        General,
+        Ingredients,
+        Steps
+    }
+
+    public EditorSection ActiveSection { get; set; } = EditorSection.General;
 
     private ImageDTO _recipeHeaderImg;
     private int _recipeCategoryId;
