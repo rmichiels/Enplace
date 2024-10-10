@@ -28,9 +28,7 @@ namespace Enplace.Tests.Database.SQL_Lite
             User user = new() { Name = _guid.ToString() };
             var result = await _repository.Add(user);
             Assert.IsNull(result);
-
-            result = await _repository.Delete(user);
-            Assert.IsNull(result);
+            await _repository.Delete(user);
         }
 
         [TestMethod]

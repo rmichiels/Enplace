@@ -1,5 +1,7 @@
 ﻿using Enplace.Service.Contracts;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 
 namespace Enplace.Service.Services
 {
@@ -7,35 +9,37 @@ namespace Enplace.Service.Services
     {
         private readonly DbContext _context;
         public GenericRepository(DbContext context) { _context = context; }
-        public async Task<Exception?> Add(TEntity entity)
+        public async Task<TEntity?> Add(TEntity entity)
         {
             try
             {
                 _context.Add(entity);
                 _context.SaveChanges();
-                return null;
+                return entity;
             }
             catch (Exception ex)
             {
-                return ex;
+                Debug.WriteLine(ex);
+                return null;
             }
         }
 
-        public async Task<Exception?> Delete(TEntity entity)
+        public Task Delete(TEntity entity)
         {
             try
             {
                 _context.Remove(entity);
                 _context.SaveChanges();
-                return null;
+                return Task.CompletedTask;
             }
             catch (Exception ex)
             {
-                return ex;
+                Debug.WriteLine(ex);
+                return Task.FromException(ex);
             }
         }
 
-        public async Task<Exception?> Delete(string name)
+        public Task Delete(string name)
         {
             try
             {
@@ -44,19 +48,19 @@ namespace Enplace.Service.Services
                 {
                     _context.Remove(entity);
                     _context.SaveChanges();
+                    return Task.CompletedTask;
                 }
                 else
                 {
-                    return new Exception($"Entity with Name {name} not found.");
+                    return Task.FromException(new Exception($"Entity with Name {name} not found."));
                 }
-                return null;
             }
             catch (Exception ex)
             {
-                return ex;
+                return Task.FromException(ex);
             }
         }
-        public async Task<Exception?> Delete(int id)
+        public Task Delete(int id)
         {
             try
             {
@@ -65,16 +69,16 @@ namespace Enplace.Service.Services
                 {
                     _context.Remove(entity);
                     _context.SaveChanges();
+                    return Task.CompletedTask;
                 }
                 else
                 {
-                    return new Exception($"Entity with ID {id} not found.");
+                    return Task.FromException(new Exception($"Entity with ID {id} not found."));
                 }
-                return null;
             }
             catch (Exception ex)
             {
-                return ex;
+                return Task.FromException(ex);
             }
         }
         public async Task<TEntity?> Get(int id)
@@ -100,17 +104,17 @@ namespace Enplace.Service.Services
             return _context.Set<TEntity>();
         }
 
-        public async Task<Exception?> Update(TEntity entity)
+        public Task<TEntity?> Update(TEntity entity)
         {
             try
             {
                 _context.Update(entity);
                 _context.SaveChanges();
-                return null;
+                return Task.FromResult(entity);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return ex;
+                return Task.FromResult<TEntity?>(null);
             }
         }
     }

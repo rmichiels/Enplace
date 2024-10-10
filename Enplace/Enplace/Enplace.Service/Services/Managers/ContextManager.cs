@@ -46,52 +46,48 @@ namespace Enplace.Service.Services.Managers
             }
         }
 
-        public async Task<Exception?> Add<TEntity>(TEntity entity) where TEntity : class, ILabeled
+        public async Task<TEntity?> Add<TEntity>(TEntity entity) where TEntity : class, ILabeled
         {
-            Exception? exception = null;
+            TEntity? returnValue = null;
             foreach (var kvp in _contexts)
             {
                 var repo = new GenericRepository<TEntity>(kvp.Value);
-                exception = await repo.Add(entity);
-                if (exception != null) { return exception; }
+                var result = await repo.Add(entity);
+                if (kvp.Key == RepositoryMarker.Primary)
+                {
+
+                    returnValue = result;
+                }
             }
-            return exception;
+            return returnValue;
         }
 
-        public async Task<Exception?> Delete<TEntity>(TEntity entity) where TEntity : class, ILabeled
+        public async Task Delete<TEntity>(TEntity entity) where TEntity : class, ILabeled
         {
-            Exception? exception = null;
             foreach (var kvp in _contexts)
             {
                 var repo = new GenericRepository<TEntity>(kvp.Value);
-                exception = await repo.Delete(entity);
-                if (exception != null) { return exception; }
+                await repo.Delete(entity);
             }
-            return exception;
         }
 
-        public async Task<Exception?> Delete<TEntity>(string name) where TEntity : class, ILabeled
+        public async Task Delete<TEntity>(string name) where TEntity : class, ILabeled
         {
-            Exception? exception = null;
             foreach (var kvp in _contexts)
             {
                 var repo = new GenericRepository<TEntity>(kvp.Value);
-                exception = await repo.Delete(name);
-                if (exception != null) { return exception; }
+                await repo.Delete(name);
             }
-            return exception;
         }
 
-        public async Task<Exception?> Delete<TEntity>(int id) where TEntity : class, ILabeled
+        public async Task Delete<TEntity>(int id) where TEntity : class, ILabeled
         {
-            Exception? exception = null;
+
             foreach (var kvp in _contexts)
             {
                 var repo = new GenericRepository<TEntity>(kvp.Value);
-                exception = await repo.Delete(id);
-                if (exception != null) { return exception; }
+                await repo.Delete(id);
             }
-            return exception;
         }
 
         public async Task<TEntity?> Get<TEntity>(int id) where TEntity : class, ILabeled
@@ -112,21 +108,20 @@ namespace Enplace.Service.Services.Managers
             return await repo.GetAll();
         }
 
-        public async Task<Exception?> Update<TEntity>(TEntity entity) where TEntity : class, ILabeled
+        public async Task<TEntity?> Update<TEntity>(TEntity entity) where TEntity : class, ILabeled
         {
-            try
+            TEntity? returnValue = null;
+            foreach (var kvp in _contexts)
             {
-                foreach (var kvp in _contexts)
+                var repo = new GenericRepository<TEntity>(kvp.Value);
+                var result = await repo.Update(entity);
+                if (kvp.Key == RepositoryMarker.Primary)
                 {
-                    kvp.Value.Update<TEntity>(entity);
-                    kvp.Value.SaveChanges();
+                    returnValue = result;
                 }
-                return null;
             }
-            catch (Exception ex)
-            {
-                return ex;
-            }
+
+            return returnValue;
         }
 
         public async Task<List<TEntity>> GetWhere<TEntity>(Func<TEntity, bool> predicate) where TEntity : class, ILabeled

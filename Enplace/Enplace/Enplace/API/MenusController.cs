@@ -115,13 +115,13 @@ namespace Enplace.API
         }
 
         [HttpPatch]
-        public override async Task<Exception?> Update(MenuDTO DTO)
+        public override async Task<IActionResult> Update(MenuDTO DTO)
         {
             var entity = await _converter.Convert(DTO);
             var q = await _service.Query<UserMenu>();
             var dbEntity = q.Include(um => um.MenuRecipes).First(um => um.Id == entity.Id);
 
-            if (entity is not null)
+            try
             {
                 await _service.Update(entity);
                 foreach (UserMenuRecipe umr in entity.MenuRecipes)
@@ -141,11 +141,11 @@ namespace Enplace.API
                         await _service.UnLink(source);
                     }
                 }
-                return null;
+                return Ok(entity);
             }
-            else
+            catch (Exception ex)
             {
-                return new Exception("Entity Conversion Failed & Resulted in 'null'");
+                return BadRequest(ex.Message);
             }
         }
     }

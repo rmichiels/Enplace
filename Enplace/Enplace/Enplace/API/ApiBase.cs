@@ -32,17 +32,19 @@ namespace Enplace.API
         }
         [Route("add")]
         [HttpPost]
-        public async Task<Exception?> Add(TDTO DTO)
+        public async Task<IActionResult> Add(TDTO DTO)
         {
-            TEntity? entity = await _converter.Convert(DTO);
-            if (entity is not null)
+            TEntity entity = await _converter.Convert(DTO);
+
+            var addedEntity = await _service.Add(entity);
+            if (addedEntity is null)
             {
-                return await _service.Add(entity);
+                return BadRequest();
             }
             else
             {
-                return new Exception("Entity Conversion Failed & Resulted in 'null'");
-            };
+                return Ok(addedEntity);
+            }
         }
 
         [HttpGet]
@@ -63,34 +65,52 @@ namespace Enplace.API
         }
         [Route("{param}")]
         [HttpDelete]
-        public async Task<Exception?> Delete(string param)
+        public async Task<IActionResult> Delete(string param)
         {
-            if (int.TryParse(param, out var id))
+            try
             {
-                return await _service.Delete<TEntity>(id);
+                if (int.TryParse(param, out var id))
+                {
+                    await _service.Delete<TEntity>(id);
+                }
+                else
+                {
+                    await _service.Delete<TEntity>(param);
+                }
+                return Ok();
             }
-            else
+            catch (Exception ex)
             {
-                return await _service.Delete<TEntity>(param);
+                return BadRequest(ex.Message);
             }
+
         }
         [HttpPatch]
-        public virtual async Task<Exception?> Update(TDTO DTO)
+        public virtual async Task<IActionResult> Update(TDTO DTO)
         {
             var entity = await _converter.Convert(DTO);
-            if (entity is not null)
+            try
             {
-                return await _service.Update(entity);
+                var result = await _service.Update(entity);
+                return Ok(result);
             }
-            else
+            catch (Exception ex)
             {
-                return new Exception("Entity Conversion Failed & Resulted in 'null'");
+                return BadRequest(ex.Message);
             }
         }
         [HttpDelete]
-        public Task<Exception?> Delete(TDTO entity)
+        public async Task<IActionResult> Delete(TDTO entity)
         {
-            return _service.Delete(entity);
+            try
+            {
+                await _service.Delete(entity);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
