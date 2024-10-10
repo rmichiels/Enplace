@@ -2,14 +2,9 @@
 using Enplace.Service.DTO;
 using Enplace.Service.Entities;
 using Enplace.Service.Services.Converters;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Identity.Client;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Diagnostics;
-using System.Net;
 using System.Security.Claims;
 
 namespace Enplace.API

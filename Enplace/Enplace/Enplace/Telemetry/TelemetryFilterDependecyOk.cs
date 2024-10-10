@@ -1,6 +1,6 @@
 ﻿using Microsoft.ApplicationInsights.Channel;
-using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.ApplicationInsights.DataContracts;
+using Microsoft.ApplicationInsights.Extensibility;
 
 public class TelemetryFilterDependecyOk : ITelemetryProcessor
 {
