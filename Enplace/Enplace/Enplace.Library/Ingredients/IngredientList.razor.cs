@@ -1,4 +1,6 @@
-﻿using Enplace.Service;
+﻿using Blazored.Modal.Services;
+using Blazored.Modal;
+using Enplace.Service;
 using Enplace.Service.DTO;
 using Enplace.Service.Entities;
 using Enplace.Service.Services.API;
@@ -11,7 +13,6 @@ namespace Enplace.Library.Ingredients
     {
         [Inject]
         public ConfigurationService ConfigurationService { get; set; }
-
         [CascadingParameter]
         public EditContext EditContext { get; set; }
         [Parameter]

@@ -10,6 +10,7 @@ namespace Enplace.Service.Services.API
             {"auth:service", new("https://sk-skid.azurewebsites.net", "/api/v1/auth/", false) },
             {"auth:api", new("https://localhost:7283", "/api/v1/auth/", false) },
             {$"data:{nameof(RecipeDTO)}", new("https://localhost:7283", "/api/v1/Recipes/", true) },
+            {$"data:{nameof(IngredientDTO)}", new("https://localhost:7283", "/api/v1/Ingredients/", true) },
             {$"data:{nameof(MenuDTO)}", new("https://localhost:7283", "/api/v1/Menus/", true) },
             {"config", new("https://localhost:7283","api/v1/Configuration/", true)},
             {"res:ingr", new("https://localhost:7283","res/q/ingredients", true)}

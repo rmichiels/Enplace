@@ -1,0 +1,23 @@
+﻿@using Blazored.Modal
+
+<EditForm class="ingredient-request flex-col flex-start gap-m" Model="Ingredient" OnSubmit="PostIngredient">
+    <InputText style="width:100%" @bind-Value="Ingredient.Name" />
+    <TGLSelect @bind-Field="Ingredient.CategoryId" Options="EnplaceContext.IngredientCategories.ToList<ILabeled>()" />
+    <button type="submit">
+        Request
+    </button>
+</EditForm>
+
+@code {
+    [CascadingParameter] BlazoredModalInstance CreatorInstance { get; set; } = default!;
+    [Inject]
+    public ApiService<IngredientDTO> API { get; set; }
+
+    public IngredientDTO Ingredient { get; set; } = new();
+
+    public async Task PostIngredient()
+    {
+        await API.Add(Ingredient);
+        await CreatorInstance.CloseAsync();
+    }
+}

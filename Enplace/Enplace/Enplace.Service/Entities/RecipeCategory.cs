@@ -6,7 +6,7 @@ namespace Enplace.Service.Entities
     public class RecipeCategory : ILabeled
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public required string Name { get; set; }
         [JsonIgnore]
         public virtual ICollection<Recipe> Recipes { get; set; } = [];
     }

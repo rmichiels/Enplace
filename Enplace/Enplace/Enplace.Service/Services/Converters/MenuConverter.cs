@@ -6,7 +6,7 @@ namespace Enplace.Service.Services.Converters
 {
     public class MenuConverter : IModelConverter<UserMenu, MenuDTO>
     {
-        public async Task<UserMenu?> Convert(MenuDTO? viewModel)
+        public Task<UserMenu> Convert(MenuDTO viewModel)
         {
             UserMenu entity = new() { Id = viewModel.Id, Name = viewModel.Name, Week = viewModel.Week, UserId = viewModel.UserId };
             var recipeConverter = new RecipeConverter();
@@ -20,12 +20,12 @@ namespace Enplace.Service.Services.Converters
                 }
             });
 
-            return entity;
+            return Task.FromResult(entity);
         }
 
-        public async Task<MenuDTO?> Convert(UserMenu? entity)
+        public Task<MenuDTO> Convert(UserMenu entity)
         {
-            return new() { Id = entity.Id, Name = entity.Name, Week = entity.Week, UserId = entity.UserId };
+            return Task.FromResult<MenuDTO>(new() { Id = entity.Id, Name = entity.Name, Week = entity.Week, UserId = entity.UserId });
         }
     }
 }

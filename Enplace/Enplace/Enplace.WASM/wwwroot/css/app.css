@@ -2,6 +2,12 @@
     --gap-s: 0.5rem;
     --gap-m: 1rem;
     --border-radius: 10px;
+    --border-radius-s: 5px;
+    --palette-primary: #fbe7c6;
+    --palette-neutral: white;
+    --palette-accent: #ff8b5d;
+    --palette-action: var(--palette-primary);
+    --palette-confirm: var(--palette-accent);
 }
 
 html, body {
@@ -304,4 +310,50 @@ code {
     flex-direction: row;
     gap: 1rem;
     flex: 1;
+}
+
+.feedback-subtle {
+    font-size: 1rem;
+    font-weight: bold;
+    color: rgba(0,0,0,0.4);
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+button:disabled svg {
+    fill: rgba(0,0,0,0.4);
+}
+
+button:disabled:hover {
+    fill: rgba(0,0,0,0.4);
+}
+
+.size-large {
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 800px;
+    min-width: 0;
+}
+
+mobile-flip-col {
+}
+
+mobile-invert-col {
+}
+
+@media(max-width:800px) {
+    .size-large {
+        max-width: 100%;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .mobile-invert-col {
+        flex-direction: column-reverse;
+    }
+
+    .mobile-flip-col {
+        flex-direction: row;
+    }
 }

@@ -9,11 +9,6 @@ namespace Enplace.Service.Services.API
     {
         private readonly HttpClient _serviceClient;
         private readonly HttpClient _apiClient;
-        private string _token;
-        private static AuthenticationState _notAuthenticatedState = new(new System.Security.Claims.ClaimsPrincipal());
-        public Dictionary<string, string> Claims { get; set; }
-        public Dictionary<string, string> Scopes { get; set; }
-
         private int _retryLimit = 3;
 
         public AuthService(IHttpClientFactory clientFactory)
@@ -76,14 +71,30 @@ namespace Enplace.Service.Services.API
         {
             _apiClient.DefaultRequestHeaders.Authorization = new("Bearer", token);
             var result = await _apiClient.PostAsJsonAsync("register", string.Empty);
-            return await JsonSerializer.DeserializeAsync<UserDTO>(await result.Content.ReadAsStreamAsync());
+            var parse = await JsonSerializer.DeserializeAsync<UserDTO>(await result.Content.ReadAsStreamAsync());
+            if (parse is not null)
+            {
+                return parse;
+            }
+            else
+            {
+                throw new Exception("Can't parse User from the Server Response.");
+            }
         }
 
         public async Task<UserDTO> AuthenticateAPI(string token)
         {
             _apiClient.DefaultRequestHeaders.Authorization = new("Bearer", token);
             var result = await _apiClient.PostAsJsonAsync("login", string.Empty);
-            return await JsonSerializer.DeserializeAsync<UserDTO>(await result.Content.ReadAsStreamAsync()); ;
+            var parse = await JsonSerializer.DeserializeAsync<UserDTO>(await result.Content.ReadAsStreamAsync());
+            if (parse is not null)
+            {
+                return parse;
+            }
+            else
+            {
+                throw new Exception("Can't parse User from the Server Response.");
+            }
         }
 
         public bool IsTokenValid(string token)

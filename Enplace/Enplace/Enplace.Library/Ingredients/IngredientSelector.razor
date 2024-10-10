@@ -1,4 +1,10 @@
-﻿
+﻿@using Blazored.Modal
+@using Blazored.Modal.Services
+@using System.Security.Claims
+@using Enplace.Service.Services.Managers
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
 <div class="ingredient-selector">
     @*     <EditForm Model="_ingredient"> *@
     <div class="input-blade">
@@ -29,19 +35,19 @@
                 }
             }
             <p>
-                Not what you're looking for? Request a new ingredient!
+                Not what you're looking for? <a class="interact-subtle" @onclick="(e) => EventManager.IngredientRequested.TriggerEvent()" onclick:preventDefault>Request a new ingredient!</a>
             </p>
         </div>
     }
-
     <InputText @bind-Value="_ingredient.Comment" placeholder="Peeled & Quartered,..." style="width:100%; margin-top:0.5rem;" />
-
 </div>
 
 
 @code {
     [Inject]
     public IResource<IngredientDTO> Resource { get; set; }
+    [Inject]
+    public NavigationManager Navigation { get; set; }
 
     private IngredientDTO _ingredient = new();
 

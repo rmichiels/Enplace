@@ -6,7 +6,7 @@ namespace Enplace.Service.Entities;
 public partial class UserMenu : ILabeled
 {
     public int Id { get; set; }
-    public string Name { get; set; }
+    public required string Name { get; set; }
     public int UserId { get; set; }
     public int Week { get; set; }
     [JsonIgnore]

@@ -16,6 +16,7 @@ namespace Enplace.Service
             services.AddScoped<SynchronisationManager>(syncman => new(new(), new()));
 
             services.AddScoped<IModelConverter<UserMenu, MenuDTO>, MenuConverter>();
+            services.AddScoped<IModelConverter<Ingredient, IngredientDTO>, IngredientConverter>();
             return services;
         }
     }

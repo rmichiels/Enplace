@@ -6,14 +6,14 @@ namespace Enplace.Service.Services.Converters
 {
     public class RecipeStepConverter : IModelConverter<RecipeStep, RecipeStepDTO>
     {
-        public async Task<RecipeStep?> Convert(RecipeStepDTO? viewModel)
+        public Task<RecipeStep> Convert(RecipeStepDTO viewModel)
         {
-            return new() { Description = viewModel.Description, RecipeId = viewModel.RecipeId, Name = viewModel.Name, Id = viewModel.Id };
+            return Task.FromResult<RecipeStep>(new() { Description = viewModel.Description, RecipeId = viewModel.RecipeId, Name = viewModel.Name, Id = viewModel.Id });
         }
 
-        public async Task<RecipeStepDTO?> Convert(RecipeStep? entity)
+        public Task<RecipeStepDTO> Convert(RecipeStep entity)
         {
-            return new() { Id = entity.Id, Description = entity.Description, Name = entity.Name, RecipeId = entity.RecipeId };
+            return Task.FromResult(new RecipeStepDTO() { Id = entity.Id, Description = entity.Description, Name = entity.Name, RecipeId = entity.RecipeId });
         }
     }
 }

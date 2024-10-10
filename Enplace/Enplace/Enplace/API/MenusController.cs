@@ -12,9 +12,9 @@ namespace Enplace.API
 {
     [Authorize]
     [Route("api/v1/menus/")]
-    public class MenuController : ApiBase<UserMenu, MenuDTO>
+    public class MenusController : ApiBase<UserMenu, MenuDTO>
     {
-        public MenuController(ICrudable crudService, IModelConverter<UserMenu, MenuDTO> modelConverter) : base(crudService, modelConverter)
+        public MenusController(ICrudable crudService, IModelConverter<UserMenu, MenuDTO> modelConverter) : base(crudService, modelConverter)
         {
         }
         [HttpGet]

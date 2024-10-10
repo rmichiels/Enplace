@@ -1,0 +1,10 @@
+﻿.ingredient-request {
+   
+}
+
+    .ingredient-request button {
+        width: 100%;
+        background-color: var(--palette-action);
+        border: none;
+        border-radius: var(--border-radius);
+    }

@@ -7,7 +7,7 @@ namespace Enplace.Library.Layout
 {
     public class BaseTile<TItem> : ComponentBase where TItem : class, ILabeled
     {
-        [CascadingParameter] public IModalService Modal { get; set; } = default!;
+        [CascadingParameter] public IModalService ModalService { get; set; } = default!;
         [Inject]
         public ApiService<TItem> API { get; set; }
         [Inject]

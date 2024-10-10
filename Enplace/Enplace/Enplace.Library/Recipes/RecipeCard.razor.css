@@ -9,6 +9,7 @@
     padding: 1rem;
     border-radius: 10px;
     justify-content: space-between;
+    min-width: 250px;
     width: 250px;
     box-shadow: var(--color-accent) 5px 5px;
     margin-bottom: 0.5rem;
@@ -20,7 +21,8 @@
     position: sticky;
     left: 0;
     box-shadow: Black 5px 5px;
-    min-width: 150px;
+    min-width: 250px;
+    width: 250px;
     gap: 0;
     padding: 0;
 }
@@ -38,7 +40,7 @@
     .recipe-shard-header img {
         background: var(--color-accent);
         border-radius: 10px;
-        height: 150px;
+        height: 100px;
         width: 100%;
     }
 

@@ -3,6 +3,7 @@
     public enum ComponentState
     {
         Loading,
+        Skeleton,
         Details,
         Edit,
         Create,

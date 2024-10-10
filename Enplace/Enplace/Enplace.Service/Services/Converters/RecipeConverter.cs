@@ -7,11 +7,10 @@ namespace Enplace.Service.Services.Converters
     public class RecipeConverter : IModelConverter<Recipe, RecipeDTO>
     {
         private readonly UserConverter _userConverter = new();
-        private readonly IngredientConverter _ingredientConverter = new();
+        private readonly RecipeIngredientConverter _ingredientConverter = new();
         private readonly RecipeStepConverter _stepConverter = new();
-        public async Task<Recipe?> Convert(RecipeDTO? viewModel)
+        public async Task<Recipe> Convert(RecipeDTO viewModel)
         {
-            if (viewModel == null) return null;
             var recipe = new Recipe()
             {
                 Id = viewModel.Id,
@@ -19,7 +18,7 @@ namespace Enplace.Service.Services.Converters
                 OwnerUserId = viewModel.Owner.Id,
                 ApproximateCookingTime = viewModel.ApproximateCookingTime,
                 ApproximateServingSize = viewModel.ApproximateServingSize,
-                RecipeCategoryId = viewModel.Category.Id,
+                RecipeCategoryId = viewModel.Category?.Id ?? 0,
                 Comment = viewModel.Comment,
             };
 
@@ -54,9 +53,8 @@ namespace Enplace.Service.Services.Converters
             return recipe;
         }
 
-        public async Task<RecipeDTO?> Convert(Recipe? entity)
+        public async Task<RecipeDTO> Convert(Recipe entity)
         {
-            if (entity == null) return null;
             RecipeDTO dto = new()
             {
                 Id = entity.Id,

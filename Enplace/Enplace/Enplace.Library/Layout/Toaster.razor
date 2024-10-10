@@ -1,0 +1,45 @@
+﻿@using Enplace.Service.Services.Managers
+<footer class="toaster">
+    @foreach (Notification n in _notifications)
+    {
+        <article class="toast notification @n.Type">
+            <span>
+                @n.Message
+            </span>
+            <button @onclick="() => CloseNotification(n)">
+            </button>
+        </article>
+    }
+</footer>
+
+@code {
+    [Inject]
+    public AsyncEventManager<Notification> NotificationManager { get; set; }
+
+    private List<Notification> _notifications = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        NotificationManager.OnEventTriggered += ReceiveNotificiation;
+    }
+
+    private async Task ReceiveNotificiation(Notification notif)
+    {
+        _notifications.Add(notif);
+        StateHasChanged();
+        RemoveNotificaiton(notif);
+    }
+
+    private async Task RemoveNotificaiton(Notification notification)
+    {
+        Thread.Sleep(10000);
+        _notifications.Remove(notification);
+        StateHasChanged();
+    }
+
+    private async Task CloseNotification(Notification notif)
+    {
+        _notifications.Remove(notif);
+        StateHasChanged();
+    }
+}

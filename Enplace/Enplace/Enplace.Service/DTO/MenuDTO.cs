@@ -5,7 +5,7 @@ namespace Enplace.Service.DTO
     public class MenuDTO : ILabeled
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
         public int Week { get; set; }
         public int UserId { get; set; }
         public List<RecipeDTO> MenuRecipes { get; set; } = [];

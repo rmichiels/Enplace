@@ -35,23 +35,17 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
   .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
   {
       options.Audience = builder.Configuration["TokenConfig:Audience"];
-       options.TokenValidationParameters =
-        new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidIssuer = builder.Configuration["TokenConfig:Issuer"],
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = key,
-            ValidateLifetime = true
-        };
+      options.TokenValidationParameters =
+       new TokenValidationParameters
+       {
+           ValidateIssuer = true,
+           ValidIssuer = builder.Configuration["TokenConfig:Issuer"],
+           ValidateIssuerSigningKey = true,
+           IssuerSigningKey = key,
+           ValidateLifetime = true
+       };
       options.Events = new JwtBearerEvents
       {
-          OnMessageReceived = context =>
-          {
-              var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
-              Debug.WriteLine($"Received Token: {token}");
-              return Task.CompletedTask;
-          },
           OnForbidden = context =>
           {
               Debug.WriteLine($"Forbidden failed: {context.Result}");
@@ -67,7 +61,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
           }
       };
   });
-builder.Services.AddAuthorization();
+
+builder.Services.AddAuthorization(
+    options => options.ApplyPolicyDefinitions(builder.Configuration)
+);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()

@@ -5,10 +5,10 @@ namespace Enplace.Service.DTO
     public class GroceryListItem
     {
         [JsonPropertyName("name")]
-        public string Name { get; set; }
+        public required string Name { get; set; }
         [JsonPropertyName("measurement")]
-        public string Measurement { get; set; }
+        public required string Measurement { get; set; }
         [JsonPropertyName("quantity")]
-        public decimal Quantity { get; set; }
+        public required decimal Quantity { get; set; }
     }
 }

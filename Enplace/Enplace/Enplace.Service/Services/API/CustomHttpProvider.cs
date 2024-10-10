@@ -21,7 +21,7 @@ namespace Enplace.Service.Services.API
                     HttpClient returnClient = new() { BaseAddress = new Uri(uri, config.Suffix) };
                     if (config.AllowAuthHeader)
                     {
-                        string token = EnplaceContext.Token;
+                        string? token = EnplaceContext.Token;
                         if (string.IsNullOrEmpty(token))
                         {
                             token = _storageService.GetItemAsString("skid.enplace") ?? string.Empty;

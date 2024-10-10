@@ -22,9 +22,16 @@ namespace Enplace.Service.Services.API
         public async Task GetBaseResources()
         {
             var result = await _client.GetFromJsonAsync<ResourceDTO>($"resourcebase");
-            EnplaceContext.IngredientCategories = result.IngredientCategories;
-            EnplaceContext.RecipeCategories = result.RecipeCategories;
-            EnplaceContext.Measurements = result.Measurements;
+            if (result is not null)
+            {
+                EnplaceContext.IngredientCategories = result.IngredientCategories;
+                EnplaceContext.RecipeCategories = result.RecipeCategories;
+                EnplaceContext.Measurements = result.Measurements;
+            }
+            else
+            {
+                throw new Exception("Unable to parse Resources from the Server Response");
+            }
         }
     }
 }

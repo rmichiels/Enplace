@@ -8,7 +8,7 @@ namespace Enplace.Service.Services.API
         private readonly HttpClient _client;
         private readonly string _endpoint;
         private RequestOptions _options = new();
-        private Dictionary<HttpStatusCode, Action<T, HttpResponseMessage>> _handlers = [];
+        private readonly Dictionary<HttpStatusCode, Action<T?, HttpResponseMessage>> _handlers = [];
 
         protected RequestBuilder(HttpClient client, string endpoint)
         {
@@ -21,7 +21,7 @@ namespace Enplace.Service.Services.API
             return new RequestBuilder<T>(client, endpoint);
         }
 
-        public RequestBuilder<T> AddResponseHandler(HttpStatusCode code, Action<T, HttpResponseMessage> handler)
+        public RequestBuilder<T> AddResponseHandler(HttpStatusCode code, Action<T?, HttpResponseMessage> handler)
         {
             _handlers.TryAdd(code, handler);
             return this;

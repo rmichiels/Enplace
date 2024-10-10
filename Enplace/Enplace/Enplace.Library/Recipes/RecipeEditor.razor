@@ -1,25 +1,30 @@
 ﻿@page "/recipes/{Id:int}/{Action}"
 @page "/recipes/{Action}"
 @using Blazored.Modal
+@using Blazored.Modal.Services
+@using Enplace.Library.Ingredients
 @using Enplace.Service.Services.Converters
 @using Enplace.Service.Services.Managers
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
-@switch (State)
-{
-    case ComponentState.Loading:
-        // TODO : Add Skeleton version of the component
-        <div class="recipe-editor-loading">
-            ... loading ...
-        </div>
-        break;
-    case ComponentState.Create:
-        <EditForm EditContext="@Context" OnSubmit="PostRecipe">
-            <div class="recipe-editor-edit card">
-                <ImageDropper @bind-Image="@_recipeHeaderImg" />
+<EditForm class="flex-col flex-start gap-m mobile-invert-col" EditContext="@Context" OnSubmit="PostRecipe">
+    <TabList @bind-OptionSet="ActiveSection" Delimiter="OptionSetDelimiter.CapitalLetters" />
+    <div class="card recipe-editor @State">
+        @switch (State)
+        {
+            case ComponentState.Loading:
+                // TODO : Add Skeleton version of the component
+                <p>... loading ...</p>
+                break;
+            case ComponentState.Create:
+            case ComponentState.Edit:
+                bool isValid = IsRecipeValid();
                 <div class="card-header">
+                    <ImageDropper @bind-Image="@_recipeHeaderImg" />
                 </div>
                 <div class="card-body">
-                    <TabList @bind-OptionSet="ActiveSection" Delimiter="OptionSetDelimiter.CapitalLetters" />
                     @switch (ActiveSection)
                     {
                         case EditorSection.General:
@@ -31,9 +36,9 @@
                                 <InputText @bind-Value="Recipe.Name" placeholder="Recipe Name..." />
                                 <TGLSelect Field="@_recipeCategoryId" FieldChanged="(i) => AssignCategory(i)" Options="EnplaceContext.RecipeCategories.ToList<ILabeled>()" />
                             </div>
-                            <div class="flex-col flex-start">
+                            <div class="flex-col flex-start flex-fill">
                                 <span class="subtitle">Description</span>
-                                <InputTextArea style="width:100%;" @bind-Value="Recipe.Description" />
+                                <InputTextArea style="width:100%; height:100%;" @bind-Value="Recipe.Description" />
                             </div>
                             break;
                         case EditorSection.Ingredients:
@@ -47,37 +52,29 @@
                     }
                 </div>
                 <div class="card-footer flex-row flex-start">
-                    <button class="btn-icon" type="submit">
-                        <Enplace.Library.Icons.Save />
+                    <button class="btn-icon" type="submit" disabled="@(!isValid)">
+                        @if (ActiveSection == EditorSection.General && !isValid)
+                        {
+                            <Next />
+                        }
+                        else
+                        {
+                            <Enplace.Library.Icons.Save />
+                        }
                     </button>
+                    <span class="feedback-subtle">
+                        @ValidatorFeedback(isValid)
+                    </span>
                 </div>
-            </div>
-        </EditForm>
-        break;
-    // case ComponentState.Edit:
-    default:
-        <EditForm EditContext="@Context" OnSubmit="PostRecipe">
-            <div class="recipe-editor-edit card">
-                <div class="card-header">
-                    @State
-                </div>
-                <div class="card-body">
-                    <Enplace.Library.Ingredients.IngredientList @bind-Ingredients="Recipe.Ingredients" @bind-State="State" />
-                </div>
-                <div class="card-footer">
-                    <button class="btn-icon" type="submit">
-                        <Enplace.Library.Icons.Save />
-                    </button>
-                </div>
-            </div>
-        </EditForm>
-        break;
-}
-
+                break;
+        }
+    </div>
+</EditForm>
 
 @code {
-    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
-    private async Task Close() => await BlazoredModal.CloseAsync();
+    [CascadingParameter] BlazoredModalInstance EditorInstance { get; set; } = default!;
+    [CascadingParameter] IModalService ModalService { get; set; } = default!;
+
     [Inject]
     public ApiService<RecipeDTO> Service { get; set; }
     [Inject]
@@ -113,10 +110,10 @@
 
     private ImageDTO _recipeHeaderImg;
     private int _recipeCategoryId;
-    private async Task AssignCategory(int categoryId)
+
+    protected override async Task OnInitializedAsync()
     {
-        _recipeCategoryId = categoryId;
-        Recipe.Category = EnplaceContext.RecipeCategories.First(cat => cat.Id == categoryId);
+        EventManager.IngredientRequested.OnEventTriggered += RequestNewIngredient;
     }
 
     protected override async Task OnParametersSetAsync()
@@ -177,11 +174,69 @@
         if (result is null)
         {
             Console.WriteLine("...no exception returned from the server.");
-            Close();
+            await EditorInstance.CloseAsync();
         }
         else
         {
             Console.WriteLine(result.Message);
         }
     }
+
+    private async Task RequestNewIngredient()
+    {
+        var state = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var id = state.User.Identity as ClaimsIdentity;
+        var scopes = id?.FindAll("scope") ?? [];
+        List<string> allowedScopes = ["superuser", "admin", "communitychampion", "std"];
+
+        if (scopes.Any(c => allowedScopes.Contains(c.Value)))
+        {
+            var opts = new ModalOptions() { Size = ModalSize.Small };
+            var modalParams = new ModalParameters();
+            ModalService.Show<IngredientCreator>("Request new Ingredient", modalParams, opts);
+        }
+        else
+        {
+            // standard user scope
+        }
+
+    }
+
+    private async Task AssignCategory(int categoryId)
+    {
+        _recipeCategoryId = categoryId;
+        Recipe.Category = EnplaceContext.RecipeCategories.First(cat => cat.Id == categoryId);
+    }
+
+    private bool IsRecipeValid()
+    {
+        if (Recipe is null) return false;
+        if (Recipe.Ingredients.Count == 0) return false;
+        if (string.IsNullOrEmpty(Recipe.Name) || Recipe.Category is null) return false;
+        return true;
+    }
+    private string ValidatorFeedback(bool allowPost)
+    {
+        if (!allowPost)
+        {
+            return ActiveSection switch
+            {
+                EditorSection.General => (string.IsNullOrEmpty(Recipe.Name) || Recipe.Category is null) ? "The basics first" : "Next up, ingredients",
+                EditorSection.Ingredients => Recipe?.Ingredients.Count == 0 ? "Now, ingredients" : string.Empty,
+                _ => string.Empty
+            };
+        }
+        else
+        {
+            if (Recipe.RecipeSteps.Count == 0)
+            {
+                return "You can add the recipe steps later!";
+            }
+            else
+            {
+                return "All done!";
+            }
+        }
+    }
+
 }

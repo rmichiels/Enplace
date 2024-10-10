@@ -31,6 +31,7 @@ builder.Services.AddScoped<AuthenticationStateProvider, SwissknifeAuthStateProvi
 builder.Services.AddSingleton<ConfigurationService>();
 builder.Services.AddScoped<ApiService<RecipeDTO>>();
 builder.Services.AddScoped<ApiService<MenuDTO>>();
+builder.Services.AddScoped<ApiService<IngredientDTO>>();
 
 // besides the base implementation
 // MenuAPI has some unique methods
