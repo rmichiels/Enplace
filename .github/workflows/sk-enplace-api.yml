@@ -1,4 +1,4 @@
-name: Build and deploy .NET Core application to Web App sk-enplace-api
+name: API CI/CD
 on:
   push:
     branches:
