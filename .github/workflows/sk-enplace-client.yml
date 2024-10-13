@@ -25,6 +25,7 @@ env:
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 8.0.x
   WORKING_DIRECTORY: Enplace\EnplaceClient.sln
+  CREDENTIALS: $({secrets.AZURE_CREDENTIALS})
 jobs:
   build:
     runs-on: windows-latest
@@ -57,7 +58,7 @@ jobs:
     - name: Azure Login
       uses: Azure/login@v2.2.0
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        creds: $CREDENTIALS
     - name: Deploy to Azure WebApp
       uses: azure/webapps-deploy@v2
       with:
