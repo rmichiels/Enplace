@@ -3,6 +3,22 @@ on:
   push:
     branches:
     - main
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: true
+        default: 'information'
+        type: choice
+        options:
+          - information
+          - debug
+          - warning
+          - critical
+      tags:
+        description: 'Purpose of Run This Workflow?'
+        required: true
+        type: string
 env:
   AZURE_WEBAPP_NAME: sk-enplace-api
   AZURE_WEBAPP_PACKAGE_PATH: Enplace\Enplace\publish
