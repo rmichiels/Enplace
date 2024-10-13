@@ -1,15 +1,26 @@
 ﻿.menu-card {
     display: flex;
-    width: 300px;
+    justify-content: space-between;
+    align-items: center;
     background-color: white;
     border-radius: 10px;
-    padding: 1rem;
+    padding: var(--gap-s);
+    margin: var(--gap-s);
+    min-height: 1.875rem;
+    max-height: 100%;
+    min-width: 200px;
+    max-width: 250px;
 }
 
 .Create {
     align-items: center;
     justify-content: space-around;
+    padding: 0;
 }
+
+    .Create button {
+        padding: 0;
+    }
 
 .ActiveMenu {
     box-shadow: 0px 0px 10px 5px rgba(255,255,255,1);

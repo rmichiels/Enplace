@@ -1,15 +1,18 @@
 ﻿using Blazored.Modal.Services;
 using Enplace.Service.Contracts;
 using Enplace.Service.Services.API;
+using Enplace.Service.Services.Managers;
 using Microsoft.AspNetCore.Components;
 
 namespace Enplace.Library.Layout
 {
-    public class BaseTile<TItem> : ComponentBase where TItem : class, ILabeled
+    public class BaseTile<TItem> : ComponentBase where TItem : class, ILabeled, new()
     {
         [CascadingParameter] public IModalService ModalService { get; set; } = default!;
         [Inject]
-        public ApiService<TItem> API { get; set; }
+        public virtual required ApiService<TItem> API { get; set; }
+        [Inject]
+        public required AsyncEventManager<TItem> EventManager { get; set; }
         [Inject]
         public required NavigationManager Navigation { get; set; }
 
@@ -22,5 +25,11 @@ namespace Enplace.Library.Layout
         public ComponentState State { get; set; } = ComponentState.Details;
         [Parameter]
         public EventCallback<ComponentState> StateChanged { get; set; }
+
+        [Parameter]
+        public virtual EventCallback<TItem> OnItemSelected { get; set; }
+
+        [Parameter]
+        public string Class { get; set; } = string.Empty;
     }
 }

@@ -8,7 +8,7 @@
         @ChildContent
         break;
     default:
-        <InputSelect class="tgl tgl-select" TValue="int" @bind-Value="Field" placeholder="@Placeholder" style="height:100%">
+        <InputSelect class="@($"tgl tgl-select {Class}")" TValue="int" @bind-Value="Field" placeholder="@Placeholder" style="height:100%">
             @if (Placeholder is not null)
             {
                 <option value="0" selected="selected">@Placeholder</option>

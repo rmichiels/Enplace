@@ -1,6 +1,17 @@
 ﻿header {
-	display: flex;
-	flex-direction: row;
-	justify-content: space-around;
-	gap: 2rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 2rem;
+}
+
+@media(max-height:800px) {
+    header {
+        z-index: 5;
+        position: sticky;
+        top: 0;
+        padding-top: var(--gap-s);
+        padding-bottom: var(--gap-s);
+        background-color: var(--palette-neutral);
+    }
 }

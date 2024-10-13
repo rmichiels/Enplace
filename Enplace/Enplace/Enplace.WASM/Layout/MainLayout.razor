@@ -1,15 +1,24 @@
 ﻿@using Blazored.LocalStorage
 @inherits LayoutComponentBase
+
 <div class="page">
-    <aside class="sidebar">
-        <Enplace.Library.Layout.ControlBar />
-    </aside>
-    <main>
-        <Enplace.Library.Layout.TopBar />
-        <article>
+    <AuthorizeView>
+        <Authorized>
+            <aside class="sidebar">
+                <Enplace.Library.Layout.ControlBar />
+            </aside>
+            <main>
+                <Enplace.Library.Layout.TopBar />
+                <article>
+                    @Body
+                </article>
+            </main>
+        </Authorized>
+        <NotAuthorized>
             @Body
-        </article>
-    </main>
+        </NotAuthorized>
+    </AuthorizeView>
+    <Toaster />
 </div>
 
 

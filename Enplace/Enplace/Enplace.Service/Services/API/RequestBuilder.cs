@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Net.Http.Json;
 using System.Text.Json;
 
 namespace Enplace.Service.Services.API
@@ -16,7 +17,7 @@ namespace Enplace.Service.Services.API
             _endpoint = endpoint;
         }
 
-        public static RequestBuilder<T> Create(HttpClient client, string endpoint)
+        public static RequestBuilder<T> Create(HttpClient client, string endpoint = "")
         {
             return new RequestBuilder<T>(client, endpoint);
         }
@@ -33,10 +34,15 @@ namespace Enplace.Service.Services.API
             return this;
         }
 
-        public async Task<(HttpStatusCode, T)> ExecuteGetAsync()
+        private async Task<T?> Handle(Task<HttpResponseMessage> request)
         {
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+
             int attempts = 1;
-            var result = await _client.GetAsync(_endpoint);
+            var result = await request;
             T? parsedResponse = null;
             do
             {
@@ -45,19 +51,23 @@ namespace Enplace.Service.Services.API
                     case HttpStatusCode.OK:
                         try
                         {
-                            parsedResponse = await JsonSerializer.DeserializeAsync<T>(await result.Content.ReadAsStreamAsync());
+                            parsedResponse = await JsonSerializer.DeserializeAsync<T>(await result.Content.ReadAsStreamAsync(), options);
                         }
                         catch
                         {
-                            return (HttpStatusCode.InternalServerError, new T());
+                            return null;
                         }
                         if (parsedResponse is not null)
                         {
-                            return (HttpStatusCode.OK, parsedResponse);
+                            if (_handlers.TryGetValue(result.StatusCode, out var okResponseHandler))
+                            {
+                                okResponseHandler.Invoke(parsedResponse, result);
+                            }
+                            return parsedResponse;
                         }
                         else
                         {
-                            return (HttpStatusCode.InternalServerError, new T());
+                            return null;
                         }
                     default:
                         if (_handlers.TryGetValue(result.StatusCode, out var action))
@@ -66,12 +76,32 @@ namespace Enplace.Service.Services.API
                         }
                         else
                         {
-                            result = await _client.GetAsync(_endpoint);
+                            result = await request;
                         }
                         break;
                 }
             } while (attempts < _options.RetryLimit);
-            return (result.StatusCode, new T());
+            return null;
+        }
+
+        public async Task<T?> ExecuteGetAsync()
+        {
+            return await Handle(_client.GetAsync(_endpoint));
+        }
+
+        public async Task<T?> ExecutePostAsync(T payload)
+        {
+            return await Handle(_client.PostAsJsonAsync(_endpoint, payload));
+        }
+
+        public async Task<T?> ExecutePatchAsync(T payload)
+        {
+            return await Handle(_client.PatchAsJsonAsync(_endpoint, payload));
+        }
+
+        public async Task ExecuteDeleteAsync()
+        {
+            await Handle(_client.DeleteAsync(_endpoint));
         }
     }
 

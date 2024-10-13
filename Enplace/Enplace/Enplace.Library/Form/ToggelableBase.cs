@@ -39,6 +39,9 @@ namespace Enplace.Library.Form
 
         [Parameter]
         public StateManagement StateManagement { get; set; } = StateManagement.External;
+        [Parameter]
+        public string Class { get; set; } = string.Empty;
+
         protected virtual async void Callback()
         {
             await FieldChanged.InvokeAsync(Field);

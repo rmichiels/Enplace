@@ -1,14 +1,17 @@
-﻿@using Enplace.Service.Services.Managers
-<article class="menu-card @State @Class" @onclick="() => OnMenuSelected.InvokeAsync(Menu)">
+﻿@using Blazored.Modal
+@using Enplace.Service.Services.Managers
+@inherits BaseTile<MenuDTO>
+
+<article class="menu-card @State @Class" @onclick="() => OnItemSelected.InvokeAsync(Item)">
     @switch (State)
     {
         case ComponentState.Create:
-            <button class="btn-icon icon-large">
+            <button class="btn-icon icon-med" @onclick="ShowMenuEditor">
                 <Enplace.Library.Icons.Add />
             </button>
             break;
         case ComponentState.Details:
-            <span class="subtitle">@Menu?.Name</span>
+            <span class="subtitle">@Item?.Name</span>
             <button class="btn-icon" @onclick="() => DeleteMenu()">
                 <Delete />
             </button>
@@ -16,26 +19,20 @@
     }
 </article>
 @code {
-    [Inject]
-    public MenuAPI API { get; set; }
-
-    [Parameter]
-    public MenuDTO Menu { get; set; } = new();
-    [Parameter]
-    public EventCallback<MenuDTO> MenuChanged { get; set; }
-
-    [Parameter]
-    public ComponentState State { get; set; } = ComponentState.Details;
-
-    [Parameter]
-    public EventCallback<MenuDTO> OnMenuSelected { get; set; }
-
-    [Parameter]
-    public string Class { get; set; } = string.Empty;
-
     public async Task DeleteMenu()
     {
-        await API.Delete(Menu.Id);
-        EventManager.MenuCreated.TriggerEvent(Menu);
+        if (Item is not null)
+        {
+            await API.Delete(Item.Id);
+        }
+    }
+
+    protected Task ShowMenuEditor()
+    {
+        Console.WriteLine("Show Menu Editor Modal...");
+        var opt = new ModalOptions() { Size = ModalSize.Medium };
+        var param = new ModalParameters().Add(nameof(MenuEditor.State), ComponentState.Create);
+        ModalService.Show<MenuEditor>("Create new menu", param, opt);
+        return Task.CompletedTask;
     }
 }

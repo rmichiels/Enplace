@@ -131,6 +131,14 @@ html, body {
     background-color: rgba(255,255,255,0.8);
 }
 
+.icon-med svg {
+    width: calc(0.5rem * 6);
+    height: min( calc(0.5rem * 6), 100%);
+    max-width: 100%;
+    max-height: 100%;
+    aspect-ratio: 1/1;
+}
+
 .icon-large {
     background-color: transparent;
 }
@@ -143,6 +151,8 @@ html, body {
         width: calc(24px * 8);
         height: min( calc(24px * 8), 100%);
         max-width: 100%;
+        max-height: 100%;
+        aspect-ratio: 1/1;
     }
 
 .tgl {
@@ -309,6 +319,7 @@ code {
     padding: 0;
     font-size: 1.2rem;
     width: fit-content;
+    max-width: 100%;
 }
 
 .section-recipe {
@@ -464,6 +475,14 @@ mobile-invert-col {
     .m-revealed {
         display: block;
     }
+
+    .m-hidden {
+        display: none !important;
+    }
+
+    .m-hidden-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
 }
 
 .ingredient-request {
@@ -475,4 +494,23 @@ mobile-invert-col {
     gap: var(--gap-s);
     border-radius: var(--border-radius);
     border: 2px solid black;
+}
+
+.tile {
+    --color-primary: #D3D3D3;
+    --color-accent: white;
+    --color-primary-alt: black;
+    --color-accent-alt: white;
+    background-color: var(--color-primary);
+    display: grid;
+    padding: var(--gap-m);
+    border-radius: var(--border-radius);
+    margin-bottom: var(--gap-s);
+    min-height: 0;
+    max-height: 100%;
+    justify-content: space-between;
+    min-width: 250px;
+    width: 250px;
+    box-shadow: var(--color-accent) 5px 5px;
+    gap: var(--gap-s);
 }

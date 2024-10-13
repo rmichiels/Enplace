@@ -2,7 +2,9 @@
 }
 
 .recipe-editor {
-    flex: 1;
+    min-height: 750px;
+    flex-grow: 1;
+    flex-shrink: 0;
     width: 100%;
     border: solid 3px var(--palette-primary);
 }
@@ -22,12 +24,30 @@
 
 .input-blade {
     display: grid;
+    grid-template-rows: [labels] 1fr [controls] 1fr;
     grid-template-columns: [ingredient] 5fr [measurement] 3fr [quantity] 1fr [button] 1fr;
     gap: 0.5rem;
 }
 
-    .input-blade input,
-    .input-blade select,
-    .input-blade button {
-        min-width: 0;
+.blade-label {
+    grid-row: labels;
+}
+
+@media(max-width:800px) {
+    .recipe-editor {
+        min-height: 100%;
+        max-height: 100%;
+        min-width: 100%;
+        max-width: 100%;
     }
+
+        .recipe-editor .card-footer {
+            padding: 0.25rem 0.5rem 0.25rem 0.5rem;
+        }
+
+    .input-blade {
+        grid-template-columns: none;
+        grid-template-columns: [left]1fr [right]1fr;
+        grid-template-rows: [labels] 1fr [controls] 1fr [labels] 1fr [controls] 1fr;
+    }
+}

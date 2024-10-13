@@ -31,9 +31,18 @@ article {
     min-width: 0;
 }
 
-@media(max-width: 500px) {
+@media(max-width: 800px) {
     .page {
         flex-direction: column-reverse;
+        gap: var(--gap-s);
+    }
+}
+
+@media(max-height:800px) {
+    main {
+        min-height: 0;
+        max-height: 100%;
+        padding: 0;
     }
 }
 
@@ -43,6 +52,15 @@ article {
     flex-direction: column;
     justify-content: space-around;
     --color-primary: #fbe7c6;
+}
+
+@media(max-width: 800px) {
+    .sidebar {
+        position: sticky;
+        bottom: 0;
+        max-width: 100%;
+        justify-content: flex-end;
+    }
 }
 
 .top-row {

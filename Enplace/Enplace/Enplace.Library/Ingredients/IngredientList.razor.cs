@@ -41,7 +41,6 @@ namespace Enplace.Library.Ingredients
 
         protected virtual async void AddIngredientAsync(IngredientDTO ingredient)
         {
-            Console.WriteLine(ingredient.Id);
             Ingredients.Add(ingredient);
             await IngredientsChanged.InvokeAsync(Ingredients);
             StateHasChanged();

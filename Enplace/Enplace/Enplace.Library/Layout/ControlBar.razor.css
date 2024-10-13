@@ -28,14 +28,19 @@
         }
 }
 
-@media(max-width:500px) {
+@media(max-width:800px) {
     .ctrl-bar {
-        grid-template-columns: [ctrl-corner-a] 90px [ctrl-body] 1fr [ctrl-corner-b] 90px;
+        position: sticky;
+        bottom: 0;
+        grid-template-columns: [ctrl-corner-a] 0 [ctrl-body] 1fr [ctrl-corner-b] 0;
         max-height: 90px;
-        max-width: 360px;
+        max-width: 100%;
     }
 
         .ctrl-bar .container {
             flex-direction: row;
+            justify-content: space-between;
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
         }
 }

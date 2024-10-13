@@ -1,32 +1,51 @@
 ﻿.generic-carrousel {
-    overflow-x: scroll;
+    overflow-x: auto;
     overflow-y: hidden;
     min-height: 0;
     max-height: 100%;
-    --sb-track-color: Transparent;
-    --sb-thumb-color: Black;
-    --sb-border-color: Transparent;
-    --sb-size: 15px;
+    --sb-track-color: #e1e1e1;
+    --sb-thumb-color: #e1e1e1;
+    --sb-border-color: White;
+    --sb-size: 1.1rem;
     scrollbar-gutter: stable;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: var(--gap-m);
 }
 
     .generic-carrousel::-webkit-scrollbar {
-        width: var(--sb-size)
+        width: var(--sb-size);
+        height: var(--sb-size);
     }
 
     .generic-carrousel::-webkit-scrollbar-track {
+        border-radius: 30px;
         background: var(--sb-track-color);
-        border-radius: 15px;
+        border: 0.5rem solid var(--sb-border-color);
     }
 
     .generic-carrousel::-webkit-scrollbar-thumb {
         background: var(--sb-thumb-color);
-        border-radius: 15px;
-        border: 5px solid var(--sb-border-color);
+        border-radius: 30px;
+        border: 0.2rem solid var(--sb-border-color);
     }
 
-@supports not selector(::-webkit-scrollbar) {
+.menu-carrousel {
+    flex-direction: column;
+    max-height: 100%;
+    flex-wrap: wrap;
+    gap: var(--gap-s);
+    align-content: flex-start;
+    grid-row: content;
+    grid-column: content;
+}
+
+@media(max-height:800px) {
     .generic-carrousel {
-        scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
+        padding-bottom: 0;
     }
+
+        .generic-carrousel::-webkit-scrollbar-track {
+        }
 }

@@ -1,9 +1,9 @@
 ﻿@using Blazored.Modal
 
 <EditForm class="ingredient-request flex-col flex-start gap-m" Model="Ingredient" OnSubmit="PostIngredient">
-    <InputText style="width:100%" @bind-Value="Ingredient.Name" />
-    <TGLSelect @bind-Field="Ingredient.CategoryId" Options="EnplaceContext.IngredientCategories.ToList<ILabeled>()" />
-    <button type="submit">
+    <InputText class="blade-control" style="width:100%" @bind-Value="Ingredient.Name" />
+    <TGLSelect class="blade-control" @bind-Field="Ingredient.CategoryId" Options="EnplaceContext.IngredientCategories.ToList<ILabeled>()" />
+    <button type="submit" class="blade-button">
         Request
     </button>
 </EditForm>

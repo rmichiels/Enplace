@@ -43,6 +43,8 @@ namespace Enplace.Service.Services.API
 
         public async Task<AuthResponse?> AuthenticateUser(AuthRequest request)
         {
+
+
             int attemptedRequests = 0;
             // request loop to deal w/ cold-start timeouts in the dependency chain
             while (attemptedRequests < _retryLimit)

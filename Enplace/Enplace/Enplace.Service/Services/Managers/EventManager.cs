@@ -28,9 +28,9 @@ namespace Enplace.Service.Services.Managers
 
     public class AsyncEventManager<TMessage>
     {
-        public delegate Task AsyncEventHandler(TMessage message);
+        public delegate Task AsyncEventHandler(TMessage? message);
         public event AsyncEventHandler OnEventTriggered;
-        public void TriggerEvent(TMessage message)
+        public void TriggerEvent(TMessage? message)
         {
             OnEventTriggered?.Invoke(message);
         }

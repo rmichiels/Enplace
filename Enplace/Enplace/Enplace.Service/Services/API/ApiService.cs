@@ -1,53 +1,40 @@
 ﻿using Enplace.Service.Contracts;
+using Enplace.Service.DTO;
+using Enplace.Service.Services.Managers;
+using System.Net;
 using System.Net.Http.Json;
 
 namespace Enplace.Service.Services.API
 {
-    public class ApiService<TEntity> where TEntity : class, ILabeled
+    public class ApiService<TEntity> where TEntity : class, ILabeled, new()
     {
+        public record QueryParameter(string Key, string Value);
+
         protected readonly HttpClient _client;
-        public ApiService(IHttpClientFactory clientFactory)
+        protected readonly AsyncEventManager<Notification> _notificationManager;
+        public ApiService(IHttpClientFactory clientFactory, AsyncEventManager<Notification> notificationManager)
         {
             string clientName = $"data:{typeof(TEntity).Name}";
             _client = clientFactory.CreateClient(clientName);
+            _notificationManager = notificationManager;
         }
-        public async Task<Exception?> Add(TEntity entity)
+        public async Task<TEntity?> Add(TEntity entity)
         {
-            try
-            {
-                await _client.PostAsJsonAsync($"add", entity);
-                return null;
-            }
-            catch (Exception ex)
-            {
-                return ex;
-            }
+            return await RequestBuilder<TEntity>.Create(_client, "add")
+                .AddResponseHandler(HttpStatusCode.Unauthorized, (_, m) => _notificationManager.TriggerEvent(new() { Type = NotificationType.Error, Message = m?.ReasonPhrase ?? string.Empty }))
+                .ExecutePostAsync(entity);
         }
 
-        public async Task<Exception?> Delete(int id)
+        public async Task Delete(int id)
         {
-            try
-            {
-                await _client.DeleteAsync($"{id}");
-                return null;
-            }
-            catch (Exception ex)
-            {
-                return ex;
-            }
+            await RequestBuilder<TEntity>.Create(_client, $"{id}")
+                .ExecuteDeleteAsync();
         }
 
-        public async Task<Exception?> Delete(string name)
+        public async Task Delete(string name)
         {
-            try
-            {
-                await _client.DeleteAsync($"{name}");
-                return null;
-            }
-            catch (Exception ex)
-            {
-                return ex;
-            }
+            await RequestBuilder<TEntity>.Create(_client, $"{name}")
+                .ExecuteDeleteAsync();
         }
 
         public async Task<TEntity?> Get(int id)
@@ -59,23 +46,31 @@ namespace Enplace.Service.Services.API
             return await _client.GetFromJsonAsync<TEntity>($"{name}");
         }
 
-        public async Task<List<TEntity>> GetAll()
+        public async Task<List<TEntity>> GetAll(params (string Key, string Value)[] queryParameters)
         {
-            var result = await _client.GetFromJsonAsync<List<TEntity>>($"list") ?? [];
+            string url = "list";
+            string parameters = string.Empty;
+            if (queryParameters.Length > 0)
+            {
+                parameters = string.Join("&", queryParameters.Select(kvp => $"{kvp.Key}={kvp.Value}"));
+            }
+            if (!string.IsNullOrEmpty(parameters))
+            {
+                url += "?" + parameters;
+            }
+
+            var result = await RequestBuilder<List<TEntity>>.Create(_client, url)
+               .AddResponseHandler(HttpStatusCode.Forbidden, (_, _) => Console.WriteLine("Not Allowed to Retrieve Entities for User"))
+               .ExecuteGetAsync() ?? [];
+
             return result;
         }
 
-        public async Task<Exception?> Update(TEntity entity)
+        public async Task<TEntity?> Update(TEntity entity)
         {
-            try
-            {
-                await _client.PatchAsJsonAsync("", entity);
-                return null;
-            }
-            catch (Exception ex)
-            {
-                return ex;
-            }
+            return await RequestBuilder<TEntity>.Create(_client)
+             .AddResponseHandler(HttpStatusCode.Unauthorized, (_, m) => _notificationManager.TriggerEvent(new() { Type = NotificationType.Error, Message = m.ReasonPhrase }))
+             .ExecutePatchAsync(entity);
         }
     }
 }

@@ -2,9 +2,8 @@
 @rendermode RenderMode.InteractiveAuto
 @inherits IngredientListBase
 
-@if (EditContext is not null)
-{
-    <EditForm EditContext="EditContext">
+<section class="section-ingredients">
+    <div class="flex-col flex-start flex-grow-1">
         @foreach (IngredientCategory category in EnplaceContext.IngredientCategories)
         {
             if (Ingredients is not null)
@@ -20,11 +19,12 @@
                 }
             }
         }
+    </div>
+    <div>
         @if (State == ComponentState.Edit || State == ComponentState.Create)
         {
             <hr />
             <IngredientSelector OnSave="AddIngredientAsync" />
         }
-    </EditForm>
-}
-
+    </div>
+</section>

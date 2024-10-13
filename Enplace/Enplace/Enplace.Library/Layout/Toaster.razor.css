@@ -1,0 +1,7 @@
+﻿.toaster {
+    position: absolute;
+    z-index: 5;
+}
+
+.toaster-notification {
+}

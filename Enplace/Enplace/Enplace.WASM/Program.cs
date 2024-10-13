@@ -17,6 +17,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 // Event Managers
 builder.Services.AddSingleton<AsyncEventManager<RecipeDTO>>();
 builder.Services.AddSingleton<AsyncEventManager<Notification>>();
+builder.Services.AddSingleton<AsyncEventManager<MenuDTO>>();
 
 // Base services
 builder.Services.AddSingleton<ClientConfigurationMap>();

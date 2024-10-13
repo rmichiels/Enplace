@@ -2,92 +2,125 @@
 @page "/dashboard"
 @attribute [Authorize]
 
+@using Blazored.Modal
+@using Blazored.Modal.Services
+@using Enplace.Library.Menus
 @using Enplace.Service.Services.Managers
 
 <div id="user-dashboard" class="user-dashboard">
     <section class="section-menu">
-        <aside class="menu-splash">
+        <aside class="menu-splash m-hidden">
             <p>
                 what will you be cooking today {username}?
             </p>
         </aside>
-        <header>
+        <header class="flex-row flex-between gap-m">
             <span class="subtitle">Your menus</span>
+            <button type="button" class="btn-icon m-revealed" @onclick="ShowMenuEditor">
+                <Add />
+            </button>
         </header>
-        <Enplace.Library.Menus.MenuCarrousel />
-    </section>
-    <section class="flex-col flex-start">
-        <span class="subtitle">On the menu...</span>
-        <section class="section-recipe">
-            @foreach (RecipeDTO recipe in _selectedMenu.MenuRecipes)
-            {
-                <RecipeCard Item="recipe" State="ComponentState.Details" />
-            }
-        </section>
+        <CachedCarrousel TItem="MenuDTO" Class="menu-carrousel m-hidden-scrollbar" TComponent="MenuCard" @bind-SelectedItem:get="_selectedMenu" @bind-SelectedItem:set="MenuSelected" SelectFirst=true ShowCreationTile=true FilterOnUser=true />
     </section>
     <section class="section-inspiration">
-        <span class="subtitle">Pick up where you left off!</span>
-
-        @*  <section class="section-recipe">
-        <RecipeCard Item="_newRecipe" State="ComponentState.Create" />
-        @foreach (RecipeDTO recipe in _recipes)
-        {
-        <RecipeCard Item="recipe" State="ComponentState.Details" />
-        }
-        </section> *@
-        <CachedCarrousel TItem="RecipeDTO" TComponent="RecipeCard" Class="section-recipe" />
+        <header class="flex-row flex-between gap-m">
+            <span class="subtitle">On the menu...</span>
+        </header>
+        <CachedCarrousel TItem="RecipeDTO" TComponent="RecipeCard" Class="section-recipe" ShowCreationTile=false FilterOnUser=true QueryOverride=true @bind-Items="@_menuRecipes" />
+    </section>
+    <section class="section-inspiration">
+        <header class="flex-row flex-between gap-m">
+            <span class="subtitle">Pick up where you left off!</span>
+            <button type="button" class="btn-icon m-revealed" @onclick="ShowRecipeCreator">
+                <Add />
+            </button>
+        </header>
+        <CachedCarrousel TItem="RecipeDTO" TComponent="RecipeCard" Class="section-recipe" FilterOnUser=true />
     </section>
 </div>
 
 @code {
+    [CascadingParameter] public IModalService ModalService { get; set; } = default!;
     [Inject]
-    public ApiService<RecipeDTO> Service { get; set; }
+    public required ApiService<RecipeDTO> Service { get; set; }
     [Inject]
-    public MenuAPI MenuAPI { get; set; }
+    public required MenuAPI MenuAPI { get; set; }
+    [Inject]
+    public required AsyncEventManager<MenuDTO> MenuEventManager { get; set; }
 
-    private List<RecipeDTO> _recipes = [];
-    private MenuDTO _selectedMenu = new();
+    private MenuDTO? _selectedMenu = null;
+    private List<RecipeDTO> _menuRecipes
+    {
+        get => _selectedMenu?.MenuRecipes ?? [];
+        set => _selectedMenu.MenuRecipes = value;
+    }
     private RecipeDTO _newRecipe = new() { Category = new() { Id = 1, Name = "Standard" } };
 
     protected override async Task OnInitializedAsync()
     {
         EventManager.OnSubmit += RefreshDashboard;
-        EventManager.MenuSelection.OnEventTriggered += MenuSelected;
-
-        var recipeResult = await Service.GetAll();
-        _recipes = recipeResult.ToList();
+        MenuEventManager.OnEventTriggered += MenuSelected;
     }
 
     private async Task RefreshDashboard()
     {
         Console.WriteLine("Triggered Dashboard Refresh...");
-        var recipeResult = await Service.GetAll();
-        _recipes = recipeResult.ToList();
-        _selectedMenu.MenuRecipes = await MenuAPI.GetMenuRecipes(_selectedMenu.Id);
+        if (_selectedMenu is not null)
+        {
+            _selectedMenu.MenuRecipes = await MenuAPI.GetMenuRecipes(_selectedMenu);
+        }
         StateHasChanged();
         Console.WriteLine("...Dashboard Refreshed.");
     }
 
-    private async Task MenuSelected(MenuDTO menu)
+    private async Task MenuSelected(MenuDTO? menu)
     {
-        Console.WriteLine($"User Dashboard - Menu Selected: {menu.Name}");
-        _selectedMenu = menu;
-        _selectedMenu.MenuRecipes = await MenuAPI.GetMenuRecipes(menu.Id);
-        EnplaceContext.Menu = _selectedMenu;
+        if (menu is null)
+        {
+            _selectedMenu = new();
+        }
+        else if (_selectedMenu is null || _selectedMenu.Id != menu.Id)
+        {
+            Console.WriteLine($"User Dashboard - Menu Selected: {menu?.Name}");
+            _selectedMenu = menu ?? new();
+            _selectedMenu.MenuRecipes = await MenuAPI.GetMenuRecipes(_selectedMenu) ?? [];
+            EnplaceContext.Menu = _selectedMenu;
+        }
         StateHasChanged();
+    }
+
+    public void ShowRecipeCreator()
+    {
+        var modalOpts = new ModalOptions() { Size = ModalSize.Large };
+        var modalParams = new ModalParameters()
+            .Add(nameof(RecipeEditor.State), ComponentState.Create)
+            .Add(nameof(RecipeEditor.Action), "create");
+        ModalService.Show<RecipeEditor>("Add New Recipe", modalParams, modalOpts);
+    }
+
+    protected Task ShowMenuEditor()
+    {
+        Console.WriteLine("Show Menu Editor Modal...");
+        var opt = new ModalOptions() { Size = ModalSize.Medium };
+        var param = new ModalParameters().Add(nameof(MenuEditor.State), ComponentState.Create);
+        ModalService.Show<MenuEditor>("Create new menu", param, opt);
+        return Task.CompletedTask;
     }
 
     private async Task AddRecipeToMenu(RecipeDTO recipe)
     {
-        if (_selectedMenu.MenuRecipes.Contains(recipe))
+        if (_selectedMenu is not null)
         {
-            _selectedMenu.MenuRecipes.Remove(recipe);
+            if (_selectedMenu.MenuRecipes.Contains(recipe))
+            {
+                _selectedMenu.MenuRecipes.Remove(recipe);
+            }
+            else
+            {
+                _selectedMenu.MenuRecipes.Add(recipe);
+            }
+            var response = await MenuAPI.Update(_selectedMenu);
+            StateHasChanged();
         }
-        else
-        {
-            _selectedMenu.MenuRecipes.Add(recipe);
-        }
-        var response = await MenuAPI.Update(_selectedMenu);
-        StateHasChanged();
     }
 }

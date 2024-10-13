@@ -97,7 +97,7 @@ namespace Enplace.API
 
         [Route("list")]
         [HttpGet]
-        public override async Task<ICollection<MenuDTO>> GetAll()
+        public override async Task<ICollection<MenuDTO>> GetAll([FromQuery] bool foruser = false)
         {
             List<MenuDTO> results = [];
             var id = User.Identity as ClaimsIdentity;

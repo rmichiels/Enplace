@@ -37,18 +37,11 @@ namespace Enplace.API
                 };
 
                 var response = await _db.Add(user);
-                if (response is null)
+                if (response is not null)
                 {
-                    var userToReturn = await _db.Get<User>(user.Name);
-
-                    if (userToReturn is not null)
                     {
                         UserConverter converter = new();
-                        return Accepted(await converter.Convert(userToReturn));
-                    }
-                    else
-                    {
-                        return BadRequest();
+                        return Accepted(await converter.Convert(response));
                     }
                 }
                 else

@@ -1,18 +1,25 @@
 ﻿@page "/login"
 @attribute [AllowAnonymous]
 
-<div class="account-login">
-    <EditForm Model="_model">
-        <InputText @bind-Value="_model.Email" DisplayName="Email" />
-        <InputText @bind-Value="_model.Credentials" DisplayName="Password" />
-        <button class="btn btn-primary" @onclick="() => AuthorizeUser()">
-            Log In
-        </button>
-        <button class="btn btn-secondary" @onclick="() => RegisterUser()">
-            Create New Account
-        </button>
-    </EditForm>
-</div>
+
+
+<EditForm class="m-auto" Model="_model">
+    <section class="flex-col flex-around account-login">
+        <h1>Login</h1>
+        <span class="subtitle">email</span>
+        <InputText typeof="email" placeholder="homecook@enplace.com" class="blade-control" @bind-Value="_model.Email" DisplayName="Email" />
+        <span class="subtitle">password</span>
+        <InputText class="blade-control" placeholder="********" type="password" @bind-Value="_model.Credentials" DisplayName="Password" />
+        <div class="flex-row flex-between gap-s">
+            <button class="btn btn-primary" @onclick="() => AuthorizeUser()">
+                Log In
+            </button>
+            <button class="btn btn-secondary" @onclick="() => RegisterUser()">
+                Create New Account
+            </button>
+        </div>
+    </section>
+</EditForm>
 
 
 @code {

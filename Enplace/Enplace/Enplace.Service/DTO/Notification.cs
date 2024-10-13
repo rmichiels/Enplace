@@ -1,6 +1,6 @@
 ﻿using Enplace.Service;
 
-namespace Enplace.Library.Context
+namespace Enplace.Service.DTO
 {
     public class Notification
     {

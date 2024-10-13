@@ -1,80 +1,93 @@
-﻿.recipe-shard {
-    --color-primary: #D3D3D3;
-    --color-accent: white;
-    --color-primary-alt: black;
-    --color-accent-alt: white;
-    display: flex;
-    flex-direction: column;
-    background-color: var(--color-primary);
-    padding: 1rem;
-    border-radius: 10px;
-    justify-content: space-between;
-    min-width: 250px;
-    width: 250px;
-    box-shadow: var(--color-accent) 5px 5px;
-    margin-bottom: 0.5rem;
-    min-height: 0;
-    max-height: 100%;
+﻿
+.tile-recipe {
+    grid-template-rows: [image] min-content [attributes] 2rem [title]min-content [description] min-content [buffer] 1fr [controls] 1.875rem;
+    grid-template-columns: [main] 100%;
 }
 
+
 .Create {
+    display: flex;
     position: sticky;
     left: 0;
     box-shadow: Black 5px 5px;
-    min-width: 250px;
-    width: 250px;
     gap: 0;
     padding: 0;
-}
-
-    .Create::deep svg {
-        max-width: 90%;
-    }
-
-.recipe-shard-header {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-    .recipe-shard-header img {
-        background: var(--color-accent);
-        border-radius: 10px;
-        height: 100px;
-        width: 100%;
-    }
-
-.recipe-shard-body {
-}
-
-.shard-create {
-    height: 100%;
-    display: flex;
-    align-content: center;
     justify-content: space-around;
 }
 
-.recipe-shard-title {
+    .Create button {
+        justify-content: space-around;
+    }
+
+.tile-image {
+    grid-column: main;
+    grid-row: image;
+    background: var(--color-accent);
+    border-radius: 10px;
+    height: 100px;
+    width: 100%;
+}
+
+.tile-attributes {
+    grid-column: main;
+    grid-row: attributes;
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: var(--gap-s);
+}
+
+.tile-title {
+    font-size: 1rem;
+    grid-column: main;
+    grid-row: title;
     font-weight: bold;
     vertical-align: top;
     height: fit-content;
     margin: 0;
-    /*color:var(--color-primary-alt)*/
 }
 
-.shard-description {
+.tile-description {
+    white-space: nowrap;
+    grid-column: main;
     margin: 0;
     max-height: 100px;
     overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1rem;
 }
 
-.recipe-shard-footer {
+.tile-controls {
+    grid-column: main;
+    grid-row: controls;
     display: flex;
     flex-direction: row;
-    gap: 0.5rem;
+    justify-content: flex-start;
+    gap: var(--gap-s);
 }
 
-    .recipe-shard-footer img {
-        width: 24px;
-        height: 24px;
+@media(max-width:800px) {
+    .tile-recipe {
+        grid-template-rows: [title]min-content [description] minmax(0,1fr) [controls] minmax(30px, 1.875rem);
+        grid-template-columns: [image] min-content [main] 1fr;
+        min-width: 300px;
+        width: 300px;
     }
+
+    .tile-image {
+        grid-column: image;
+        grid-row: 1/-1;
+        aspect-ratio: 1/1;
+        margin: auto;
+        height: 100%;
+    }
+
+    .tile-attributes {
+        display: none;
+    }
+
+    .Create {
+        display: none;
+    }
+}

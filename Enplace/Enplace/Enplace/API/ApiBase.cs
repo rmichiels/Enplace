@@ -1,5 +1,6 @@
 ﻿using Enplace.Service.Contracts;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Enplace.API
 {
@@ -14,9 +15,17 @@ namespace Enplace.API
             _service = crudService;
             _converter = modelConverter;
         }
+
+        protected Task<string> GetUserName()
+        {
+            var id = User.Identity as ClaimsIdentity;
+            var username = id?.FindFirst("username")?.Value ?? string.Empty;
+            return Task.FromResult(username);
+        }
+
         [Route("list")]
         [HttpGet]
-        public virtual async Task<ICollection<TDTO>> GetAll()
+        public virtual async Task<ICollection<TDTO>> GetAll([FromQuery] bool foruser = false)
         {
             List<TDTO> results = [];
             var intermediary = await _service.GetAll<TEntity>();

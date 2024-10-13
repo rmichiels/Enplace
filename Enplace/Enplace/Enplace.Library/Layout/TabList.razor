@@ -43,7 +43,6 @@
 
     public async Task SelectTab(TOptionSet e)
     {
-        Console.WriteLine($"Selecting Tab: {nameof(e)} - {e.ToString()}");
         await OptionSetChanged.InvokeAsync(e);
         StateHasChanged();
     }

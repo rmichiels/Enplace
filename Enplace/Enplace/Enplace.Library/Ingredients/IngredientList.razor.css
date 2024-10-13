@@ -18,6 +18,14 @@
     --color-category-underline: #c3fcf1;
 }
 
+.section-ingredients {
+    justify-content: space-between;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    height: 100%;
+}
+
 .ingredient-category {
     margin: 0;
     padding: 0;

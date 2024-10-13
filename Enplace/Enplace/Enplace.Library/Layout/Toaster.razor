@@ -1,8 +1,8 @@
-﻿@using Enplace.Service.Services.Managers
+﻿
 <footer class="toaster">
     @foreach (Notification n in _notifications)
     {
-        <article class="toast notification @n.Type">
+        <article class="toaster-notification @n.Type">
             <span>
                 @n.Message
             </span>
@@ -23,23 +23,25 @@
         NotificationManager.OnEventTriggered += ReceiveNotificiation;
     }
 
-    private async Task ReceiveNotificiation(Notification notif)
+    private async Task ReceiveNotificiation(Notification notification)
     {
-        _notifications.Add(notif);
+        _notifications.Add(notification);
         StateHasChanged();
-        RemoveNotificaiton(notif);
+        _ = Task.Run(() => RemoveNotificaiton(notification));
     }
 
-    private async Task RemoveNotificaiton(Notification notification)
+    private Task RemoveNotificaiton(Notification notification)
     {
         Thread.Sleep(10000);
         _notifications.Remove(notification);
         StateHasChanged();
+        return Task.CompletedTask;
     }
 
-    private async Task CloseNotification(Notification notif)
+    private Task CloseNotification(Notification notification)
     {
-        _notifications.Remove(notif);
+        _notifications.Remove(notification);
         StateHasChanged();
+        return Task.CompletedTask;
     }
 }

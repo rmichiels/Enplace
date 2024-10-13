@@ -1,0 +1,6 @@
+﻿.account-login {
+    padding: var(--gap-m);
+    gap: var(--gap-s);
+    border-radius: var(--border-radius);
+    border: 2px solid black;
+}

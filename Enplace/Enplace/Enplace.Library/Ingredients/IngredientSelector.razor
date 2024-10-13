@@ -5,20 +5,19 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
-<div class="ingredient-selector">
-    @*     <EditForm Model="_ingredient"> *@
-    <div class="input-blade">
-        <InputText @bind-Value="_searchIngredient" @oninput="(c) => QueryIngredients((string)c.Value)" @onchange="(c) => QueryIngredients((string)c.Value)" placeholder="Search Ingredients..." />
-        <TGLSelect @bind-Field="_measurementId" Options="EnplaceContext.Measurements.ToList<ILabeled>()" Placeholder="Select Measurement..." />
-        <InputNumber style="min-width:0" @bind-Value="_quantity" />
-        <button class="btn-icon" @onclick="async () => await Callback()">
+<div class="ingredient-selector" @onclick="@(() => {ShowOptions = false; StateHasChanged();})">
+    <div class="input-blade" @onclick="@(() => {ShowOptions = false; StateHasChanged();})">
+        <InputText class="blade-control m-row-main m-row-full-width" @bind-Value="_searchIngredient" @oninput="(c) => QueryIngredients((string)c.Value)" @onchange="(c) => QueryIngredients((string)c.Value)" placeholder="Search..." />
+        <TGLSelect Class="blade-control" @bind-Field="_measurementId" Options="EnplaceContext.Measurements.ToList<ILabeled>()" Placeholder="Measurements..." />
+        <InputNumber class="blade-control" style="grid-row:controls;" @bind-Value="_quantity" />
+        <button type="button" class="btn-icon blade-control " @onclick="async () => await Callback()">
             <Enplace.Library.Icons.Add />
         </button>
+        <InputText class="blade-comment" @bind-Value="_ingredient.Comment" placeholder="Peeled & Quartered,..." />
     </div>
-    @*     </EditForm> *@
-    @if (_searchIngredient.Length > 2 && _searchIngredient != _ingredient.Name)
+    @if (ShowOptions)
     {
-        <div class="ingredient-options">
+        <div @ref="optionsRef" class="ingredient-options">
             @if (_options.Count == 0)
             {
                 <p>
@@ -39,7 +38,6 @@
             </p>
         </div>
     }
-    <InputText @bind-Value="_ingredient.Comment" placeholder="Peeled & Quartered,..." style="width:100%; margin-top:0.5rem;" />
 </div>
 
 
@@ -59,6 +57,14 @@
     private decimal _quantity { get; set; } = 0;
     private List<IngredientDTO> _options { get; set; } = [];
 
+    public bool ShowOptions { get; set; } = false;
+    ElementReference optionsRef = new();
+
+    protected override async void OnAfterRender(bool firstRender)
+    {
+        //if (ShowOptions) { await optionsRef.FocusAsync(); }
+    }
+
     private async Task QueryIngredients(string str)
     {
         if (str.Length > 2)
@@ -66,6 +72,7 @@
             _searchIngredient = str;
             _options = await Resource.Query(str);
         }
+        ShowOptions = _searchIngredient.Length > 2 && _searchIngredient != _ingredient.Name;
         StateHasChanged();
     }
 

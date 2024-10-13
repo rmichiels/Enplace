@@ -1,5 +1,7 @@
 ﻿.ingredient-request {
-   
+    margin-top: var(--gap-m);
+    display: grid;
+    grid-template-rows: [controls] 1fr [controls] 1fr [buttons] 1fr;
 }
 
     .ingredient-request button {
@@ -8,3 +10,10 @@
         border: none;
         border-radius: var(--border-radius);
     }
+
+.blade-button {
+    min-height: 1.875rem;
+    grid-row: buttons;
+    font-size: 1.2rem;
+    font-weight: bold;
+}

@@ -1,9 +1,9 @@
 ﻿@using Blazored.Modal
 @using Enplace.Service.Services.Managers
 
-<article class="menu-selector flex-row flex-start">
-    <TGLSelect Field="Menu.Id" FieldChanged="(i) => SelectMenu(i)" Options="_menuOptions.ToList<ILabeled>()" />
-    <button class="btn-icon" @onclick="() => AddRecipeToMenu()">
+<article class="menu-selector flex-row flex-start ">
+    <TGLSelect Field="Menu.Id" FieldChanged="(i) => SelectMenu(i)" Options="_menuOptions.ToList<ILabeled>()" Class="blade-control m-auto" />
+    <button class="btn-icon blade-button" @onclick="() => AddRecipeToMenu()">
         <Enplace.Library.Icons.Add />
     </button>
 </article>
@@ -25,6 +25,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        Menu = EnplaceContext.Menu ?? new();
         _menuOptions = await API.GetAll();
     }
 
@@ -36,7 +37,7 @@
 
     private async Task AddRecipeToMenu()
     {
-        Menu.MenuRecipes = await API.GetMenuRecipes(Menu.Id);
+        Menu.MenuRecipes = await API.GetMenuRecipes(Menu);
         Menu.MenuRecipes.Add(Recipe);
         await API.Update(Menu);
         EventManager.TriggerOnSubmit();

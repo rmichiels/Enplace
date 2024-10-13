@@ -16,6 +16,7 @@
     border-radius: 15px;
     gap: 0.3rem;
     width: 100%;
+    top: 2.25rem;
 }
 
     .ingredient-options button {
@@ -49,6 +50,7 @@
 .input-blade {
     display: grid;
     grid-template-columns: [ingredient] 5fr [measurement] 3fr [quantity] 1fr [button] 1fr;
+    grid-template-rows: [controls] 1fr [comments] 1fr;
     gap: 0.5rem;
 }
 
@@ -57,3 +59,19 @@
     .input-blade button {
         min-width: 0;
     }
+
+@media(max-width:800px) {
+    .input-blade {
+        grid-template-columns: 0;
+        grid-template-columns: [left] 1fr [right] 1fr;
+        grid-template-rows: [main] 1fr [comments] 1fr [controls]1fr [button] 1fr;
+    }
+
+        .input-blade:first-child {
+            grid-column: 1/-1;
+        }
+
+        .input-blade button {
+            grid-row: button;
+        }
+}

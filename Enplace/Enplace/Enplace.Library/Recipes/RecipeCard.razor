@@ -2,36 +2,36 @@
 @inherits RecipeCardBase
 @rendermode RenderMode.InteractiveAuto
 
-<div class="recipe-shard @Item?.Category.Name @State">
+<article class="tile tile-recipe @Item?.Category?.Name @State">
     @switch (State)
     {
         case ComponentState.Create:
-            <div class="recipe-shard-body shard-create">
-                <button class="btn-icon icon-large" @onclick="() => ShowRecipeCreator()">
-                    <Enplace.Library.Icons.Add />
-                </button>
-            </div>
+            <button class="btn-icon icon-large" @onclick="() => ShowRecipeCreator()">
+                <Enplace.Library.Icons.Add />
+            </button>
             break;
         default:
-            <div class="recipe-shard-header">
-                <img src="@_imgShardB64" />
-                <div class="flex-row flex-start gap-s">
+            <img class="tile-image" src="@_imgShardB64" />
+            <div class="tile-attributes">
+                @if (!(Item?.ApproximateCookingTime is null || Item?.ApproximateCookingTime == 0))
+                {
                     <div class="pill">
                         <Enplace.Library.Icons.Clock />
                         @Item?.ApproximateCookingTime
                     </div>
+                }
+                @if (!(Item?.ApproximateServingSize is null || Item?.ApproximateServingSize == 0))
+                {
                     <div class="pill">
                         <Enplace.Library.Icons.Silhouette />
                         @Item?.ApproximateServingSize
                     </div>
-                </div>
-                <p class="recipe-shard-title">@Item?.Name</p>
+                }
 
             </div>
-            <div class="recipe-shard-body">
-                <p class="shard-description">@Item?.Name</p>
-            </div>
-            <div class="recipe-shard-footer">
+            <p class="tile-title">@Item?.Name</p>
+            <p class="tile-description">@Item?.Name</p>
+            <div class="tile-controls">
                 @if (State == ComponentState.Edit)
                 {
                     <button class="btn-icon">
@@ -53,5 +53,5 @@
             </div>
             break;
     }
-</div>
+</article>
 

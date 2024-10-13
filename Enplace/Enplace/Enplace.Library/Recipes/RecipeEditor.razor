@@ -9,7 +9,7 @@
 @using System.Security.Claims
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
-<EditForm class="flex-col flex-start gap-m mobile-invert-col" EditContext="@Context" OnSubmit="PostRecipe">
+<EditForm class="flex-col flex-start gap-m flex-grow-1 mobile-invert-col" EditContext="@Context" OnSubmit="PostRecipe">
     <TabList @bind-OptionSet="ActiveSection" Delimiter="OptionSetDelimiter.CapitalLetters" />
     <div class="card recipe-editor @State">
         @switch (State)
@@ -21,31 +21,34 @@
             case ComponentState.Create:
             case ComponentState.Edit:
                 bool isValid = IsRecipeValid();
-                <div class="card-header">
-                    <ImageDropper @bind-Image="@_recipeHeaderImg" />
-                </div>
-                <div class="card-body">
+                @if (ActiveSection == EditorSection.General)
+                {
+                    <div class="card-header">
+                        <ImageDropper @bind-Image="@_recipeHeaderImg" />
+                    </div>
+                }
+                <div class="card-body flex-col flex-1">
                     @switch (ActiveSection)
                     {
                         case EditorSection.General:
                             <div class="input-blade">
-                                <span class="subtitle">Title</span>
-                                <span class="subtitle">Category</span>
-                            </div>
-                            <div class="input-blade">
-                                <InputText @bind-Value="Recipe.Name" placeholder="Recipe Name..." />
+                                <span class="subtitle blade-label" style="width:min-content;">Title</span>
+                                <InputText class="blade-control" @bind-Value="Recipe.Name" placeholder="Recipe Name..." />
+                                <span class="subtitle blade-label">Category</span>
                                 <TGLSelect Field="@_recipeCategoryId" FieldChanged="(i) => AssignCategory(i)" Options="EnplaceContext.RecipeCategories.ToList<ILabeled>()" />
+                                <Clock Class="blade-label m-row-3" />
+                                <InputNumber class="blade-control" @bind-Value="Recipe.ApproximateCookingTime" />
+                                <Silhouette Class="blade-label m-row-3" />
+                                <InputNumber Class="blade-control" @bind-Value="Recipe.ApproximateServingSize" />
                             </div>
                             <div class="flex-col flex-start flex-fill">
                                 <span class="subtitle">Description</span>
-                                <InputTextArea style="width:100%; height:100%;" @bind-Value="Recipe.Description" />
+                                <InputTextArea style="width:100%; height:100%;flex:1;" @bind-Value="Recipe.Description" />
                             </div>
                             break;
                         case EditorSection.Ingredients:
-                            <div class="flex-col flex-start">
-                                <span class="subtitle">Ingredients</span>
-                                <Enplace.Library.Ingredients.IngredientList @bind-Ingredients="Recipe.Ingredients" @bind-State="State" />
-                            </div>
+                            <span class="subtitle">Ingredients</span>
+                            <Enplace.Library.Ingredients.IngredientList @bind-Ingredients="Recipe.Ingredients" @bind-State="State" />
                             break;
                         case EditorSection.Steps:
                             break;
@@ -65,6 +68,9 @@
                     <span class="feedback-subtle">
                         @ValidatorFeedback(isValid)
                     </span>
+                    <button class="btn-icon m-revealed item-end" @onclick="() => EditorInstance.CloseAsync()">
+                        <Close />
+                    </button>
                 </div>
                 break;
         }
@@ -90,7 +96,7 @@
     public string Action { get; set; } = string.Empty;
 
     [Parameter]
-    public RecipeDTO? Recipe { get; set; } = new();
+    public RecipeDTO Recipe { get; set; } = new();
     [Parameter]
     public EventCallback<RecipeDTO?> RecipeChanged { get; set; }
 
@@ -145,7 +151,7 @@
 
     public async Task PostRecipe(EditContext context)
     {
-        Exception? result = null;
+        RecipeDTO? result = null;
         UserConverter userConverter = new();
         Recipe.Owner = EnplaceContext.User;
         Console.WriteLine("Submit triggered...");
@@ -178,7 +184,6 @@
         }
         else
         {
-            Console.WriteLine(result.Message);
         }
     }
 

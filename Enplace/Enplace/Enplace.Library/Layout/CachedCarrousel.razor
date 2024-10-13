@@ -1,20 +1,21 @@
 ﻿@using Enplace.Service.Services.Managers
-@implements IAsyncDisposable
-@typeparam TItem where TItem : class, ILabeled
+@typeparam TItem where TItem : class, ILabeled, new()
 @typeparam TComponent where TComponent : BaseTile<TItem>
 
-<section class="generic-carrousel @_class">
+<section class="generic-carrousel @Class">
     @if (ShowCreationTile)
     {
-        <DynamicComponent Type="typeof(TComponent)" Parameters="@(new Dictionary<string, object>(){{"State", ComponentState.Create}})" />
+        <DynamicComponent Type="typeof(TComponent)" Parameters="@(new Dictionary<string, object>(){{"State", ComponentState.Create},  {"Class",   "m-hidden"}})" />
     }
-    @foreach (TItem item in Items)
+    @foreach (TItem item in Items ?? [])
     {
         <DynamicComponent Type="typeof(TComponent)"
                           Parameters="@(new Dictionary<string, object>()
                             {
                                 {"State", ComponentState.Details},
-                                {"Item", Items[Items.IndexOf(item)]}
+                                {"Item", Items[Items.IndexOf(item)]},
+                                {"OnItemSelected",EventCallback.Factory.Create<TItem>(this, val => OnItemSelected(val))},
+                                {"Class",   SelectedItem?.Id == item?.Id ? "ActiveMenu" : string.Empty}
                             }
                 )" />
     }
@@ -22,50 +23,119 @@
 
 @code {
     [Inject]
-    public ApiService<TItem> API { get; set; }
+    public required ApiService<TItem> API { get; set; }
     [Inject]
-    public AsyncEventManager<TItem> EventManager { get; set; }
+    public required AsyncEventManager<TItem> EventManager { get; set; }
 
     [Parameter]
-    public string Class
-    {
-        get => _class;
-        set
-        {
-            _class = value;
-            StateHasChanged();
-        }
-    }
-    private string _class = string.Empty;
+    public TItem? SelectedItem { get; set; }
+    [Parameter]
+    public EventCallback<TItem> SelectedItemChanged { get; set; }
 
+    private TItem? _lastEvent { get; set; }
+
+    [Parameter]
+    public bool FilterOnUser { get; set; } = false;
+    [Parameter]
+    public string Class { get; set; } = string.Empty;
+    [Parameter]
+    public bool SelectFirst { get; set; } = false;
     [Parameter]
     public bool ShowCreationTile { get; set; } = true;
+    [Parameter]
+    public bool QueryOverride { get; set; } = false;
 
-    public static List<TItem> Items { get; set; } = [];
-    private static DateTime _timeStamp = DateTime.Now;
+    [Parameter]
+    public List<TItem>? Items { get; set; }
+    [Parameter]
+    public EventCallback<List<TItem>>? ItemsChanged { get; set; }
+
+    private DateTime _timeStamp = DateTime.Now;
     public static readonly double MinutesToCacheInvalidation = 10;
 
     protected override async Task OnInitializedAsync()
     {
+        Console.WriteLine($"{typeof(TItem).Name} Carrousel | OnInitializedAsync");
         var freshStamp = DateTime.Now;
         // if intermediate stamp exceeds cached stamp by n time
         // or there are 0 cached items
         // refresh collection
-        if (freshStamp > _timeStamp.AddMinutes(MinutesToCacheInvalidation) || Items.Count == 0)
+        if (freshStamp > _timeStamp.AddMinutes(MinutesToCacheInvalidation) || Items?.Count == 0 || Items is null)
         {
-            Console.WriteLine($"Refreshing Cached {typeof(TItem).Name} Carrousel...");
-            Items = await API.GetAll();
+            (string, string)[] parameters = [];
+            if (FilterOnUser)
+            {
+                parameters = [("foruser", "true")];
+            }
+            if (QueryOverride)
+            {
+                if (Items is null)
+                {
+                    throw new Exception("Query overridden, but no alternative source has been provided.");
+                }
+            }
+            else
+            {
+                Items = await API.GetAll(parameters);
+            }
+
             _timeStamp = freshStamp;
         }
         EventManager.OnEventTriggered += ForceCarrouselRefresh;
     }
-    public async System.Threading.Tasks.ValueTask DisposeAsync()
+
+    protected override void OnAfterRender(bool firstRender)
     {
-        EventManager.OnEventTriggered -= ForceCarrouselRefresh;
+        Console.WriteLine($"{typeof(TItem).Name} Carrousel | OnAfterRender");
+        Console.WriteLine($"{typeof(TItem).Name} Carrousel | FirstRender {firstRender} - Items {Items?.Count}");
+        if (Items is not null && Items.Count > 0)
+        {
+            Console.WriteLine($"{typeof(TItem).Name} Carrousel | {Items.Count} - {SelectFirst} - {SelectedItem?.Id}");
+            if (SelectFirst && SelectedItem is null)
+            {
+                Console.WriteLine("SelectFirst & No Selected Item");
+                SelectedItem = Items.First();
+                SelectedItemChanged.InvokeAsync(Items.First());
+                StateHasChanged();
+            }
+        }
+
     }
 
-    private async Task ForceCarrouselRefresh(TItem item)
+    private async Task ForceCarrouselRefresh(TItem? item)
     {
-        Items = await API.GetAll();
+        Console.WriteLine($"Forcing {typeof(TItem).Name} Carrousel Refresh...");
+        if (item != _lastEvent || item is null)
+        {
+            (string, string)[] parameters = [];
+            if (FilterOnUser)
+            {
+                parameters = [("foruser", "true")];
+            }
+            if (!QueryOverride)
+            {
+                Items = await API.GetAll(parameters);
+            }
+            _lastEvent = item;
+            StateHasChanged();
+        }
+    }
+
+    private async Task OnItemSelected(TItem? item)
+    {
+        Console.WriteLine($"Triggering {typeof(TItem).Name} Item Selection...");
+        if (item is not null && SelectedItem is not null)
+        {
+            if (item.Id != SelectedItem.Id)
+            {
+                await SelectedItemChanged.InvokeAsync(item);
+                StateHasChanged();
+            }
+        }
+        else if (item is not null && SelectedItem is null)
+        {
+            await SelectedItemChanged.InvokeAsync(item);
+            StateHasChanged();
+        }
     }
 }
