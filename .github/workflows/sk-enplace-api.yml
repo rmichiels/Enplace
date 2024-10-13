@@ -25,6 +25,7 @@ env:
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 8.0.x
   WORKING_DIRECTORY: Enplace\Enplace.sln
+  CREDENTIALS: $({secrets.AZURE_CREDENTIALS})
 jobs:
   build:
     runs-on: windows-latest
@@ -52,7 +53,7 @@ jobs:
     - name: Azure Login
       uses: Azure/login@v2.2.0
       with:
-        creds: $({secrets.AZURE_CREDENTIALS})
+        creds: $CREDENTIALS
     - name: Download artifact from build job
       uses: actions/download-artifact@v3
       with:
