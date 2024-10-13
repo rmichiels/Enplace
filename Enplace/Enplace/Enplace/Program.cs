@@ -137,8 +137,7 @@ app.UseAntiforgery();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
-    .AddInteractiveWebAssemblyRenderMode()
-    .AddAdditionalAssemblies(typeof(Enplace.Client._Imports).Assembly);
+    .AddInteractiveWebAssemblyRenderMode();
 app.MapControllers();
 app.UseSwagger();
 app.UseSwaggerUI(c =>
