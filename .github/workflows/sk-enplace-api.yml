@@ -54,11 +54,13 @@ jobs:
       uses: Azure/login@v2.2.0
       with:
         creds: $CREDENTIALS
+        
     - name: Download artifact from build job
       uses: actions/download-artifact@v3
       with:
         name: webapp
         path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+        
     - name: Deploy to Azure WebApp
       uses: azure/webapps-deploy@v2
       with:
