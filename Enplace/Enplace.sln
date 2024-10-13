@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enplace", "Enplace\Enplace\Enplace.csproj", "{F19D8DA1-1572-47AD-A9D4-95198BD4B9C3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3B4FE8AB-AF71-4BE3-B6E8-8106D4E69C24} = {3B4FE8AB-AF71-4BE3-B6E8-8106D4E69C24}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enplace.Service", "Enplace\Enplace.Service\Enplace.Service.csproj", "{4A8D9101-4C2F-4991-AFE9-521EC871BF12}"
 EndProject
