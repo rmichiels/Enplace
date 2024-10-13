@@ -6,9 +6,18 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Diagnostics;
 using System.Text;
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+var keyVaultEndpoint = new Uri(Environment.GetEnvironmentVariable("VaultUri"));
+var cred = new DefaultAzureCredential();
+var client = new SecretClient(new Uri(keyVaultEndpoint.ToString()), cred);
+var sink = client.GetSecret("k-enplace-api-sink");
+Assert.IsNotNull(sink.Value.Value);
 
 // Inject Telemetry
 builder.Logging.AddApplicationInsights();
@@ -26,7 +35,7 @@ builder.Services.AddCors(
 );
 
 // Configure Auth
-var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("CCD70E1C-D950-460B-B46B-2139DA16B865"));
+var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(sink.Value.Value));
 
 IdentityModelEventSource.ShowPII = true;
 IdentityModelEventSource.LogCompleteSecurityArtifact = true;
