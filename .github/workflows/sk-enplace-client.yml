@@ -15,10 +15,10 @@ on:
           - debug
           - warning
           - critical
-      tags:
-        description: 'Purpose of Run This Workflow?'
-        required: true
-        type: string
+      #tags:
+       # description: 'Purpose of Run This Workflow?'
+        #required: true
+        #type: string
 env:
   AZURE_WEBAPP_NAME: sk-enplace-client
   AZURE_WEBAPP_PACKAGE_PATH: Enplace\Enplace.WASM\published
