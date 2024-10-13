@@ -4,16 +4,18 @@ namespace Enplace.Service.Services.API
 {
     public class ClientConfigurationMap
     {
+        private const string _localHost = "https://localhost:7283";
+        private const string _azureHost = "sk-api-skid.azurewebsites.net";
         private readonly Dictionary<string, ClientConfiguration> _configMap = new()
         {
             //{"auth", new("http://localhost:8110", "/api/v1/auth/", false) },
             {"auth:service", new("https://sk-skid.azurewebsites.net", "/api/v1/auth/", false) },
-            {"auth:api", new("https://localhost:7283", "/api/v1/auth/", false) },
-            {$"data:{nameof(RecipeDTO)}", new("https://localhost:7283", "/api/v1/Recipes/", true) },
-            {$"data:{nameof(IngredientDTO)}", new("https://localhost:7283", "/api/v1/Ingredients/", true) },
-            {$"data:{nameof(MenuDTO)}", new("https://localhost:7283", "/api/v1/Menus/", true) },
-            {"config", new("https://localhost:7283","api/v1/Configuration/", true)},
-            {"res:ingr", new("https://localhost:7283","res/q/ingredients", true)}
+            {"auth:api", new(_azureHost, "/api/v1/auth/", false) },
+            {$"data:{nameof(RecipeDTO)}", new(_azureHost, "/api/v1/Recipes/", true) },
+            {$"data:{nameof(IngredientDTO)}", new(_azureHost, "/api/v1/Ingredients/", true) },
+            {$"data:{nameof(MenuDTO)}", new(_azureHost, "/api/v1/Menus/", true) },
+            {"config", new(_azureHost,"api/v1/Configuration/", true)},
+            {"res:ingr", new(_azureHost,"res/q/ingredients", true)}
         };
 
         public ClientConfiguration this[string label]
