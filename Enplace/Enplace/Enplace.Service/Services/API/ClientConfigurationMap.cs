@@ -5,7 +5,7 @@ namespace Enplace.Service.Services.API
     public class ClientConfigurationMap
     {
         private const string _localHost = "https://localhost:7283";
-        private const string _azureHost = "sk-api-skid.azurewebsites.net";
+        private const string _azureHost = "https://sk-enplace-api.azurewebsites.net";
         private readonly Dictionary<string, ClientConfiguration> _configMap = new()
         {
             //{"auth", new("http://localhost:8110", "/api/v1/auth/", false) },
