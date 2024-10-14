@@ -69,7 +69,7 @@ namespace Enplace.Service.Services.API
         public async Task<TEntity?> Update(TEntity entity)
         {
             return await RequestBuilder<TEntity>.Create(_client)
-             .AddResponseHandler(HttpStatusCode.Unauthorized, (_, m) => _notificationManager.TriggerEvent(new() { Type = NotificationType.Error, Message = m.ReasonPhrase }))
+             .AddResponseHandler(HttpStatusCode.Unauthorized, (_, m) => _notificationManager.TriggerEvent(new() { Type = NotificationType.Error, Message = m?.ReasonPhrase ?? string.Empty }))
              .ExecutePatchAsync(entity);
         }
     }

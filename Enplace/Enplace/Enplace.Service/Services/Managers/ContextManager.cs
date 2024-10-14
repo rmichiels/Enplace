@@ -136,22 +136,24 @@ namespace Enplace.Service.Services.Managers
             return await repo.Query();
         }
 
-        public async Task Link<TBridge>(TBridge bridge) where TBridge : class
+        public Task Link<TBridge>(TBridge bridge) where TBridge : class
         {
             foreach (var kvp in _contexts)
             {
                 kvp.Value.Add<TBridge>(bridge);
                 kvp.Value.SaveChanges();
             }
+            return Task.CompletedTask;
         }
 
-        public async Task UnLink<TBridge>(TBridge bridge) where TBridge : class
+        public Task UnLink<TBridge>(TBridge bridge) where TBridge : class
         {
             foreach (var kvp in _contexts)
             {
                 kvp.Value.Remove<TBridge>(bridge);
                 kvp.Value.SaveChanges();
             }
+            return Task.CompletedTask;
         }
     }
 }

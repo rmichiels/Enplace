@@ -6,13 +6,13 @@ namespace Enplace.Library.Form
     public partial class ToggelableBase<TField> : ComponentBase where TField : IComparable
     {
         [CascadingParameter]
-        public EditContext EditContext { get; set; }
+        public EditContext? EditContext { get; set; }
 
         [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        public RenderFragment? ChildContent { get; set; }
 
         [Parameter]
-        public TField Field
+        public required TField Field
         {
             get => _field;
             set

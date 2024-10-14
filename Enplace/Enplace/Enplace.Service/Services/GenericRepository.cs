@@ -9,18 +9,18 @@ namespace Enplace.Service.Services
     {
         private readonly DbContext _context;
         public GenericRepository(DbContext context) { _context = context; }
-        public async Task<TEntity?> Add(TEntity entity)
+        public Task<TEntity?> Add(TEntity entity)
         {
             try
             {
                 _context.Add(entity);
                 _context.SaveChanges();
-                return entity;
+                return Task.FromResult<TEntity?>(entity);
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex);
-                return null;
+                return Task.FromResult<TEntity?>(null);
             }
         }
 
@@ -94,14 +94,14 @@ namespace Enplace.Service.Services
             return await _context.Set<TEntity>().ToListAsync();
         }
 
-        public async Task<List<TEntity>> GetWhere(Func<TEntity, bool> predicate)
+        public Task<List<TEntity>> GetWhere(Func<TEntity, bool> predicate)
         {
-            return _context.Set<TEntity>().Where(predicate).OrderBy(e => e.Name).ToList();
+            return Task.FromResult(_context.Set<TEntity>().Where(predicate).OrderBy(e => e.Name).ToList());
         }
 
-        public async Task<IQueryable<TEntity>> Query()
+        public Task<IQueryable<TEntity>> Query()
         {
-            return _context.Set<TEntity>();
+            return Task.FromResult(_context.Set<TEntity>().AsQueryable());
         }
 
         public Task<TEntity?> Update(TEntity entity)
@@ -110,7 +110,7 @@ namespace Enplace.Service.Services
             {
                 _context.Update(entity);
                 _context.SaveChanges();
-                return Task.FromResult(entity);
+                return Task.FromResult<TEntity?>(entity);
             }
             catch (Exception)
             {

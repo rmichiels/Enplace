@@ -13,7 +13,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var keyVaultEndpoint = new Uri(Environment.GetEnvironmentVariable("VaultUri"));
+Uri keyVaultEndpoint = new(Environment.GetEnvironmentVariable("VaultUri") ?? string.Empty);
 var cred = new DefaultAzureCredential();
 var client = new SecretClient(new Uri(keyVaultEndpoint.ToString()), cred);
 var sink = client.GetSecret("k-enplace-api-sink");
