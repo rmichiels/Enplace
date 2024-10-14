@@ -29,7 +29,7 @@ builder.Services.AddApplicationInsightsTelemetryProcessor<TelemetryFilterDepende
 builder.Services.AddCors(
     options => options.AddDefaultPolicy(builder =>
         builder.AllowAnyHeader()
-       .WithOrigins("https://sk-enplace-client.azurewebsites.net/", "https://localhost:7282")
+         .WithOrigins("https://sk-enplace-client.azurewebsites.net", "https://localhost:7282")
         .AllowAnyMethod()
     )
 );
