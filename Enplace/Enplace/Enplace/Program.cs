@@ -2,13 +2,13 @@ using Enplace.Components;
 using Enplace.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Logging;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Diagnostics;
 using System.Text;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.IdentityModel.Tokens;
 
 
 var builder = WebApplication.CreateBuilder(args);
