@@ -53,22 +53,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
            IssuerSigningKey = key,
            ValidateLifetime = true
        };
-      options.Events = new JwtBearerEvents
-      {
-          OnForbidden = context =>
-          {
-              Debug.WriteLine($"Forbidden failed: {context.Result}");
-              return Task.CompletedTask;
-          },
-
-          OnAuthenticationFailed = context =>
-          {
-              Debug.WriteLine($"Authentication failed: {context.Exception.StackTrace}");
-              Debug.WriteLine($"Authentication failed: {context.Exception.Message}");
-              Debug.WriteLine($"Authentication failed: {context.Exception.InnerException?.Message}");
-              return Task.CompletedTask;
-          }
-      };
   });
 
 builder.Services.AddAuthorization(
