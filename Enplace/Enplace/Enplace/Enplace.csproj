@@ -8,7 +8,11 @@
     <UserSecretsId>46b41378-dc50-4fb1-95ee-f1342a289cc6</UserSecretsId>
   </PropertyGroup>
 
-  <ItemGroup>
+	<PropertyGroup>
+		<_FunctionsSkipCleanOutput>true</_FunctionsSkipCleanOutput>
+	</PropertyGroup>
+
+	<ItemGroup>
     <ProjectReference Include="..\Enplace.Service\Enplace.Service.csproj" />
     <PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.3.2" />
     <PackageReference Include="Azure.Identity" Version="1.12.1" />
