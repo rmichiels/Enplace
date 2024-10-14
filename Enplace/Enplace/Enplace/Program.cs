@@ -29,7 +29,7 @@ builder.Services.AddApplicationInsightsTelemetryProcessor<TelemetryFilterDepende
 builder.Services.AddCors(
     options => options.AddDefaultPolicy(builder =>
         builder.AllowAnyHeader()
-        .AllowAnyOrigin()
+       .WithOrigins("https://sk-enplace-client.azurewebsites.net/", "https://localhost:7282")
         .AllowAnyMethod()
     )
 );
@@ -126,9 +126,10 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+app.UseHttpsRedirection();
 
 app.UseCors();
-app.UseHttpsRedirection();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
