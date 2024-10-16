@@ -13,6 +13,6 @@ namespace Enplace.Service.Entities
         public ImageSize Size { get; set; } = ImageSize.Header;
 
         [JsonIgnore]
-        public required virtual Recipe Recipe { get; set; }
+        public virtual Recipe? Recipe { get; set; }
     }
 }
