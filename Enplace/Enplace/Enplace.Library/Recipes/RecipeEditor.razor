@@ -35,7 +35,7 @@
                                 <span class="subtitle blade-label" style="width:min-content;">Title</span>
                                 <InputText class="blade-control" @bind-Value="Recipe.Name" placeholder="Recipe Name..." />
                                 <span class="subtitle blade-label">Category</span>
-                                <TGLSelect Field="@_recipeCategoryId" FieldChanged="(i) => AssignCategory(i)" Options="EnplaceContext.RecipeCategories.ToList<ILabeled>()" />
+                                <TGLSelect Class="blade-control" Field="@_recipeCategoryId" FieldChanged="(i) => AssignCategory(i)" Options="EnplaceContext.RecipeCategories.ToList<ILabeled>()" />
                                 <Clock Class="blade-label m-row-3" />
                                 <InputNumber class="blade-control" @bind-Value="Recipe.ApproximateCookingTime" />
                                 <Silhouette Class="blade-label m-row-3" />
