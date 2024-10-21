@@ -1,0 +1,25 @@
+﻿@if (IsLoading)
+{
+    <div class="ct-loader">
+        <img src="SK_Loading_SatBlue.gif" />
+    </div>
+}
+
+@code {
+    [Inject]
+    public AsyncEventManager<bool> EventManager { get; set; }
+
+    public bool IsLoading { get; set; } = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        EventManager.OnEventTriggered += ToggleLoader;
+    }
+
+    private Task ToggleLoader(bool toggle)
+    {
+        IsLoading = toggle;
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+}

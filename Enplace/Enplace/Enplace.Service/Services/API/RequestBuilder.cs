@@ -9,7 +9,7 @@ namespace Enplace.Service.Services.API
         private readonly HttpClient _client;
         private readonly string _endpoint;
         private RequestOptions _options = new();
-        private readonly Dictionary<HttpStatusCode, Action<T?, HttpResponseMessage>> _handlers = [];
+        private readonly Dictionary<HttpStatusCode, Func<HttpResponseMessage, bool>> _handlers = [];
 
         protected RequestBuilder(HttpClient client, string endpoint)
         {
@@ -22,7 +22,7 @@ namespace Enplace.Service.Services.API
             return new RequestBuilder<T>(client, endpoint);
         }
 
-        public RequestBuilder<T> AddResponseHandler(HttpStatusCode code, Action<T?, HttpResponseMessage> handler)
+        public RequestBuilder<T> AddResponseHandler(HttpStatusCode code, Func<HttpResponseMessage, bool> handler)
         {
             _handlers.TryAdd(code, handler);
             return this;
@@ -41,13 +41,17 @@ namespace Enplace.Service.Services.API
                 PropertyNameCaseInsensitive = true
             };
 
-            int attempts = 1;
-            var result = await request;
+            bool allowRetries = true;
+            int attempts = 0;
+
             T? parsedResponse = null;
-            do
+            while (attempts <= _options.RetryLimit && allowRetries)
             {
+                var result = await request;
+                attempts++;
                 switch (result.StatusCode)
                 {
+                    case HttpStatusCode.Accepted:
                     case HttpStatusCode.OK:
                         try
                         {
@@ -61,7 +65,7 @@ namespace Enplace.Service.Services.API
                         {
                             if (_handlers.TryGetValue(result.StatusCode, out var okResponseHandler))
                             {
-                                okResponseHandler.Invoke(parsedResponse, result);
+                                okResponseHandler.Invoke(result);
                             }
                             return parsedResponse;
                         }
@@ -72,15 +76,11 @@ namespace Enplace.Service.Services.API
                     default:
                         if (_handlers.TryGetValue(result.StatusCode, out var action))
                         {
-                            action.Invoke(parsedResponse, result);
-                        }
-                        else
-                        {
-                            result = await request;
+                            allowRetries = action.Invoke(result);
                         }
                         break;
                 }
-            } while (attempts < _options.RetryLimit);
+            }
             return null;
         }
 
@@ -89,7 +89,7 @@ namespace Enplace.Service.Services.API
             return await Handle(_client.GetAsync(_endpoint));
         }
 
-        public async Task<T?> ExecutePostAsync(T payload)
+        public async Task<T?> ExecutePostAsync(object payload)
         {
             return await Handle(_client.PostAsJsonAsync(_endpoint, payload));
         }

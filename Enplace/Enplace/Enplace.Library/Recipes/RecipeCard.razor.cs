@@ -14,11 +14,14 @@ namespace Enplace.Library.Recipes
 
         public void ShowRecipeCreator()
         {
+            
+
             var modalOpts = new ModalOptions() { Size = ModalSize.Large };
             var modalParams = new ModalParameters()
                 .Add(nameof(RecipeEditor.State), ComponentState.Create)
                 .Add(nameof(RecipeEditor.Action), "create");
             ModalService.Show<RecipeEditor>("Add New Recipe", modalParams, modalOpts);
+            NotificationManager.TriggerEvent(new() { Type = Service.NotificationType.Message, Message = "Message" });
         }
 
         public void ShowMenuSelector()

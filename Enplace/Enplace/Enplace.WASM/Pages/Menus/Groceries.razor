@@ -21,7 +21,7 @@
 
 @code {
     [Inject]
-    public MenuAPI API { get; set; }
+    public required MenuAPI API { get; set; }
     [Parameter]
     public int Id { get; set; }
 
@@ -29,6 +29,6 @@
 
     protected async override Task OnInitializedAsync()
     {
-        _groceriesPerCategory = await API.GetGroceriesFor(Id);
+        _groceriesPerCategory = await API.GetGroceriesFor(Id) ?? [];
     }
 }

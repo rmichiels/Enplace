@@ -8,8 +8,6 @@ namespace Enplace.Service.Services.API
 {
     public class ApiService<TEntity> where TEntity : class, ILabeled, new()
     {
-        public record QueryParameter(string Key, string Value);
-
         protected readonly HttpClient _client;
         protected readonly AsyncEventManager<Notification> _notificationManager;
         public ApiService(IHttpClientFactory clientFactory, AsyncEventManager<Notification> notificationManager)
@@ -21,7 +19,12 @@ namespace Enplace.Service.Services.API
         public async Task<TEntity?> Add(TEntity entity)
         {
             return await RequestBuilder<TEntity>.Create(_client, "add")
-                .AddResponseHandler(HttpStatusCode.Unauthorized, (_, m) => _notificationManager.TriggerEvent(new() { Type = NotificationType.Error, Message = m?.ReasonPhrase ?? string.Empty }))
+                .AddResponseHandler(HttpStatusCode.Unauthorized,
+                (m) =>
+                {
+                    _notificationManager.TriggerEvent(new() { Type = NotificationType.Error, Message = m?.ReasonPhrase ?? string.Empty });
+                    return true;
+                })
                 .ExecutePostAsync(entity);
         }
 
@@ -60,7 +63,11 @@ namespace Enplace.Service.Services.API
             }
 
             var result = await RequestBuilder<List<TEntity>>.Create(_client, url)
-               .AddResponseHandler(HttpStatusCode.Forbidden, (_, _) => Console.WriteLine("Not Allowed to Retrieve Entities for User"))
+               .AddResponseHandler(HttpStatusCode.Forbidden, (_) =>
+               {
+                   Console.WriteLine("Not Allowed to Retrieve Entities for User");
+                   return false;
+               })
                .ExecuteGetAsync() ?? [];
 
             return result;
@@ -69,7 +76,11 @@ namespace Enplace.Service.Services.API
         public async Task<TEntity?> Update(TEntity entity)
         {
             return await RequestBuilder<TEntity>.Create(_client)
-             .AddResponseHandler(HttpStatusCode.Unauthorized, (_, m) => _notificationManager.TriggerEvent(new() { Type = NotificationType.Error, Message = m?.ReasonPhrase ?? string.Empty }))
+             .AddResponseHandler(HttpStatusCode.Unauthorized, (m) =>
+             {
+                 _notificationManager.TriggerEvent(new() { Type = NotificationType.Error, Message = m?.ReasonPhrase ?? string.Empty });
+                 return false;
+             })
              .ExecutePatchAsync(entity);
         }
     }

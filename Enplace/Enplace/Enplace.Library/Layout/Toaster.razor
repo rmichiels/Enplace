@@ -2,11 +2,12 @@
 <footer class="toaster">
     @foreach (Notification n in _notifications)
     {
-        <article class="toaster-notification @n.Type">
+        <article class="toaster-notification @n.Type fade-in">
             <span>
                 @n.Message
             </span>
-            <button @onclick="() => CloseNotification(n)">
+            <button class="btn-icon" @onclick="() => CloseNotification(n)">
+                <Close />
             </button>
         </article>
     }
@@ -30,12 +31,11 @@
         _ = Task.Run(() => RemoveNotificaiton(notification));
     }
 
-    private Task RemoveNotificaiton(Notification notification)
+    private async Task RemoveNotificaiton(Notification notification)
     {
-        Thread.Sleep(10000);
+        await Task.Delay(10000);
         _notifications.Remove(notification);
         StateHasChanged();
-        return Task.CompletedTask;
     }
 
     private Task CloseNotification(Notification notification)

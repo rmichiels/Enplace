@@ -12,7 +12,7 @@
 
 @code {
     [Inject]
-    public ApiService<RecipeDTO> Service { get; set; }
+    public required ApiService<RecipeDTO> Service { get; set; }
     private List<RecipeDTO> _recipes = [];
 
     protected override async Task OnInitializedAsync()

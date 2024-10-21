@@ -36,4 +36,10 @@
     <ProjectReference Include="..\Enplace.Service\Enplace.Service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="wwwroot\SK_Loading_SatBlue.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

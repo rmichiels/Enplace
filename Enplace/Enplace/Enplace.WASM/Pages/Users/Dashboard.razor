@@ -52,11 +52,18 @@
     private List<RecipeDTO> _menuRecipes
     {
         get => _selectedMenu?.MenuRecipes ?? [];
-        set => _selectedMenu.MenuRecipes = value;
+        set
+        {
+            if (_selectedMenu is not null)
+            {
+                _selectedMenu.MenuRecipes = value;
+            }
+        }
     }
+
     private RecipeDTO _newRecipe = new() { Category = new() { Id = 1, Name = "Standard" } };
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         EventManager.OnSubmit += RefreshDashboard;
         MenuEventManager.OnEventTriggered += MenuSelected;
@@ -95,7 +102,8 @@
         var modalParams = new ModalParameters()
             .Add(nameof(RecipeEditor.State), ComponentState.Create)
             .Add(nameof(RecipeEditor.Action), "create");
-        ModalService.Show<RecipeEditor>("Add New Recipe", modalParams, modalOpts);
+        ModalService.Show<RecipeEditor>
+    ("Add New Recipe", modalParams, modalOpts);
     }
 
     protected Task ShowMenuEditor()
@@ -103,7 +111,8 @@
         Console.WriteLine("Show Menu Editor Modal...");
         var opt = new ModalOptions() { Size = ModalSize.Medium };
         var param = new ModalParameters().Add(nameof(MenuEditor.State), ComponentState.Create);
-        ModalService.Show<MenuEditor>("Create new menu", param, opt);
+        ModalService.Show<MenuEditor>
+            ("Create new menu", param, opt);
         return Task.CompletedTask;
     }
 

@@ -15,7 +15,8 @@ namespace Enplace.Service.Services.API
             {$"data:{nameof(IngredientDTO)}", new(_azureHost, "/api/v1/Ingredients/", true) },
             {$"data:{nameof(MenuDTO)}", new(_azureHost, "/api/v1/Menus/", true) },
             {"config", new(_azureHost,"api/v1/Configuration/", true)},
-            {"res:ingr", new(_azureHost,"res/q/ingredients", true)}
+            {"res:ingr", new(_azureHost,"res/q/ingredients", true)},
+            {"res:recipe", new(_azureHost,"res/q/recipes", true)}
         };
 
         public ClientConfiguration this[string label]

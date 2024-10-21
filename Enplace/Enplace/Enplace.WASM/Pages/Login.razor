@@ -1,4 +1,5 @@
 ﻿@page "/login"
+@using Enplace.Service.Services.Managers
 @attribute [AllowAnonymous]
 
 
@@ -24,47 +25,44 @@
 
 @code {
     [Inject]
-    public AuthService Auth { get; set; }
+    public required AuthService Auth { get; set; }
     [Inject]
-    public AuthenticationStateProvider AuthProvider { get; set; }
+    public required AuthenticationStateProvider AuthProvider { get; set; }
+    [Inject]
+    public required NavigationManager NavigationManager { get; set; }
+    [Inject]
+    public required ILocalStorageService Storage { get; set; }
 
     [Inject]
-    public NavigationManager NavigationManager { get; set; }
-
-    [Inject]
-    public ILocalStorageService Storage { get; set; }
+    public required AsyncEventManager<bool> LoadingEventManager { get; set; }
 
     private AuthRequest _model = new();
 
     public async void AuthorizeUser()
     {
+        LoadingEventManager.TriggerEvent(true);
         var response = await Auth.AuthenticateUser(_model);
         if (response is not null)
         {
-            var dto = await Auth.AuthenticateAPI(response.Token);
+            var dto = await Auth.AuthenticateAPI(response.Token ?? string.Empty);
             Console.WriteLine(dto.Name);
             Console.WriteLine(dto.Id);
             EnplaceContext.User = dto;
-            HandleToken(response.Token);
+            HandleToken(response.Token ?? string.Empty);
         }
-        else
-        {
-            // Notify User
-        }
+        LoadingEventManager.TriggerEvent(false);
     }
 
     public async void RegisterUser()
     {
+        LoadingEventManager.TriggerEvent(true);
         var response = await Auth.RegisterUser(_model);
         if (response is not null)
         {
-            EnplaceContext.User = await Auth.RegisterAPI(response.Token);
-            HandleToken(response.Token);
+            EnplaceContext.User = await Auth.RegisterAPI(response.Token ?? string.Empty);
+            HandleToken(response.Token ?? string.Empty);
         }
-        else
-        {
-            // Notify User
-        }
+        LoadingEventManager.TriggerEvent(false);
     }
 
     private void HandleToken(string token)
@@ -77,11 +75,13 @@
 
             StateHasChanged();
             AuthProvider.GetAuthenticationStateAsync();
+            LoadingEventManager.TriggerEvent(false);
             NavigationManager.NavigateTo("/");
         }
         else
         {
             // Notify user
         }
+        LoadingEventManager.TriggerEvent(false);
     }
 }

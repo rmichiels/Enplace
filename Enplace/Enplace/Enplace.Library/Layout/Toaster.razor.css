@@ -1,7 +1,62 @@
 ﻿.toaster {
-    position: absolute;
-    z-index: 5;
+    position: fixed;
+    z-index: 200;
+    right: 1rem;
+    bottom: 1rem;
+    display: flex;
+    flex-direction: column-reverse; /* Ensures new notifications appear at the bottom */
+    align-items: flex-end;
+    gap: var(--gap-s);
+}
+
+@media(max-width:800) {
+    .toaster {
+        top: 0;
+        margin: auto;
+        right: unset;
+        bottom: unset;
+        flex-direction: column;
+    }
 }
 
 .toaster-notification {
+    min-width: 300px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    border: 2px solid Transparent;
+    background-color: transparent;
+    opacity: 0;
+}
+
+.Message {
+    color: #41464b;
+    background-color: #e2e3e5;
+    border-color: #d3d6d8;
+}
+
+.Warning {
+    color: #664d03;
+    background-color: #fff3cd;
+    border-color: #ffecb5;
+}
+
+.Error {
+    color: #842029;
+    background-color: #f8d7da;
+    border-color: #f5c2c7;
+}
+
+.Success {
+    color: #0f5132;
+    background-color: #d1e7dd;
+    border-color: #badbcc;
+}
+
+.fade-in {
+    opacity: 1;
+    transition: 0.5s;
 }
