@@ -32,6 +32,8 @@
     public required NavigationManager NavigationManager { get; set; }
     [Inject]
     public required ILocalStorageService Storage { get; set; }
+    [Inject]
+    public required AsyncEventManager<Notification> Notifications { get; set; }
 
     [Inject]
     public required AsyncEventManager<bool> LoadingEventManager { get; set; }
@@ -56,13 +58,21 @@
     public async void RegisterUser()
     {
         LoadingEventManager.TriggerEvent(true);
-        var response = await Auth.RegisterUser(_model);
-        if (response is not null)
+        try
         {
-            EnplaceContext.User = await Auth.RegisterAPI(response.Token ?? string.Empty);
-            HandleToken(response.Token ?? string.Empty);
+            var response = await Auth.RegisterUser(_model);
+            if (response is not null)
+            {
+                EnplaceContext.User = await Auth.RegisterAPI(response.Token ?? string.Empty);
+                HandleToken(response.Token ?? string.Empty);
+                LoadingEventManager.TriggerEvent(false);
+            }
         }
-        LoadingEventManager.TriggerEvent(false);
+        catch (Exception ex)
+        {
+            Notifications.TriggerEvent(new() { Message = ex.Message, Type = NotificationType.Error });
+            LoadingEventManager.TriggerEvent(false);
+        }
     }
 
     private void HandleToken(string token)

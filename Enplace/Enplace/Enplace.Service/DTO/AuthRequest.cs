@@ -10,6 +10,6 @@ namespace Enplace.Service.DTO
         [DataType(DataType.Password)]
         public string Credentials { get; set; } = string.Empty;
         [JsonPropertyName("ApplicationSignature")]
-        public Guid Signature { get; set; } = Guid.Parse("338e0e5d-16b0-42f0-b4ca-62c007dd452e");
+        public Guid Signature { get; set; } = Guid.Parse("5F25A490-5A39-47D5-AD56-EDB81CB1FB00");
     }
 }

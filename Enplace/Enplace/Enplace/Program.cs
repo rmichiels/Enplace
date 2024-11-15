@@ -29,12 +29,14 @@ builder.Services.AddApplicationInsightsTelemetryProcessor<TelemetryFilterDepende
 builder.Services.AddCors(
     options => options.AddDefaultPolicy(builder =>
         builder.AllowAnyHeader()
-         .WithOrigins("https://sk-enplace-client.azurewebsites.net", "https://localhost:7282")
+         .WithOrigins("https://sk-enplace-client.azurewebsites.net", "https://localhost:7282", "https://localhost:7287")
         .AllowAnyMethod()
     )
 );
 
 // Configure Auth
+Debug.WriteLine(sink.Value.Value);
+Debug.WriteLine(Encoding.UTF8.GetBytes(sink.Value.Value).ToString());
 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(sink.Value.Value));
 
 IdentityModelEventSource.ShowPII = true;

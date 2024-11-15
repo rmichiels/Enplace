@@ -66,7 +66,24 @@ namespace Enplace.API
                 var response = await _db.Get<User>(id.FindFirst("username")?.Value ?? string.Empty);
                 if (response is null)
                 {
-                    return NotFound();
+                    User user = new()
+                    {
+                        Name = id.FindFirst("username")?.Value ?? string.Empty,
+                        SKID = Guid.Parse(id.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty)
+                    };
+
+                    var result = await _db.Add(user);
+                    if (result is not null)
+                    {
+                        {
+                            UserConverter converter = new();
+                            return Accepted(await converter.Convert(result));
+                        }
+                    }
+                    else
+                    {
+                        return UnprocessableEntity();
+                    }
                 }
                 else
                 {

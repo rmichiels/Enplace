@@ -12,18 +12,18 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Enplace.Service.Migrations.SSDB
 {
     [DbContext(typeof(SSDBContext))]
-    [Migration("20240915125810_AddRecipeComments")]
-    partial class AddRecipeComments
+    [Migration("20241110210257_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.7")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("ProductVersion", "8.0.10")
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
             modelBuilder.Entity("Enplace.Service.Entities.DeltaStore", b =>
                 {
@@ -32,7 +32,7 @@ namespace Enplace.Service.Migrations.SSDB
                         .HasColumnType("int")
                         .HasColumnName("ID");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int?>("Command")
                         .HasColumnType("int");
@@ -52,7 +52,7 @@ namespace Enplace.Service.Migrations.SSDB
                         .HasColumnType("int")
                         .HasColumnName("ID");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("IngredientCategoryId")
                         .HasColumnType("int")
@@ -61,7 +61,7 @@ namespace Enplace.Service.Migrations.SSDB
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("varchar(100)");
 
                     b.HasKey("Id");
 
@@ -80,12 +80,12 @@ namespace Enplace.Service.Migrations.SSDB
                         .HasColumnType("int")
                         .HasColumnName("ID");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 
@@ -102,12 +102,12 @@ namespace Enplace.Service.Migrations.SSDB
                         .HasColumnType("int")
                         .HasColumnName("ID");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 
@@ -124,7 +124,7 @@ namespace Enplace.Service.Migrations.SSDB
                         .HasColumnType("int")
                         .HasColumnName("ID");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int?>("ApproximateCookingTime")
                         .HasColumnType("int");
@@ -133,12 +133,11 @@ namespace Enplace.Service.Migrations.SSDB
                         .HasColumnType("int");
 
                     b.Property<string>("Comment")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("OwnerUserId")
                         .HasColumnType("int")
@@ -164,11 +163,11 @@ namespace Enplace.Service.Migrations.SSDB
                         .HasColumnType("int")
                         .HasColumnName("ID");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -181,15 +180,19 @@ namespace Enplace.Service.Migrations.SSDB
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<byte[]>("Image")
                         .IsRequired()
-                        .HasColumnType("varbinary(max)");
+                        .HasColumnType("longblob");
+
+                    b.Property<string>("MIME")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("RecipeId")
                         .HasColumnType("int");
@@ -215,7 +218,7 @@ namespace Enplace.Service.Migrations.SSDB
                         .HasColumnName("IngredientID");
 
                     b.Property<string>("Comment")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("MeasurementId")
                         .HasColumnType("int")
@@ -240,22 +243,22 @@ namespace Enplace.Service.Migrations.SSDB
                         .HasColumnType("int")
                         .HasColumnName("ID");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<int>("RecipeId")
                         .HasColumnType("int")
                         .HasColumnName("RecipeID");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id", "RecipeId");
+                    b.HasKey("Id");
 
                     b.HasIndex("RecipeId");
 
@@ -269,13 +272,22 @@ namespace Enplace.Service.Migrations.SSDB
                         .HasColumnType("int")
                         .HasColumnName("ID");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<Guid>("SKID")
+                        .HasColumnType("char(36)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.HasIndex("SKID")
+                        .IsUnique();
 
                     b.ToTable("Users");
                 });
@@ -287,7 +299,11 @@ namespace Enplace.Service.Migrations.SSDB
                         .HasColumnType("int")
                         .HasColumnName("ID");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int")
@@ -303,20 +319,17 @@ namespace Enplace.Service.Migrations.SSDB
                     b.ToTable("UserMenus");
                 });
 
-            modelBuilder.Entity("UserMenuRecipe", b =>
+            modelBuilder.Entity("Enplace.Service.Entities.UserMenuRecipe", b =>
                 {
-                    b.Property<int>("MenuId")
-                        .HasColumnType("int")
-                        .HasColumnName("MenuID");
+                    b.Property<int>("MenuID")
+                        .HasColumnType("int");
 
-                    b.Property<int>("RecipeId")
-                        .HasColumnType("int")
-                        .HasColumnName("RecipeID");
+                    b.Property<int>("RecipeID")
+                        .HasColumnType("int");
 
-                    b.HasKey("MenuId", "RecipeId")
-                        .HasName("PK_MenuRecipes");
+                    b.HasKey("MenuID", "RecipeID");
 
-                    b.HasIndex("RecipeId");
+                    b.HasIndex("RecipeID");
 
                     b.ToTable("UserMenuRecipes", (string)null);
                 });
@@ -435,20 +448,23 @@ namespace Enplace.Service.Migrations.SSDB
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("UserMenuRecipe", b =>
+            modelBuilder.Entity("Enplace.Service.Entities.UserMenuRecipe", b =>
                 {
-                    b.HasOne("Enplace.Service.Entities.UserMenu", null)
-                        .WithMany()
-                        .HasForeignKey("MenuId")
-                        .IsRequired()
-                        .HasConstraintName("fk_UserMenuRecipes_N1_UserMenus");
-
-                    b.HasOne("Enplace.Service.Entities.Recipe", null)
-                        .WithMany()
-                        .HasForeignKey("RecipeId")
+                    b.HasOne("Enplace.Service.Entities.UserMenu", "Menu")
+                        .WithMany("MenuRecipes")
+                        .HasForeignKey("MenuID")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_UserMenuRecipes_N1_Recipes");
+                        .IsRequired();
+
+                    b.HasOne("Enplace.Service.Entities.Recipe", "Recipe")
+                        .WithMany("MenuRecipes")
+                        .HasForeignKey("RecipeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Menu");
+
+                    b.Navigation("Recipe");
                 });
 
             modelBuilder.Entity("UserRecipe", b =>
@@ -484,6 +500,8 @@ namespace Enplace.Service.Migrations.SSDB
 
             modelBuilder.Entity("Enplace.Service.Entities.Recipe", b =>
                 {
+                    b.Navigation("MenuRecipes");
+
                     b.Navigation("RecipeImages");
 
                     b.Navigation("RecipeIngredients");
@@ -501,6 +519,11 @@ namespace Enplace.Service.Migrations.SSDB
                     b.Navigation("Recipes");
 
                     b.Navigation("UserMenus");
+                });
+
+            modelBuilder.Entity("Enplace.Service.Entities.UserMenu", b =>
+                {
+                    b.Navigation("MenuRecipes");
                 });
 #pragma warning restore 612, 618
         }
