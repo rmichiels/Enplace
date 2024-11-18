@@ -38,7 +38,7 @@ public partial class SSDBContext : DbContext
     {
         optionsBuilder.EnableSensitiveDataLogging();
         //optionsBuilder.UseSqlServer("Server=tcp:swissknife.database.windows.net,1433;Initial Catalog=EnplaceDB;Persist Security Info=False;User ID=dabman;Password=M4st3rk3y;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60;", options => options.EnableRetryOnFailure());
-        optionsBuilder.UseMySql("Server=192.168.0.139;Port=3306;Database=Enplace;User ID=agent;Password=M4st3rk3y;CharSet=utf8;", ServerVersion.AutoDetect("Server=192.168.0.139;Port=3306;Database=SKID;User ID=agent;Password=M4st3rk3y;CharSet=utf8;"));
+        optionsBuilder.UseMySql("Server=sql.swissknife.solutions;Port=6446;Database=Enplace;User ID=agent;Password=M4st3rk3y;CharSet=utf8;", ServerVersion.AutoDetect("Server=sql.swissknife.solutions;Port=6446;Database=SKID;User ID=agent;Password=M4st3rk3y;CharSet=utf8;"));
 
     }
 
