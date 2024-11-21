@@ -2,7 +2,7 @@ name: API CI/CD
 on:
   push:
     branches:
-    - main
+    - PROD-API
   workflow_dispatch:
     inputs:
       logLevel:
