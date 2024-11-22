@@ -15,12 +15,9 @@
     }
 
 .section-menu {
-    --color-primary: #fbe7c6;
-    display: grid;
-    grid-template-rows: [header] 30px [content] 1fr;
-    grid-template-columns: [splash]500px [content] 1fr;
+  display:flex;
+  flex-direction:row;
     gap: 1rem;
-    background: var(--color-primary);
     border-radius: 10px;
     padding: 1rem;
 }

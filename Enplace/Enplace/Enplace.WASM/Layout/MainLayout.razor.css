@@ -7,12 +7,12 @@
     height: 100vh;
     background-color: white;
     opacity: 1;
+    /*
     background-image: radial-gradient(#020202 0.75px, white 0.75px);
     background-size: 15px 15px;
+    */
     overflow: hidden;
 }
-
-
 
 main {
     padding-top: 1rem;

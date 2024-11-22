@@ -8,6 +8,17 @@
     --palette-accent: #ff8b5d;
     --palette-action: var(--palette-primary);
     --palette-confirm: var(--palette-accent);
+    --palette-base: #D0FBF2;
+    /*--palette-base-accent:#0FC381;*/
+    --palette-base-accent: #13E2B7;
+    --palette-base-accent-text: #ffffff;
+    --palette-base-neutral: #ffffff;
+    --palette-alt: #FEC196;
+    --palette-alt-accent: #FF8669;
+    --palette-alt-neutral: #ffffff;
+    --padding-xs: 0.25rem;
+    --padding-s: 0.5rem;
+    --padding-m: 1rem;
 }
 
 @media(max-width :800px) {
@@ -19,6 +30,35 @@
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
+
+.material-symbols-rounded {
+    font-family: 'Material Symbols Rounded';
+    font-weight: normal;
+    font-style: normal;
+    /* font-size: 24px; */
+    font-size: 1.5rem;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    text-align: center;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+}
+
+.glass {
+    background: rgba(255, 255, 255, 0.43);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(9.9px);
+    -webkit-backdrop-filter: blur(9.9px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    padding: var(--padding-m);
+}
+
 
 .Standard {
     --color-primary: #fbe7c6 !important;
@@ -304,6 +344,10 @@ code {
 
 .flex-around {
     justify-content: space-around;
+}
+
+.f-1{
+    flex:1;
 }
 
 .gap-s {

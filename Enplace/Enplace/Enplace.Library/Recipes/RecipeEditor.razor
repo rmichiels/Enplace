@@ -192,7 +192,7 @@
         var state = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var id = state.User.Identity as ClaimsIdentity;
         var scopes = id?.FindAll("scope") ?? [];
-        List<string> allowedScopes = ["superuser", "admin", "communitychampion", "std"];
+        List<string> allowedScopes = ["owner", "admin", "community-champion"];
 
         if (scopes.Any(c => allowedScopes.Contains(c.Value)))
         {

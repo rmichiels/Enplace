@@ -2,11 +2,11 @@
 @using Enplace.Service.Services.Managers
 @inherits BaseTile<MenuDTO>
 
-<article class="menu-card @State @Class" @onclick="() => OnItemSelected.InvokeAsync(Item)">
+<article class="menu-card glass @State @Class" @onclick="() => OnItemSelected.InvokeAsync(Item)">
     @switch (State)
     {
         case ComponentState.Create:
-            <button class="btn-icon icon-med" @onclick="ShowMenuEditor">
+            <button class="btn-icon icon-med f-1" @onclick="ShowMenuEditor">
                 <Enplace.Library.Icons.Add />
             </button>
             break;
@@ -24,6 +24,7 @@
         if (Item is not null)
         {
             await API.Delete(Item.Id);
+            EventManager.TriggerEvent(Item);
         }
     }
 
