@@ -21,7 +21,7 @@ namespace Enplace.Library.Recipes
                 .Add(nameof(RecipeEditor.State), ComponentState.Create)
                 .Add(nameof(RecipeEditor.Action), "create");
             ModalService.Show<RecipeEditor>("Add New Recipe", modalParams, modalOpts);
-            NotificationManager.TriggerEvent(new() { Type = Service.NotificationType.Message, Message = "Message" });
+            //NotificationManager.TriggerEvent(new() { Type = Service.NotificationType.Message, Message = "Message" });
         }
 
         public void ShowMenuSelector()

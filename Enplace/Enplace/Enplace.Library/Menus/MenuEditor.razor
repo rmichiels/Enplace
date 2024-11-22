@@ -7,7 +7,7 @@
             <h1>oopsie</h1>
             break;
         case ComponentState.Create:
-            <EditForm Model="Menu" class="flex-row flex-start" OnSubmit="CreateRecipe">
+            <EditForm Model="Menu" class="flex-row flex-start" OnSubmit="CreateMenu">
                 <InputText @bind-Value="Menu.Name" />
                 <button class="btn-icon" type="submit">
                     <Enplace.Library.Icons.Add />
@@ -23,6 +23,9 @@
 
     [Inject]
     public MenuAPI API { get; set; }
+    [Inject]
+    public AsyncEventManager<MenuDTO> EventManager { get; set; }
+
 
     [Parameter]
     public ComponentState State { get; set; } = ComponentState.Details;
@@ -30,11 +33,11 @@
     [Parameter]
     public MenuDTO Menu { get; set; } = new();
 
-    public async Task CreateRecipe()
+    public async Task CreateMenu()
     {
         Menu.UserId = EnplaceContext.User.Id;
         await API.Add(Menu);
-        EventManager.MenuCreated.TriggerEvent(Menu);
+        EventManager.TriggerEvent(Menu);
         await Close();
     }
 }
