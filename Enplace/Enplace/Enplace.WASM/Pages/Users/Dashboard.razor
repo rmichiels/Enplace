@@ -9,18 +9,22 @@
 
 <div id="user-dashboard" class="user-dashboard">
     <section class="section-menu">
-        <aside class="menu-splash m-hidden">
+        <aside class="menu-splash m-hidden glass">
             <p>
                 what will you be cooking today {username}?
             </p>
         </aside>
-        <header class="flex-row flex-between gap-m">
-            <span class="subtitle">Your menus</span>
-            <button type="button" class="btn-icon m-revealed" @onclick="ShowMenuEditor">
-                <Add />
-            </button>
-        </header>
-        <CachedCarrousel TItem="MenuDTO" Class="menu-carrousel m-hidden-scrollbar" TComponent="MenuCard" @bind-SelectedItem:get="_selectedMenu" @bind-SelectedItem:set="MenuSelected" SelectFirst=true ShowCreationTile=true FilterOnUser=true />
+        <div class="d-flex flex-col glass f-1">
+            <header class="flex-row flex-between gap-m">
+                <span class="subtitle">Your menus</span>
+                <button type="button" class="btn-icon m-revealed" @onclick="ShowMenuEditor">
+                    <Add />
+                </button>
+            </header>
+            <CachedCarrousel TItem="MenuDTO" Class="menu-carrousel m-hidden-scrollbar f-1" 
+            TComponent="MenuCard" @bind-SelectedItem:get="_selectedMenu" @bind-SelectedItem:set="MenuSelected" 
+            SelectFirst=true ShowCreationTile=true FilterOnUser=true />
+        </div>
     </section>
     <section class="section-inspiration">
         <header class="flex-row flex-between gap-m">

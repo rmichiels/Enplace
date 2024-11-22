@@ -25,7 +25,7 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem;
+    padding: var(--padding-s);
     border-radius: var(--border-radius);
     border: 2px solid Transparent;
     background-color: transparent;
