@@ -11,8 +11,15 @@
     background-image: radial-gradient(#020202 0.75px, white 0.75px);
     background-size: 15px 15px;
     */
+    background: #ffe6d9;
     overflow: hidden;
 }
+/*
+@media(prefers-color-scheme:dark){
+    .page {
+        background-color: var(--palette-dark);
+    }
+}*/
 
 main {
     padding-top: 1rem;
@@ -51,7 +58,6 @@ article {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    --color-primary: #fbe7c6;
 }
 
 @media(max-width: 800px) {

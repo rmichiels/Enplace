@@ -1,4 +1,5 @@
-﻿using Blazored.Modal.Services;
+﻿using Blazored.LocalStorage;
+using Blazored.Modal.Services;
 using Enplace.Service.Contracts;
 using Enplace.Service.DTO;
 using Enplace.Service.Services.API;
@@ -18,7 +19,6 @@ namespace Enplace.Library.Layout
         public required AsyncEventManager<Notification> NotificationManager { get; set; }
         [Inject]
         public required NavigationManager Navigation { get; set; }
-
         [Parameter]
         public TItem? Item { get; set; } = default;
         [Parameter]

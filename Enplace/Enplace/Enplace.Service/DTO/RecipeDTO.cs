@@ -9,9 +9,10 @@ namespace Enplace.Service.DTO
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; } = string.Empty;
         public UserDTO Owner { get; set; } = new();
-        public int? ApproximateServingSize { get; set; }
+        public int? ApproximateServingSize { get; set; } = 1;
         public int? ApproximateCookingTime { get; set; }
         public string? Comment { get; set; }
+        public decimal Scale { get; set; } = 1;
         public RecipeCategory? Category { get; set; }
         public List<IngredientDTO> Ingredients { get; set; } = [];
         public List<RecipeStepDTO> RecipeSteps { get; set; } = [];

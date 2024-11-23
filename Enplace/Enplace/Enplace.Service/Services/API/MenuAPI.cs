@@ -8,6 +8,11 @@ namespace Enplace.Service.Services.API
     {
         public async Task<List<RecipeDTO>> GetMenuRecipes(ILabeled item)
         {
+            if (item is null)
+            {
+                return [];
+            }
+
             return await RequestBuilder<List<RecipeDTO>>.Create(_client, $"{item.Id}/recipes")
                 .ExecuteGetAsync() ?? [];
         }

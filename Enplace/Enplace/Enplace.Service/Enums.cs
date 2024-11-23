@@ -9,22 +9,12 @@
         Header
     }
 
-    public enum ResultStatus
-    {
-        Success,
-        Error
-    }
-
-    public enum ErrorType
-    {
-        Unknown,
-    }
-
     public enum NotificationType
     {
         Message,
         Confirmation,
         Warning,
-        Error
+        Error,
+        Success
     }
 }

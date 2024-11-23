@@ -4,6 +4,7 @@ using Enplace.Service.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Enplace.Service.Migrations.SSDB
 {
     [DbContext(typeof(SSDBContext))]
-    partial class SSDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241122231637_MenuScaleAndUserRecipeSupport")]
+    partial class MenuScaleAndUserRecipeSupport
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -324,8 +327,8 @@ namespace Enplace.Service.Migrations.SSDB
                     b.Property<int>("RecipeID")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Scale")
-                        .HasColumnType("decimal(65,30)");
+                    b.Property<int>("Scale")
+                        .HasColumnType("int");
 
                     b.HasKey("MenuID", "RecipeID");
 

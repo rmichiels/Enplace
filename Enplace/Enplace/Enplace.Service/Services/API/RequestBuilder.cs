@@ -73,6 +73,12 @@ namespace Enplace.Service.Services.API
                         {
                             return null;
                         }
+                    case HttpStatusCode.NoContent:
+                        if (_handlers.TryGetValue(result.StatusCode, out var nocontentResponseHandler))
+                        {
+                            nocontentResponseHandler.Invoke(result);
+                        }
+                        return null;
                     default:
                         if (_handlers.TryGetValue(result.StatusCode, out var action))
                         {

@@ -14,7 +14,7 @@
                     <span class="ingredient-category @category.Name">@category.Name</span>
                     foreach (IngredientDTO ingredient in result)
                     {
-                        <IngredientShard @bind-Ingredient="Ingredients[Ingredients.IndexOf(ingredient)]" />
+                        <IngredientShard @bind-Ingredient="Ingredients[Ingredients.IndexOf(ingredient)]" Scale=@Scale/>
                     }
                 }
             }

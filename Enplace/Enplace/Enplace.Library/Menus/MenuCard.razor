@@ -2,7 +2,7 @@
 @using Enplace.Service.Services.Managers
 @inherits BaseTile<MenuDTO>
 
-<article class="menu-card glass @State @Class" @onclick="() => OnItemSelected.InvokeAsync(Item)">
+<article class="menu-card glass-s @State @Class" @onclick="() => OnSelect()">
     @switch (State)
     {
         case ComponentState.Create:
@@ -35,5 +35,10 @@
         var param = new ModalParameters().Add(nameof(MenuEditor.State), ComponentState.Create);
         ModalService.Show<MenuEditor>("Create new menu", param, opt);
         return Task.CompletedTask;
+    }
+
+    protected async Task OnSelect()
+    {
+        OnItemSelected.InvokeAsync(Item);
     }
 }
