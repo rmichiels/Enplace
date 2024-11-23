@@ -6,7 +6,7 @@
     flex-grow: 1;
     flex-shrink: 0;
     width: 100%;
-    border: solid 3px var(--palette-primary);
+    border: solid 3px var(--palette-base);
 }
 
     .recipe-editor .card-header {
@@ -15,7 +15,7 @@
 
     .recipe-editor .card-body {
         min-height: 200px;
-        border-color: var(--palette-primary);
+        border-color: var(--palette-base);
     }
 
     .recipe-editor .card-footer {

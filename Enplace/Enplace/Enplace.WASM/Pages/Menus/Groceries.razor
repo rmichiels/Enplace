@@ -1,5 +1,6 @@
 ﻿@page "/groceries/{Id:int}"
 @using Enplace.Library.Menus
+@using Enplace.Library.Models
 @attribute [Authorize]
 
 <div class="menu-groceries">
@@ -22,6 +23,8 @@
 @code {
     [Inject]
     public required MenuAPI API { get; set; }
+    [Inject]
+    public ILocalStorageService StorageService { get; set; }
     [Parameter]
     public int Id { get; set; }
 
@@ -29,6 +32,10 @@
 
     protected async override Task OnInitializedAsync()
     {
-        _groceriesPerCategory = await API.GetGroceriesFor(Id) ?? [];
+        _groceriesPerCategory = await StorageService.GetCacheFor<Dictionary<string, List<GroceryListItem>>>(Id, "groceries");
+        if(_groceriesPerCategory?.Count ==  0|| _groceriesPerCategory is null)
+        {
+            _groceriesPerCategory = await API.GetGroceriesFor(Id) ?? [];
+        }
     }
 }

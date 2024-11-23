@@ -83,5 +83,26 @@ namespace Enplace.Service.Services.API
              })
              .ExecutePatchAsync(entity);
         }
+
+        public async Task Like(TEntity entity)
+        {
+            await RequestBuilder<TEntity>.Create(_client, $"like/{entity.Id}")
+           .AddResponseHandler(HttpStatusCode.Unauthorized, (m) =>
+           {
+               _notificationManager.TriggerEvent(new() { Type = NotificationType.Error, Message = m?.ReasonPhrase ?? string.Empty });
+               return false;
+           })
+             .AddResponseHandler(HttpStatusCode.BadRequest, (m) =>
+             {
+                 _notificationManager.TriggerEvent(new() { Type = NotificationType.Error, Message = m?.ReasonPhrase ?? string.Empty });
+                 return false;
+             })
+            .AddResponseHandler(HttpStatusCode.NoContent, (m) =>
+            {
+                _notificationManager.TriggerEvent(new() { Type = NotificationType.Success, Message = $"{entity.Name} Liked!" });
+                return false;
+            })
+           .ExecutePatchAsync(entity);
+        }
     }
 }

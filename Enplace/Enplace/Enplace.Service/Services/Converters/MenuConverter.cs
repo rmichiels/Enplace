@@ -16,7 +16,7 @@ namespace Enplace.Service.Services.Converters
                 var intermediary = await recipeConverter.Convert(r);
                 if (intermediary != null)
                 {
-                    entity.MenuRecipes.Add(new() { MenuID = viewModel.Id, RecipeID = intermediary.Id });
+                    entity.MenuRecipes.Add(new() { MenuID = viewModel.Id, RecipeID = intermediary.Id, Scale = r.Scale });
                 }
             });
 

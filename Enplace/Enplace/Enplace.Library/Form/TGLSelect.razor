@@ -1,29 +1,19 @@
 ﻿@inherits ToggelableBase<int>
 @rendermode RenderMode.InteractiveAuto
 
+<InputSelect class="@($"tgl tgl-select {State} {Class}")" TValue="int" @bind-Value="Field" placeholder="@Placeholder" style="height:100%" disabled=@(State != ComponentState.Edit && State !=ComponentState.Create && State !=ComponentState.Loading )>
+    @if (Placeholder is not null)
+    {
+        <option value="0" selected="selected">@Placeholder</option>
+    }
 
-@switch (State)
-{
-    case ComponentState.Details:
-        @ChildContent
-        break;
-    default:
-        <InputSelect class="@($"tgl tgl-select {Class}")" TValue="int" @bind-Value="Field" placeholder="@Placeholder" style="height:100%">
-            @if (Placeholder is not null)
-            {
-                <option value="0" selected="selected">@Placeholder</option>
-            }
-            @foreach (ILabeled option in Options)
-            {
-                <option value="@option.Id">@option.Name</option>
-            }
-        </InputSelect>
-        break;
-}
+    @foreach (ILabeled option in Options)
+    {
+        <option value="@option.Id">@option.Name</option>
+    }
+</InputSelect>
 
 @code {
     [Parameter]
     public List<ILabeled> Options { get; set; } = [];
-
-
 }

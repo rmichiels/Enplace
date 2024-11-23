@@ -31,7 +31,7 @@ namespace Enplace.API
 
         [HttpGet]
         [Route("q/recipes")]
-        public async Task<IActionResult> QueryRecipes([FromQuery] string name, [FromQuery] bool foruser = false, [FromQuery] bool isliked = false, [FromQuery] string category = "", [FromQuery] int pagesize = 5, [FromQuery] int page = 1)
+        public async Task<IActionResult> QueryRecipes([FromQuery] string name, [FromQuery] string foruser = "false", [FromQuery] bool isliked = false, [FromQuery] string category = "", [FromQuery] int pagesize = 5, [FromQuery] int page = 1)
         {
             var query = await _repository.Query<Recipe>();
             query = query.IgnoreAutoIncludes()
@@ -45,21 +45,24 @@ namespace Enplace.API
                 return BadRequest("Cannot select a page below the 1st");
             }
 
-            if (foruser)
+            if (foruser == "true")
             {
                 var id = User.Identity as ClaimsIdentity;
-                userToMatch = await _repository.Get<User>(id.FindFirst("username")?.Value ?? string.Empty);
+                var username = id?.FindFirst("username")?.Value ?? string.Empty;
+
+                userToMatch = await _repository.Get<User>(username);
                 if (userToMatch is null)
                 {
-                    return BadRequest();
+                    return BadRequest("User not found.");
                 }
+
                 if (isliked)
                 {
-                    query = query.Include(r => r.Users).Where(r => r.Users.Contains(userToMatch));
+                    query = query.Where(r => r.Likes.Any(u => u.UserID == userToMatch.Id));
                 }
                 else
                 {
-                    query = query.Where(r => r.Users == userToMatch);
+                    query = query.Where(r => r.OwnerUser.Id == userToMatch.Id);
                 }
             }
 

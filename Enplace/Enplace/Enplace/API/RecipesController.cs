@@ -2,8 +2,10 @@
 using Enplace.Service.DTO;
 using Enplace.Service.Entities;
 using Enplace.Service.Services.Converters;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 
 namespace Enplace.API
@@ -20,13 +22,13 @@ namespace Enplace.API
 
             if (foruser)
             {
-                var username = await GetUserName();
-                if (username != string.Empty)
+                var user = await GetUser();
+                if (user is not null)
                 {
-                    var q = await _service.Query<Recipe>();
-                    intermediary = await q.Include(r => r.Users)
+                    var q = await Service.Query<Recipe>();
+                    intermediary = await q.Include(r => r.Likes)
                         .Include(r => r.OwnerUser)
-                        .Where(r => r.OwnerUser.Name == username || r.Users.Any(u => u.Name == username))
+                        .Where(r => r.OwnerUser.Name == user.Name || r.Likes.Any(u => u.UserID == user.Id))
                         .ToListAsync() ?? [];
                 }
                 else
@@ -36,7 +38,7 @@ namespace Enplace.API
             }
             else
             {
-                intermediary = await _service.GetAll<Recipe>();
+                intermediary = await Service.GetAll<Recipe>();
             }
 
             foreach (Recipe item in intermediary)
@@ -48,6 +50,43 @@ namespace Enplace.API
                 }
             }
             return results;
+        }
+
+        [Route("like/{recipeid}")]
+        [HttpPatch]
+        [Authorize]
+        public async Task<IActionResult> ToggleLike([FromRoute]int recipeid)
+        {
+            var user = await GetUser();
+            if (user is null)
+            {
+                return BadRequest("You can only like recipes while logged in.");
+            }
+            else
+            {
+                var query = await Service.Query<Recipe>();
+                var recipe = query
+                .Include(r => r.Likes)
+                .First(r => r.Id == recipeid);
+                UserRecipe ur = new() { UserID = user.Id, RecipeID = recipeid };
+                try
+                {
+                    if (!recipe.Likes.Any(like => like.UserID == user.Id && like.RecipeID == recipeid))
+                    {
+                        await Service.Link(ur);
+                        return NoContent();
+                    }
+                    else
+                    {
+                        await Service.UnLink(recipe.Likes.First(like => like.UserID == user.Id && like.RecipeID == recipeid));
+                        return NoContent();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return UnprocessableEntity(ex.Message);
+                }
+            }
         }
     }
 }
