@@ -1,4 +1,6 @@
-﻿@using Enplace.Service.Services.Managers
+﻿@using Blazored.LocalStorage
+@using Enplace.Library.Models
+@using Enplace.Service.Services.Managers
 @typeparam TItem where TItem : class, ILabeled, new()
 @typeparam TComponent where TComponent : BaseTile<TItem>
 
@@ -26,13 +28,15 @@
     public required ApiService<TItem> API { get; set; }
     [Inject]
     public required AsyncEventManager<TItem> EventManager { get; set; }
+    [Inject]
+    public required ILocalStorageService StorageService { get; set; }
 
     [Parameter]
     public TItem? SelectedItem { get; set; }
     [Parameter]
     public EventCallback<TItem> SelectedItemChanged { get; set; }
 
-    private TItem? _lastEvent { get; set; }
+    private ILabeled? _lastEvent { get; set; }
 
     [Parameter]
     public bool FilterOnUser { get; set; } = false;
@@ -46,6 +50,12 @@
     public bool QueryOverride { get; set; } = false;
 
     [Parameter]
+    public Func<ILabeled, Task<List<TItem>>>? Query { get; set; }
+
+    [Parameter]
+    public string? StorageKeyExtension { get; set; }
+
+    [Parameter]
     public List<TItem>? Items { get; set; }
     [Parameter]
     public EventCallback<List<TItem>>? ItemsChanged { get; set; }
@@ -55,7 +65,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Console.WriteLine($"{typeof(TItem).Name} Carrousel | OnInitializedAsync");
+        Items = await StorageService.GetCachedListFor<TItem>(EnplaceContext.User?.Id ?? 0, StorageKeyExtension);
+
         var freshStamp = DateTime.Now;
         // if intermediate stamp exceeds cached stamp by n time
         // or there are 0 cached items
@@ -69,43 +80,44 @@
             }
             if (QueryOverride)
             {
-                if (Items is null)
+                if (Items is null && Query is null)
                 {
                     throw new Exception("Query overridden, but no alternative source has been provided.");
                 }
+                Items = await Query.Invoke(SelectedItem);
             }
             else
             {
                 Items = await API.GetAll(parameters);
             }
-
             _timeStamp = freshStamp;
         }
+        await StorageService.SetCacheFor<TItem>(Items, EnplaceContext.User?.Id ?? 0, StorageKeyExtension);
         EventManager.OnEventTriggered += ForceCarrouselRefresh;
     }
 
     protected override void OnAfterRender(bool firstRender)
     {
-        Console.WriteLine($"{typeof(TItem).Name} Carrousel | OnAfterRender");
-        Console.WriteLine($"{typeof(TItem).Name} Carrousel | FirstRender {firstRender} - Items {Items?.Count}");
         if (Items is not null && Items.Count > 0)
         {
-            Console.WriteLine($"{typeof(TItem).Name} Carrousel | {Items.Count} - {SelectFirst} - {SelectedItem?.Id}");
             if (SelectFirst && SelectedItem is null)
             {
-                Console.WriteLine("SelectFirst & No Selected Item");
                 SelectedItem = Items.First();
                 SelectedItemChanged.InvokeAsync(Items.First());
                 StateHasChanged();
             }
         }
-
     }
 
-    private async Task ForceCarrouselRefresh(TItem? item)
+    public async Task ForceCarrouselRefresh(ILabeled? item)
     {
         Console.WriteLine($"Forcing {typeof(TItem).Name} Carrousel Refresh...");
-        if (item != _lastEvent || item is null)
+        if (QueryOverride && Query is not null && item is not null)
+        {
+            Items = await Query.Invoke(item);
+            StateHasChanged();
+        }
+        else if (item != _lastEvent || item is null)
         {
             (string, string)[] parameters = [];
             if (FilterOnUser)
@@ -117,13 +129,16 @@
                 Items = await API.GetAll(parameters);
             }
             _lastEvent = item;
-            StateHasChanged();
+        }
+        StateHasChanged();
+        if (Items?.Count > 0)
+        {
+            Task.Run(() => StorageService.SetCacheFor<TItem>(Items, item?.Id ?? 0, StorageKeyExtension));
         }
     }
 
     private async Task OnItemSelected(TItem? item)
     {
-        Console.WriteLine($"Triggering {typeof(TItem).Name} Item Selection...");
         if (item is not null && SelectedItem is not null)
         {
             if (item.Id != SelectedItem.Id)

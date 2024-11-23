@@ -40,6 +40,7 @@ builder.Services.AddScoped<ApiService<IngredientDTO>>();
 // MenuAPI has some unique methods
 builder.Services.AddScoped<MenuAPI>();
 builder.Services.AddScoped<IResource<IngredientDTO>, IngredientResourceService>();
+builder.Services.AddScoped<IResourceProvider<RecipeDTO>, RecipeResourceProvider>();
 builder.Services.AddScoped<AuthService>();
 
 await builder.Build().RunAsync();

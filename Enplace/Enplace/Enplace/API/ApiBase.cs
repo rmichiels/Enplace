@@ -1,5 +1,7 @@
 ﻿using Enplace.Service.Contracts;
+using Enplace.Service.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Security.Claims;
 
 namespace Enplace.API
@@ -8,19 +10,20 @@ namespace Enplace.API
     [Route("api/v1/[controller]")]
     public class ApiBase<TEntity, TDTO> : ControllerBase where TEntity : class, ILabeled where TDTO : class, ILabeled
     {
-        protected ICrudable _service { get; set; }
+        protected ICrudable Service { get; set; }
         protected readonly IModelConverter<TEntity, TDTO> _converter;
         public ApiBase(ICrudable crudService, IModelConverter<TEntity, TDTO> modelConverter)
         {
-            _service = crudService;
+            Service = crudService;
             _converter = modelConverter;
         }
 
-        protected Task<string> GetUserName()
+        protected async Task<User?> GetUser()
         {
             var id = User.Identity as ClaimsIdentity;
             var username = id?.FindFirst("username")?.Value ?? string.Empty;
-            return Task.FromResult(username);
+            var user = await Service.Get<User>(username);
+            return user;
         }
 
         [Route("list")]
@@ -28,7 +31,7 @@ namespace Enplace.API
         public virtual async Task<ICollection<TDTO>> GetAll([FromQuery] bool foruser = false)
         {
             List<TDTO> results = [];
-            var intermediary = await _service.GetAll<TEntity>();
+            var intermediary = await Service.GetAll<TEntity>();
             foreach (TEntity item in intermediary)
             {
                 var DTO = await _converter.Convert(item);
@@ -45,7 +48,7 @@ namespace Enplace.API
         {
             TEntity entity = await _converter.Convert(DTO);
 
-            var addedEntity = await _service.Add(entity);
+            var addedEntity = await Service.Add(entity);
             if (addedEntity is null)
             {
                 return BadRequest();
@@ -63,14 +66,20 @@ namespace Enplace.API
             TEntity? entity;
             if (int.TryParse(param, out var id))
             {
-                entity = await _service.Get<TEntity>(id);
+                entity = await Service.Get<TEntity>(id);
             }
             else
             {
-                entity = await _service.Get<TEntity>(param);
+                entity = await Service.Get<TEntity>(param);
             }
-
-            return await _converter.Convert(entity);
+            if (entity is null)
+            {
+                return null;
+            }
+            else
+            {
+                return await _converter.Convert(entity);
+            }
         }
         [Route("{param}")]
         [HttpDelete]
@@ -80,11 +89,11 @@ namespace Enplace.API
             {
                 if (int.TryParse(param, out var id))
                 {
-                    await _service.Delete<TEntity>(id);
+                    await Service.Delete<TEntity>(id);
                 }
                 else
                 {
-                    await _service.Delete<TEntity>(param);
+                    await Service.Delete<TEntity>(param);
                 }
                 return Ok();
             }
@@ -100,8 +109,8 @@ namespace Enplace.API
             var entity = await _converter.Convert(DTO);
             try
             {
-                var result = await _service.Update(entity);
-                return Ok(result);
+                var result = await Service.Update(entity);
+                return Ok();
             }
             catch (Exception ex)
             {
@@ -113,7 +122,7 @@ namespace Enplace.API
         {
             try
             {
-                await _service.Delete(entity);
+                await Service.Delete(entity);
                 return Ok();
             }
             catch (Exception ex)

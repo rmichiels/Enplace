@@ -1,0 +1,47 @@
+﻿<div class="ladder">
+    <button type="button" class="material-symbols-rounded btn-clear" @onclick=@StepDown>
+        chevron_left
+    </button>
+    <span class="align-middle">
+        @Step.ToString("0.##")
+    </span>
+    <button type="button" class="material-symbols-rounded btn-clear" @onclick=@StepUp>
+        chevron_right
+    </button>
+</div>
+
+@code {
+    [Parameter]
+    public decimal Step { get; set; }
+    [Parameter]
+    public EventCallback<decimal> StepChanged { get; set; }
+
+    [Parameter]
+    public decimal Magnitude { get; set; } = 1;
+
+    [Parameter]
+    public decimal? UpperBounds { get; set; } = null;
+
+    [Parameter]
+    public decimal? LowerBounds { get; set; } = null;
+
+    public void StepUp()
+    {
+        if (UpperBounds is null || Step + Magnitude < UpperBounds)
+        {
+            Step += Magnitude;
+            StepChanged.InvokeAsync(Step);
+            StateHasChanged();
+        }
+    }
+
+    public void StepDown()
+    {
+        if (LowerBounds is null || Step - Magnitude > LowerBounds)
+        {
+            Step -= Magnitude;
+            StepChanged.InvokeAsync(Step);
+            StateHasChanged();
+        }
+    }
+}

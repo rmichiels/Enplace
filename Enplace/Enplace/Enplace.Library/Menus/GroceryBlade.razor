@@ -1,11 +1,11 @@
-﻿<article class="grocery-blade @_class">
+﻿<article class="grocery-blade interactable @_class" @onclick=@(()=> ActiveState = !ActiveState)>
     <InputCheckbox class="xb-category" style="width: 1.2rem; accent-color:var(--color-category-underline);border-color:var(--color-category-underline);" @bind-Value="ActiveState" />
-    <label class="ingredient">@Item.Name</label>
+    <label class="ingredient interactable">@Item.Name</label>
+    <label class="interactable">@Item.Quantity.ToString("G29")</label>
     @if (!Item.Measurement.Contains("Unit", StringComparison.CurrentCultureIgnoreCase))
     {
-        <label>@Item.Measurement</label>
+        <label class="interactable">@Item.Measurement</label>
     }
-    <label>@Item.Quantity.ToString("G29")</label>
 </article>
 
 @code {

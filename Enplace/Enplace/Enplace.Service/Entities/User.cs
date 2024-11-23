@@ -9,9 +9,9 @@ public partial class User : ILabeled
     public Guid SKID { get; set; }
     public string Name { get; set; } = null!;
     [JsonIgnore]
-    public virtual ICollection<Recipe> Recipes { get; set; } = [];
+    public virtual ICollection<Recipe> OwnedRecipes { get; set; } = [];
     [JsonIgnore]
     public virtual ICollection<UserMenu> UserMenus { get; set; } = [];
     [JsonIgnore]
-    public virtual ICollection<Recipe> RecipesNavigation { get; set; } = [];
+    public virtual ICollection<UserRecipe> LikedRecipes { get; set; } = [];
 }

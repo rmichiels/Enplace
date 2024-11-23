@@ -47,8 +47,6 @@
         if (response is not null)
         {
             var dto = await Auth.AuthenticateAPI(response.Token ?? string.Empty);
-            Console.WriteLine(dto.Name);
-            Console.WriteLine(dto.Id);
             EnplaceContext.User = dto;
             HandleToken(response.Token ?? string.Empty);
         }
@@ -65,14 +63,13 @@
             {
                 EnplaceContext.User = await Auth.RegisterAPI(response.Token ?? string.Empty);
                 HandleToken(response.Token ?? string.Empty);
-                LoadingEventManager.TriggerEvent(false);
             }
         }
         catch (Exception ex)
         {
             Notifications.TriggerEvent(new() { Message = ex.Message, Type = NotificationType.Error });
-            LoadingEventManager.TriggerEvent(false);
         }
+        LoadingEventManager.TriggerEvent(false);
     }
 
     private void HandleToken(string token)

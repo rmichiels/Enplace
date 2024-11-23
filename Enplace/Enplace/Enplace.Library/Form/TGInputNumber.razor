@@ -5,7 +5,7 @@
     @switch (State)
     {
         case ComponentState.Details:
-            <span>@Field.ToString("G29")</span>
+            <span>@((Field * (Scale ?? 1)).ToString("0.##"))</span>
             @if (StateManagement == StateManagement.Internal)
             {
                 <button class="btn-icon" onclick="() =>Toggle(ComponentState.Edit)">
@@ -27,3 +27,7 @@
     }
 </div>
 
+@code{
+    [Parameter]
+    public decimal? Scale { get; set; }
+}
