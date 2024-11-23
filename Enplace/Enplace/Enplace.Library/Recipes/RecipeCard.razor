@@ -24,10 +24,9 @@
                 {
                     <div class="pill">
                         <Enplace.Library.Icons.Silhouette />
-                        @Item?.ApproximateServingSize
+                        @(((Item?.ApproximateServingSize ?? 1) * (Item?.Scale ?? 1)).ToString("0.##"))
                     </div>
                 }
-
             </div>
             <p class="tile-title">@Item?.Name</p>
             <p class="tile-description">@Item?.Name</p>
@@ -41,11 +40,14 @@
                         <Enplace.Library.Icons.Edit />
                     </button>
                 }
+                else
+                {
+                    <button class="btn-icon" @onclick="() => ToggleLike()">
+                        <Enplace.Library.Icons.Heart />
+                    </button>
+                }
                 <button class="btn-icon" @onclick="() => ShowMenuSelector()">
                     <Enplace.Library.Icons.AddRecipe />
-                </button>
-                <button class="btn-icon" @onclick="() => ToggleLike()">
-                    <Enplace.Library.Icons.Heart />
                 </button>
             </div>
             break;

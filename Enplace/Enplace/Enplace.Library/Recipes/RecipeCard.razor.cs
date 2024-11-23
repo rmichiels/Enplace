@@ -13,7 +13,8 @@ namespace Enplace.Library.Recipes
             var modalParams = new ModalParameters()
                 .Add(nameof(RecipeEditor.Id), Item.Id)
                 .Add(nameof(RecipeEditor.State), ComponentState.Details)
-                .Add(nameof(RecipeEditor.Action), "details");
+                .Add(nameof(RecipeEditor.Action), "details")
+                .Add(nameof(RecipeEditor.Step), Item.Scale * Item.ApproximateServingSize);
             ModalService.Show<RecipeEditor>(Item.Name, modalParams, modalOpts);
         }
 
@@ -42,7 +43,7 @@ namespace Enplace.Library.Recipes
                 .Add(nameof(MenuSelector.Recipe), Item);
             var options = new ModalOptions()
             {
-                Size = ModalSize.Small,
+                Size = ModalSize.Automatic,
             };
             ModalService.Show<MenuSelector>("Select menu", modalParams, options);
         }

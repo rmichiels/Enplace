@@ -1,4 +1,5 @@
-﻿@using Enplace.Library.Icons
+﻿@using Blazored.LocalStorage
+@using Enplace.Library.Icons
 @inject NavigationManager nav
 
 
@@ -20,9 +21,24 @@
         <button class="btn-icon" disabled>
             <Inspiration />
         </button>
-        <button class="btn-icon" disabled>
+        <button class="btn-icon" @onclick=@NavigateToLogin>
             <UserSettings />
         </button>
     </div>
     <Enplace.Library.Shapes.SlantedCorner Class="corner-b" />
 </div>
+
+@code{
+    [Inject]
+    public NavigationManager Navigation { get; set; }
+    [Inject]
+    public ILocalStorageService Storage { get; set; }
+    private bool _showMenu = false;
+
+    public void NavigateToLogin()
+    {
+        Storage.RemoveItemAsync("skid.enplace");
+        EnplaceContext.User = null;
+        Navigation.NavigateTo("/login");
+    }
+}

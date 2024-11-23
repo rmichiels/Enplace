@@ -3,6 +3,7 @@
 @using Blazored.Modal
 @using Blazored.Modal.Services
 @using Enplace.Library.Ingredients
+@using Enplace.Library.Menus
 @using Enplace.Service.Services.Converters
 @using Enplace.Service.Services.Managers
 @using Microsoft.AspNetCore.Components.Authorization
@@ -55,16 +56,16 @@
                                     <Ladder @bind-Step=@Step LowerBounds="1" />
                                 }
                             </header>
-                            <Enplace.Library.Ingredients.IngredientList @bind-Ingredients="Recipe.Ingredients" @bind-State="State" Scale=@(Step / Recipe.ApproximateServingSize) />
+                            <Enplace.Library.Ingredients.IngredientList @bind-Ingredients="Recipe.Ingredients" @bind-State="State" Scale=@Scale />
                             break;
                         case EditorSection.Steps:
                             break;
                     }
                 </div>
-                @if (State != ComponentState.Details)
-                {
-                    <div class="card-footer flex-row flex-start">
 
+                <div class="card-footer flex-row flex-start">
+                    @if (State != ComponentState.Details)
+                    {
                         @if (ActiveSection == EditorSection.General && !isValid)
                         {
                             <button class="btn-icon" type="submit" @onclick=@(() => ActiveSection = EditorSection.Ingredients)>
@@ -86,8 +87,20 @@
                         <button class="btn-icon m-revealed item-end" @onclick="() => EditorInstance.CloseAsync()">
                             <Close />
                         </button>
-                    </div>
-                }
+                    }
+                    else
+                    {
+                        @if (EnplaceContext.User.Id != Recipe?.Owner?.Id)
+                        {
+                            <button class="btn-icon" type="button" @onclick="() => Like()">
+                                <Enplace.Library.Icons.Heart />
+                            </button>
+                        }
+                        <button class="btn-icon" @onclick="() => ShowMenuSelector()">
+                            <Enplace.Library.Icons.AddRecipe />
+                        </button>
+                    }
+                </div>
                 break;
         }
     </div>
@@ -121,6 +134,7 @@
     [Parameter]
     public EventCallback<ComponentState> StateChanged { get; set; }
 
+    [Parameter]
     public decimal Step
     {
         get => _step;
@@ -130,7 +144,22 @@
             StateHasChanged();
         }
     }
-    private decimal _step;
+    private decimal _step = 0;
+
+    public decimal Scale
+    {
+        get
+        {
+            if (State == ComponentState.Create)
+            {
+                return 1;
+            }
+            else
+            {
+                return Step / Recipe.ApproximateServingSize ?? 1;
+            }
+        }
+    }
 
     public enum EditorSection
     {
@@ -165,7 +194,10 @@
             }
             else
             {
-                Step = Recipe.ApproximateServingSize ?? 1;
+                if (Step == 0)
+                {
+                    Step = (Recipe.ApproximateServingSize > 0) ? Recipe.ApproximateServingSize.Value : 1;
+                }
                 Context = new(Recipe);
                 _recipeHeaderImg = Recipe.RecipeImages.FirstOrDefault(img => img.Size == ImageSize.Header) ?? new();
                 State = Enum.Parse<ComponentState>(Action, true);
@@ -175,6 +207,7 @@
         if (State == ComponentState.Create)
         {
             _recipeHeaderImg = new();
+            Step = 1;
         }
     }
 
@@ -275,4 +308,20 @@
         }
     }
 
+    public async Task Like()
+    {
+        Service.Like(Recipe);
+        AsyncEventManager.TriggerEvent(Recipe);
+    }
+
+    public void ShowMenuSelector()
+    {
+        var modalParams = new ModalParameters()
+            .Add(nameof(MenuSelector.Recipe), Recipe);
+        var options = new ModalOptions()
+            {
+                Size = ModalSize.Small,
+            };
+        ModalService.Show<MenuSelector>("Select menu", modalParams, options);
+    }
 }

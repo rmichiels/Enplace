@@ -99,7 +99,7 @@ namespace Enplace.Service.Services.API
              })
             .AddResponseHandler(HttpStatusCode.NoContent, (m) =>
             {
-                _notificationManager.TriggerEvent(new() { Type = NotificationType.Confirmation, Message = $"{entity.Name} Liked!" });
+                _notificationManager.TriggerEvent(new() { Type = NotificationType.Success, Message = $"{entity.Name} Liked!" });
                 return false;
             })
            .ExecutePatchAsync(entity);

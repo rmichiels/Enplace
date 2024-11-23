@@ -28,9 +28,13 @@ namespace Enplace.API
             var recipes = await query.Include(r => r.MenuRecipes).Where(r => r.MenuRecipes.Any(m => m.MenuID == id)).ToListAsync();
             recipes.ForEach(async recipe =>
             {
+                var menurecipe = recipe.MenuRecipes.First(mr => mr.MenuID == id);
                 var recipeToAdd = await recipeConverter.Convert(recipe);
                 if (recipeToAdd != null)
                 {
+                    // Add Scale to DTO
+                    // with fallback value in case of missing / invalid scale
+                    recipeToAdd.Scale = (menurecipe.Scale != 0) ? menurecipe.Scale : 1;
                     returnRecipes.Add(recipeToAdd);
                 }
             });
@@ -58,6 +62,15 @@ namespace Enplace.API
                 return NotFound();
             }
 
+            foreach (var recipe in recipes)
+            {
+                var scale = recipe.MenuRecipes.First(mr => mr.MenuID == id).Scale;
+                foreach (var item in recipe.RecipeIngredients)
+                {
+                    item.Quantity *= scale;
+                }
+            }
+
             RecipeConverter recipeConverter = new();
             var recipeIngredients = new List<IngredientDTO>();
             recipes.ForEach(async recipe =>
@@ -68,15 +81,6 @@ namespace Enplace.API
                     recipeIngredients.AddRange(recipeToAdd.Ingredients);
                 }
             });
-
-            foreach (var recipe in recipes)
-            {
-                var scale = recipe.MenuRecipes.ToList()[0].Scale;
-                foreach (var item in recipe.RecipeIngredients)
-                {
-                    item.Quantity *= scale;
-                }
-            }
 
             var itemsWithCategory = recipeIngredients.GroupBy(ri => new
             {
@@ -115,7 +119,7 @@ namespace Enplace.API
             var user = await GetUser();
             var intermediary = await Service.GetWhere<UserMenu>(m => m.UserId == user?.Id);
 
-            
+
 
             foreach (UserMenu item in intermediary)
             {
