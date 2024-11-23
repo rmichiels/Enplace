@@ -17,6 +17,10 @@ namespace Enplace.Library.Ingredients
         public List<IngredientDTO> Ingredients { get; set; } = [];
         [Parameter]
         public EventCallback<List<IngredientDTO>> IngredientsChanged { get; set; }
+
+        [Parameter]
+        public decimal? Scale { get; set; }
+
         [Parameter]
         public ComponentState State { get; set; }
         [Parameter]

@@ -5,8 +5,8 @@ namespace Enplace.Service.Services.API
     public class ClientConfigurationMap
     {
         // private const string _localHost = "https://localhost:7283";
-        //private const string _azureHost = "https://localhost:7283";
-        private const string _azureHost = "https://sk-enplace-api.azurewebsites.net";
+        private const string _azureHost = "https://localhost:7283";
+        //private const string _azureHost = "https://sk-enplace-api.azurewebsites.net";
         private const string _idService = "https://id.swissknife.solutions/api/v1";
         //private const string _idService = "http://localhost:8080";
 

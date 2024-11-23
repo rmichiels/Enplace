@@ -24,7 +24,7 @@
                 break;
             default:
                 <div class="ingredient-shard">
-                    <TGInputNumber @bind-Field="Ingredient.Quantity" @bind-State="State" />
+                    <TGInputNumber @bind-Field="Ingredient.Quantity" Scale=@Scale @bind-State="State" />
                     <TGLSelect @bind-Field="Ingredient.MeasurementId" Options="EnplaceContext.Measurements.ToList<ILabeled>()" @bind-State="State">
                         <span>@Ingredient.Measurement.Name </span>
                     </TGLSelect>
@@ -65,6 +65,9 @@
 
     [Parameter]
     public EventCallback<IngredientDTO> OnSave { get; set; }
+
+    [Parameter]
+    public decimal? Scale { get; set; }
 
     private List<Ingredient>? _ingredientOptions = [];
 

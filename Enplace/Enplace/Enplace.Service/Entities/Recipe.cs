@@ -26,5 +26,5 @@ public partial class Recipe : ILabeled
     [JsonIgnore]
     public virtual ICollection<UserMenuRecipe> MenuRecipes { get; set; } = [];
     [JsonIgnore]
-    public virtual ICollection<User> Users { get; set; } = [];
+    public virtual ICollection<UserRecipe> Likes { get; set; } = [];
 }

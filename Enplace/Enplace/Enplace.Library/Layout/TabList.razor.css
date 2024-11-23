@@ -4,13 +4,13 @@
     display: flex;
     flex-direction: row;
     gap: var(--gap-s);
-    background: var(--palette-primary);
+    background: var(--palette-base);
     border-radius: var(--border-radius);
     padding: 0.5rem 0.5rem 0.5rem 0.5rem;
 }
 
 .tab-list-item {
-    color: rgba(0,0,0,0.5);
+    color: rgba(0,0,0,0.6);
     padding: 0.2rem 0.7rem 0.2rem 0.7rem;
     border-radius: var(--border-radius-s);
     background-color: transparent;
@@ -23,13 +23,31 @@
     margin-bottom: 1px;
 }
 
+  
+
     .tab-list-item h5 {
         padding: 0;
         margin: 0;
     }
 
 .ActiveTab {
-    color: black;
+    color: black !important;
     background-color: var(--palette-neutral);
     box-shadow: var(--palette-accent) 0px 3px;
 }
+
+    .ActiveTab h5 {
+        color: black !important;
+    }
+
+/*@media(prefer-color-scheme:dark){
+    .ActiveTab {
+        color: black !important;
+        background-color: var(--palette-neutral);
+        box-shadow: var(--palette-accent) 0px 3px;
+    }
+
+        .ActiveTab h5 {
+            color: black !important;
+        }
+}*/

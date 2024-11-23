@@ -32,22 +32,19 @@
             <p class="tile-title">@Item?.Name</p>
             <p class="tile-description">@Item?.Name</p>
             <div class="tile-controls">
-                @if (State == ComponentState.Edit)
+                <button class="btn-icon" @onclick="ShowRecipeDetails">
+                    <Enplace.Library.Icons.Details />
+                </button>
+                @if (EnplaceContext.User.Id == Item?.Owner?.Id)
                 {
-                    <button class="btn-icon">
+                    <button class="btn-icon" @onclick=ShowRecipeEditor>
                         <Enplace.Library.Icons.Edit />
-                    </button>
-                }
-                else
-                {
-                    <button class="btn-icon" @onclick="NavigateToRecipeDetails">
-                        <Enplace.Library.Icons.Details />
                     </button>
                 }
                 <button class="btn-icon" @onclick="() => ShowMenuSelector()">
                     <Enplace.Library.Icons.AddRecipe />
                 </button>
-                <button class="btn-icon">
+                <button class="btn-icon" @onclick="() => ToggleLike()">
                     <Enplace.Library.Icons.Heart />
                 </button>
             </div>
