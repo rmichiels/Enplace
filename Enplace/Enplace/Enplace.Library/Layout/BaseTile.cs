@@ -14,7 +14,7 @@ namespace Enplace.Library.Layout
         [Inject]
         public virtual required ApiService<TItem> API { get; set; }
         [Inject]
-        public required AsyncEventManager<TItem> EventManager { get; set; }
+        public required AsyncEventManager<TItem> ItemEvents { get; set; }
         [Inject]
         public required AsyncEventManager<Notification> NotificationManager { get; set; }
         [Inject]

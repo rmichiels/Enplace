@@ -19,7 +19,8 @@ namespace Enplace.Service.Services.Converters
                 ApproximateCookingTime = viewModel.ApproximateCookingTime,
                 ApproximateServingSize = viewModel.ApproximateServingSize,
                 RecipeCategoryId = viewModel.Category?.Id ?? 0,
-                Comment = viewModel.Comment,
+               
+                Description = viewModel.Description,
             };
 
             foreach (IngredientDTO dto in viewModel.Ingredients)
@@ -63,7 +64,7 @@ namespace Enplace.Service.Services.Converters
                 ApproximateServingSize = entity.ApproximateServingSize,
                 Owner = await _userConverter.Convert(entity.OwnerUser),
                 Category = entity.Category,
-                Comment = entity.Comment,
+                Description = entity.Description,
             };
             foreach (RecipeIngredient recipeIngredient in entity.RecipeIngredients)
             {
