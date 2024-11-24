@@ -12,6 +12,6 @@
         top: 0;
         padding-top: var(--gap-s);
         padding-bottom: var(--gap-s);
-        background-color: var(--palette-neutral);
+        background-color: var(--palette-bg);
     }
 }

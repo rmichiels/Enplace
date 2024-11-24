@@ -119,7 +119,7 @@ body {
 }
 
 .glass-padding {
-    padding-bottom: var(--padding-m);
+    padding-bottom: var(--padding-m) !important;
 }
 
 .glass-s {
@@ -703,6 +703,12 @@ mobile-invert-col {
     width: 250px;
     box-shadow: var(--color-accent) 5px 5px;
     gap: var(--gap-s);
+}
+
+@media(max-width:800px) {
+    .tile {
+        padding: var(--gap-s);
+    }
 }
 
 /*@media(prefer-color-scheme:dark){
