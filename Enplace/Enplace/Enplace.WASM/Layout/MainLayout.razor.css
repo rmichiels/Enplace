@@ -42,6 +42,7 @@ article {
     .page {
         flex-direction: column-reverse;
         gap: var(--gap-s);
+        border-radius: 0;
     }
 }
 
@@ -66,8 +67,10 @@ article {
     .sidebar {
         position: sticky;
         bottom: 0;
+        width: 100%;
         max-width: 100%;
         justify-content: flex-end;
+        background-color: var(--palette-base);
     }
 }
 
@@ -105,9 +108,10 @@ article {
         }
 }
 
-@media (min-width: 641px) {
+/*@media (min-width: 641px) {
     .sidebar {
         width: 250px;
         position: sticky;
     }
 }
+*/

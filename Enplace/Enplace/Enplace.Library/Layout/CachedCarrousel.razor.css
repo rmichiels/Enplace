@@ -1,17 +1,17 @@
 ﻿.generic-carrousel {
     overflow-x: auto;
     overflow-y: hidden;
-    min-height: 0;
     max-height: 100%;
-    --sb-track-color: #e1e1e1;
-    --sb-thumb-color: #e1e1e1;
-    --sb-border-color: White;
+    --sb-track-color: var(--palette-alt-accent);
+    --sb-thumb-color: var(--palette-alt-accent);
+    --sb-border-color: var(--palette-bg);
     --sb-size: 1.1rem;
     scrollbar-gutter: stable;
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
     gap: var(--gap-m);
+    flex: 1;
 }
 
     .generic-carrousel::-webkit-scrollbar {
@@ -48,4 +48,10 @@
 
         .generic-carrousel::-webkit-scrollbar-track {
         }
+}
+
+@media(max-width:800px) {
+    .generic-carrousel {
+        flex-wrap: wrap;
+    }
 }

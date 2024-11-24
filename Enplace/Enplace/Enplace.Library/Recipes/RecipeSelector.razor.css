@@ -1,7 +1,7 @@
 ﻿.recipe-selector {
     position: relative;
-    min-width:25%;
-    max-width:50%;
+    min-width:50%;
+    max-width:70%;
     min-height:2.5rem;
 }
 
