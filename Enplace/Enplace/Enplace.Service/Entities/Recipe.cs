@@ -14,7 +14,7 @@ public partial class Recipe : ILabeled
     public int? ApproximateServingSize { get; set; }
 
     public int? ApproximateCookingTime { get; set; }
-    public string? Comment { get; set; }
+    public string? Description { get; set; }
     public virtual RecipeCategory Category { get; set; }
     public int RecipeCategoryId { get; set; } = 1;
 

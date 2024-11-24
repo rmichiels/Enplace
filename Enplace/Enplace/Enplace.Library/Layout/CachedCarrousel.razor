@@ -27,7 +27,7 @@
     [Inject]
     public required ApiService<TItem> API { get; set; }
     [Inject]
-    public required AsyncEventManager<TItem> EventManager { get; set; }
+    public required AsyncEventManager<TItem> ItemEvents { get; set; }
     [Inject]
     public required ILocalStorageService StorageService { get; set; }
 
@@ -60,40 +60,28 @@
     [Parameter]
     public EventCallback<List<TItem>>? ItemsChanged { get; set; }
 
-    private DateTime _timeStamp = DateTime.Now;
-    public static readonly double MinutesToCacheInvalidation = 10;
-
     protected override async Task OnInitializedAsync()
     {
         Items = await StorageService.GetCachedListFor<TItem>(EnplaceContext.User?.Id ?? 0, StorageKeyExtension);
-
-        var freshStamp = DateTime.Now;
-        // if intermediate stamp exceeds cached stamp by n time
-        // or there are 0 cached items
-        // refresh collection
-        if (freshStamp > _timeStamp.AddMinutes(MinutesToCacheInvalidation) || Items?.Count == 0 || Items is null)
+        if (QueryOverride)
+        {
+            if (Items is null && Query is null)
+            {
+                throw new Exception("Query overridden, but no alternative source has been provided.");
+            }
+            Items = await Query.Invoke(SelectedItem);
+        }
+        else
         {
             (string, string)[] parameters = [];
             if (FilterOnUser)
             {
                 parameters = [("foruser", "true")];
             }
-            if (QueryOverride)
-            {
-                if (Items is null && Query is null)
-                {
-                    throw new Exception("Query overridden, but no alternative source has been provided.");
-                }
-                Items = await Query.Invoke(SelectedItem);
-            }
-            else
-            {
-                Items = await API.GetAll(parameters);
-            }
-            _timeStamp = freshStamp;
+            Items = await API.GetAll(parameters);
+            ItemEvents.OnEventTriggered += ForceCarrouselRefresh;
         }
         await StorageService.SetCacheFor<TItem>(Items, EnplaceContext.User?.Id ?? 0, StorageKeyExtension);
-        EventManager.OnEventTriggered += ForceCarrouselRefresh;
     }
 
     protected override void OnAfterRender(bool firstRender)
@@ -109,7 +97,7 @@
         }
     }
 
-    public async Task ForceCarrouselRefresh(ILabeled? item)
+    public async Task ForceCarrouselRefresh(ILabeled? item = null)
     {
         Console.WriteLine($"Forcing {typeof(TItem).Name} Carrousel Refresh...");
         if (QueryOverride && Query is not null && item is not null)
@@ -117,7 +105,7 @@
             Items = await Query.Invoke(item);
             StateHasChanged();
         }
-        else if (item != _lastEvent || item is null)
+        else
         {
             (string, string)[] parameters = [];
             if (FilterOnUser)

@@ -10,101 +10,104 @@
 @using System.Security.Claims
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
-<EditForm class="flex-col flex-start gap-m flex-grow-1 mobile-invert-col" EditContext="@Context" OnSubmit="PostRecipe">
-    <TabList @bind-OptionSet="ActiveSection" Delimiter="OptionSetDelimiter.CapitalLetters" />
-    <div class="card recipe-editor @State">
-        @switch (State)
-        {
-            case ComponentState.Loading:
-                // TODO : Add Skeleton version of the component
-                <p>... loading ...</p>
-                break;
-            case ComponentState.Details:
-            case ComponentState.Create:
-            case ComponentState.Edit:
-                bool isValid = IsRecipeValid();
-                @if (ActiveSection == EditorSection.General)
-                {
-                    <div class="card-header" hidden>
-                        <ImageDropper @bind-Image="@_recipeHeaderImg" />
-                    </div>
-                }
-                <div class="card-body flex-col flex-1">
-                    @switch (ActiveSection)
+@if (Recipe is not null && Context is not null)
+{
+    <EditForm class="flex-col flex-start gap-m flex-grow-1 mobile-invert-col" EditContext="@Context" OnSubmit="PostRecipe">
+        <TabList @bind-OptionSet="ActiveSection" Delimiter="OptionSetDelimiter.CapitalLetters" />
+        <div class="card recipe-editor @State">
+            @switch (State)
+            {
+                case ComponentState.Loading:
+                    // TODO : Add Skeleton version of the component
+                    <p>... loading ...</p>
+                    break;
+                case ComponentState.Details:
+                case ComponentState.Create:
+                case ComponentState.Edit:
+                    bool isValid = IsRecipeValid();
+                    @if (ActiveSection == EditorSection.General)
                     {
-                        case EditorSection.General:
-                            <div class="input-blade">
-                                <span class="subtitle blade-label" style="width:min-content;">Title</span>
-                                <InputText class=@($"blade-control {State}") @bind-Value="Recipe.Name" placeholder="Recipe Name..." disabled=@(State != ComponentState.Edit && State !=ComponentState.Create ) />
-                                <span class="subtitle blade-label">Category</span>
-                                <TGLSelect Class="blade-control" Field="@_recipeCategoryId" Placeholder="@(Recipe.Category?.Name ?? string.Empty)" FieldChanged="(i) => AssignCategory(i)" Options="EnplaceContext.RecipeCategories.ToList<ILabeled>()" State="State" />
-                                <Clock Class="blade-label m-row-3 dark-mode" />
-                                <InputNumber class=@($"blade-control text-center {State}") @bind-Value="Recipe.ApproximateCookingTime" disabled=@(State != ComponentState.Edit && State !=ComponentState.Create ) />
-                                <Silhouette Class="blade-label m-row-3 dark-mode" />
-                                <InputNumber class=@($"blade-control text-center {State} ") @bind-Value="Recipe.ApproximateServingSize" disabled=@(State != ComponentState.Edit && State !=ComponentState.Create ) />
-                            </div>
-                            <div class="flex-col flex-start flex-fill">
-                                <span class="subtitle">Description</span>
-                                <InputTextArea style="width:100%; height:100%;flex:1;" class=@State @bind-Value="Recipe.Description" disabled=@(State != ComponentState.Edit && State !=ComponentState.Create ) />
-                            </div>
-                            break;
-                        case EditorSection.Ingredients:
-                            <header class="d-flex flex-row gap-s">
-                                <h4>Ingredients</h4>
-                                @if (State != ComponentState.Edit && State != ComponentState.Create)
-                                {
-                                    <Ladder @bind-Step=@Step LowerBounds="1" />
-                                }
-                            </header>
-                            <Enplace.Library.Ingredients.IngredientList @bind-Ingredients="Recipe.Ingredients" @bind-State="State" Scale=@Scale />
-                            break;
-                        case EditorSection.Steps:
-                            break;
+                        <div class="card-header" hidden>
+                            <ImageDropper @bind-Image="@_recipeHeaderImg" />
+                        </div>
                     }
-                </div>
-
-                <div class="card-footer flex-row flex-start">
-                    @if (State != ComponentState.Details)
-                    {
-                        @if (ActiveSection == EditorSection.General && !isValid)
+                    <div class="card-body flex-col flex-1">
+                        @switch (ActiveSection)
                         {
-                            <button class="btn-icon" type="submit" @onclick=@(() => ActiveSection = EditorSection.Ingredients)>
-                                <Next />
+                            case EditorSection.General:
+                                <div class="input-blade">
+                                    <span class="subtitle blade-label" style="width:min-content;">Title</span>
+                                    <InputText class=@($"blade-control {State}") @bind-Value="Recipe.Name" placeholder="Recipe Name..." disabled=@(State != ComponentState.Edit && State !=ComponentState.Create ) />
+                                    <span class="subtitle blade-label">Category</span>
+                                    <TGLSelect Class="blade-control" Field="@_recipeCategoryId" Placeholder="@(Recipe.Category?.Name ?? string.Empty)" FieldChanged="(i) => AssignCategory(i)" Options="EnplaceContext.RecipeCategories.ToList<ILabeled>()" State="State" />
+                                    <Clock Class="blade-label m-row-3 dark-mode" />
+                                    <InputNumber class=@($"blade-control text-center {State}") @bind-Value="Recipe.ApproximateCookingTime" disabled=@(State != ComponentState.Edit && State !=ComponentState.Create ) />
+                                    <Silhouette Class="blade-label m-row-3 dark-mode" />
+                                    <InputNumber class=@($"blade-control text-center {State} ") @bind-Value="Recipe.ApproximateServingSize" disabled=@(State != ComponentState.Edit && State !=ComponentState.Create ) />
+                                </div>
+                                <div class="flex-col flex-start flex-fill">
+                                    <span class="subtitle">Description</span>
+                                    <InputTextArea style="width:100%; height:100%;flex:1;padding:var(--padding-s)" class=@State @bind-Value="Recipe.Description" disabled=@(State != ComponentState.Edit && State !=ComponentState.Create ) />
+                                </div>
+                                break;
+                            case EditorSection.Ingredients:
+                                <header class="d-flex flex-row gap-s">
+                                    <h4>Ingredients</h4>
+                                    @if (State != ComponentState.Edit && State != ComponentState.Create)
+                                    {
+                                        <Ladder @bind-Step=@Step LowerBounds="1" />
+                                    }
+                                </header>
+                                <Enplace.Library.Ingredients.IngredientList @bind-Ingredients="Recipe.Ingredients" @bind-State="State" Scale=@Scale />
+                                break;
+                            case EditorSection.Steps:
+                                break;
+                        }
+                    </div>
+
+                    <div class="card-footer flex-row flex-start">
+                        @if (State != ComponentState.Details)
+                        {
+                            @if (ActiveSection == EditorSection.General && !isValid)
+                            {
+                                <button class="btn-icon" type="submit" @onclick=@(() => ActiveSection = EditorSection.Ingredients)>
+                                    <Next />
+                                </button>
+                            }
+                            else
+                            {
+                                <button class="btn-icon" type="submit" disabled="@(!isValid)">
+                                    <Enplace.Library.Icons.Save />
+                                </button>
+                            }
+                            @if (State != ComponentState.Details)
+                            {
+                                <span class="feedback-subtle">
+                                    @ValidatorFeedback(isValid)
+                                </span>
+                            }
+                            <button class="btn-icon m-revealed item-end" @onclick="() => EditorInstance.CloseAsync()">
+                                <Close />
                             </button>
                         }
                         else
                         {
-                            <button class="btn-icon" type="submit" disabled="@(!isValid)">
-                                <Enplace.Library.Icons.Save />
+                            @if (EnplaceContext.User.Id != Recipe?.Owner?.Id)
+                            {
+                                <button class="btn-icon" type="button" @onclick="() => Like()">
+                                    <Enplace.Library.Icons.Heart />
+                                </button>
+                            }
+                            <button class="btn-icon" @onclick="() => ShowMenuSelector()">
+                                <Enplace.Library.Icons.AddRecipe />
                             </button>
                         }
-                        @if (State != ComponentState.Details)
-                        {
-                            <span class="feedback-subtle">
-                                @ValidatorFeedback(isValid)
-                            </span>
-                        }
-                        <button class="btn-icon m-revealed item-end" @onclick="() => EditorInstance.CloseAsync()">
-                            <Close />
-                        </button>
-                    }
-                    else
-                    {
-                        @if (EnplaceContext.User.Id != Recipe?.Owner?.Id)
-                        {
-                            <button class="btn-icon" type="button" @onclick="() => Like()">
-                                <Enplace.Library.Icons.Heart />
-                            </button>
-                        }
-                        <button class="btn-icon" @onclick="() => ShowMenuSelector()">
-                            <Enplace.Library.Icons.AddRecipe />
-                        </button>
-                    }
-                </div>
-                break;
-        }
-    </div>
-</EditForm>
+                    </div>
+                    break;
+            }
+        </div>
+    </EditForm>
+}
 
 @code {
     [CascadingParameter] BlazoredModalInstance EditorInstance { get; set; } = default!;
@@ -115,9 +118,9 @@
     [Inject]
     public ConfigurationService ConfigurationService { get; set; }
     [Inject]
-    public AsyncEventManager<RecipeDTO> AsyncEventManager { get; set; }
+    public AsyncEventManager<RecipeDTO> ItemEvents { get; set; }
 
-    public EditContext Context { get; set; } = new(new RecipeDTO());
+    public EditContext Context { get; set; }
 
     [Parameter]
     public int Id { get; set; }
@@ -125,7 +128,7 @@
     public string Action { get; set; } = string.Empty;
 
     [Parameter]
-    public RecipeDTO Recipe { get; set; } = new();
+    public RecipeDTO? Recipe { get; set; } = null;
     [Parameter]
     public EventCallback<RecipeDTO?> RecipeChanged { get; set; }
 
@@ -168,7 +171,7 @@
         Steps
     }
 
-    public EditorSection ActiveSection { get; set; } = EditorSection.General;
+    public EditorSection ActiveSection { get; set; }
 
     private ImageDTO _recipeHeaderImg;
     private int _recipeCategoryId;
@@ -176,18 +179,26 @@
     protected override async Task OnInitializedAsync()
     {
         EventManager.IngredientRequested.OnEventTriggered += RequestNewIngredient;
+        await Init();
+        //await base.OnInitializedAsync();
     }
-
+    /*
     protected override async Task OnParametersSetAsync()
     {
-        if (EnplaceContext.RecipeCategories.Count == 0 || EnplaceContext.IngredientCategories.Count == 0)
-        {
-            await ConfigurationService.GetBaseResources();
-        }
 
+        await base.OnParametersSetAsync();
+    }*/
+
+    public async Task Init()
+    {
+        ActiveSection = EditorSection.General;
         if (Action == "edit" || Action == "details")
         {
-            Recipe = await Service.Get(Id);
+            if (Recipe is null)
+            {
+                Recipe = await Service.Get(Id);
+            }
+
             if (Recipe is null)
             {
                 State = ComponentState.Error;
@@ -203,11 +214,16 @@
                 State = Enum.Parse<ComponentState>(Action, true);
             }
         }
-
         if (State == ComponentState.Create)
         {
+            Recipe = new();
+            Context = new(Recipe);
             _recipeHeaderImg = new();
             Step = 1;
+        }
+        if (EnplaceContext.RecipeCategories.Count == 0 || EnplaceContext.IngredientCategories.Count == 0)
+        {
+            await ConfigurationService.GetBaseResources();
         }
     }
 
@@ -222,7 +238,7 @@
             case ComponentState.Edit:
                 await Service.Update(Recipe);
                 EventManager.TriggerOnSubmit();
-                AsyncEventManager.TriggerEvent(Recipe);
+                ItemEvents.TriggerEvent(Recipe);
                 break;
             case ComponentState.Create:
                 if (Recipe.RecipeImages.Any(i => i.Size == ImageSize.Header))
@@ -236,7 +252,7 @@
                 }
                 result = await Service.Add(Recipe);
                 EventManager.TriggerOnSubmit();
-                AsyncEventManager.TriggerEvent(Recipe);
+                ItemEvents.TriggerEvent(Recipe);
                 break;
             default:
                 break;
@@ -310,8 +326,8 @@
 
     public async Task Like()
     {
-        Service.Like(Recipe);
-        AsyncEventManager.TriggerEvent(Recipe);
+        await Service.Like(Recipe);
+        ItemEvents.TriggerEvent(Recipe);
     }
 
     public void ShowMenuSelector()
