@@ -2,15 +2,18 @@
 using Enplace.Library.Layout;
 using Enplace.Library.Menus;
 using Enplace.Service.DTO;
+using Enplace.Service.Services.Managers;
 
 namespace Enplace.Library.Recipes
 {
     public class RecipeCardBase : BaseTile<RecipeDTO>
     {
-        public void ShowRecipeDetails()
+        public async Task ShowRecipeDetails()
         {
+            //var recipe = await API.Get(Item.Id);
             var modalOpts = new ModalOptions() { Size = ModalSize.Large };
             var modalParams = new ModalParameters()
+                .Add(nameof(RecipeEditor.Recipe), Item)
                 .Add(nameof(RecipeEditor.Id), Item.Id)
                 .Add(nameof(RecipeEditor.State), ComponentState.Details)
                 .Add(nameof(RecipeEditor.Action), "details")
@@ -32,6 +35,7 @@ namespace Enplace.Library.Recipes
             var modalOpts = new ModalOptions() { Size = ModalSize.Large };
             var modalParams = new ModalParameters()
                 .Add(nameof(RecipeEditor.Id), Item.Id)
+                 .Add(nameof(RecipeEditor.Recipe), Item)
                 .Add(nameof(RecipeEditor.State), ComponentState.Edit)
                 .Add(nameof(RecipeEditor.Action), "edit");
             ModalService.Show<RecipeEditor>("Add New Recipe", modalParams, modalOpts);
@@ -51,6 +55,7 @@ namespace Enplace.Library.Recipes
         public async Task ToggleLike()
         {
             await API.Like(Item);
+            ItemEvents.TriggerEvent(Item);
         }
 
         protected string _imgShardB64 => $"data:{Item?.RecipeImages?.FirstOrDefault(img => img.Size == Service.ImageSize.Header)?.MIME ?? string.Empty};base64," +
