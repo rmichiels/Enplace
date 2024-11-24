@@ -5,7 +5,7 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
-<div class="recipe-selector" @onclick="@(() => {ShowOptions = false; StateHasChanged();})">
+<div class="recipe-selector m-full-width" @onclick="@(() => {ShowOptions = false; StateHasChanged();})">
     <div class="input-blade" @onclick="@(() => {ShowOptions = false; StateHasChanged();})">
         <InputText class="blade-control m-row-main m-row-full-width" style="width:100%; height:100%;  border-radius: 10px;padding-left:var(--padding-m)" @bind-Value="_searchRecipe"
                    @oninput="(c) => QueryRecipes((string)c.Value)" @onchange="(c) => QueryRecipes((string)c.Value)" placeholder="Search..." />
@@ -31,11 +31,11 @@
                         </button>
                     }
                 }
-               
+
             }
-         @*    <p>
-                Not what you're looking for? <a class="interact-subtle" @onclick="(e) => EventManager.IngredientRequested.TriggerEvent()" onclick:preventDefault>Request a new ingredient!</a>
-            </p> *@
+            @*    <p>
+        Not what you're looking for? <a class="interact-subtle" @onclick="(e) => EventManager.IngredientRequested.TriggerEvent()" onclick:preventDefault>Request a new ingredient!</a>
+        </p> *@
         </div>
     }
 </div>
@@ -73,13 +73,13 @@
             }
 
 
-            var likedResponse = await Resource.Query(("name", str),("foruser", "true"), ("isliked", "true"));
+            var likedResponse = await Resource.Query(("name", str), ("foruser", "true"), ("isliked", "true"));
             if (likedResponse.Data?.Count > 0)
             {
                 _options["recipes you've liked"] = likedResponse.Data;
             }
 
-            var ownedResponse = await Resource.Query(("name", str),("foruser", "true"));
+            var ownedResponse = await Resource.Query(("name", str), ("foruser", "true"));
             if (ownedResponse.Data?.Count > 0)
             {
                 _options["your recipes"] = ownedResponse.Data;

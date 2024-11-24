@@ -6,24 +6,26 @@
 @using Blazored.Modal.Services
 @using Enplace.Library.Menus
 @using Enplace.Library.Models
+@using Enplace.Service.Contracts
 @using Enplace.Service.Services.Managers
 
 <div id="user-dashboard" class="user-dashboard">
     <section class="section-menu">
-        <aside class="menu-splash m-hidden glass">
+        <aside class="menu-splash m-hidden glass" hidden>
             <p>
                 what will you be cooking today @EnplaceContext.User.Name ?
             </p>
         </aside>
-        <div class="d-flex flex-col glass f-1">
+        <div class="d-flex flex-col glass f-1" style="padding-bottom:0 !important;">
             <header class="flex-row flex-between gap-m">
                 <span class="subtitle">Your menus</span>
                 <button type="button" class="btn-icon m-revealed" @onclick="ShowMenuEditor">
                     <Add />
                 </button>
             </header>
-            <CachedCarrousel TItem="MenuDTO" Class="menu-carrousel m-hidden-scrollbar f-1"
-                             TComponent="MenuCard" @bind-SelectedItem:get="_selectedMenu" @bind-SelectedItem:set="MenuSelected"
+            <CachedCarrousel TItem="MenuDTO" TComponent="MenuCard"
+                             Class="menu-carrousel m-hidden-scrollbar f-1 glass-padding"
+                             @bind-SelectedItem:get="_selectedMenu" @bind-SelectedItem:set="MenuSelected"
                              SelectFirst=true ShowCreationTile=true FilterOnUser=true />
         </div>
     </section>
@@ -95,14 +97,11 @@
     {
         if (menu is not null)
         {
-            if (_selectedMenu is null || _selectedMenu.Id != menu.Id)
-            {
-                Task.Run(() => MenuRecipes.ForceCarrouselRefresh(menu));
-                Task.Run(() => SetGroceries(_selectedMenu));
-                Console.WriteLine($"User Dashboard - Menu Selected: {menu?.Name}");
-                _selectedMenu = menu;
-                EnplaceContext.Menu = menu;
-            }
+            Task.Run(() => MenuRecipes.ForceCarrouselRefresh(menu));
+            Task.Run(() => SetGroceries(_selectedMenu));
+            Console.WriteLine($"User Dashboard - Menu Selected: {menu?.Name}");
+            _selectedMenu = menu;
+            EnplaceContext.Menu = menu;
         }
     }
 

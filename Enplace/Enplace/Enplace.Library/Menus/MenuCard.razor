@@ -24,7 +24,8 @@
         if (Item is not null)
         {
             await API.Delete(Item.Id);
-            EventManager.TriggerEvent(Item);
+            ItemEvents.TriggerEvent(Item);
+            EventManager.TriggerOnSubmit();
         }
     }
 
