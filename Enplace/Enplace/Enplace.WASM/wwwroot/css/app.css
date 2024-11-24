@@ -3,6 +3,7 @@
     --gap-m: 1rem;
     --border-radius: 10px;
     --border-radius-s: 5px;
+    --palette-bg: #ffe6d9;
     --palette-base: #FEC196 !important; /*Peach*/
     --palette-base-accent: #13E2B7;
     --palette-base-accent-text: #ffffff;
@@ -117,6 +118,10 @@ body {
     padding: var(--padding-m);
 }
 
+.glass-padding {
+    padding-bottom: var(--padding-m);
+}
+
 .glass-s {
     background: rgba(255, 255, 255, 0.7);
     border-radius: 16px;
@@ -215,6 +220,11 @@ body {
         .pill svg path {
             fill: var(--color-base);
         }
+
+.btn {
+    background: var(--color-accent) !important;
+    border-color: var(--color-primary);
+}
 
 .btn-icon {
     display: flex;
@@ -546,6 +556,9 @@ button:disabled:hover {
 .m-row-full-width {
 }
 
+.m-full-width {
+}
+
 .blade-label {
     grid-row: labels;
 }
@@ -624,6 +637,11 @@ mobile-invert-col {
         grid-row: controls 2;
     }
 
+    .m-full-width {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
     .m-row-main {
         grid-row: main;
     }
@@ -665,7 +683,7 @@ mobile-invert-col {
     padding: var(--gap-m);
     gap: var(--gap-s);
     border-radius: var(--border-radius);
-    border: 2px solid black;
+    /*border: 2px solid black;*/
 }
 
 .tile {
@@ -700,3 +718,61 @@ mobile-invert-col {
         background-color: var(--palette-dark-lighter-1) !important;
     }
 }*/
+
+@media(max-width:800px) {
+    .blazored-modal {
+        min-width: 100%;
+        width: 100% !important;
+    }
+
+    .blazored-modal-focus-trap {
+        min-width: 100%;
+        width: 100% !important;
+    }
+}
+
+
+.ct-loader {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 200;
+    max-width: 100vw;
+    max-height: 100vh;
+    min-width: 0;
+    min-height: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-items: center;
+    justify-content: space-around;
+    align-items: center;
+    background-color: rgba(0,0,0,0.4);
+}
+
+    .ct-loader img {
+        max-width: 200px;
+        max-height: 200px;
+    }
+
+
+img {
+    position: relative;
+}
+
+    /* style this to fit your needs */
+    /* and remove [alt] to apply to all images*/
+    img:after {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--color-accent);
+        font-family: 'Helvetica';
+        font-weight: 300;
+        line-height: 2;
+        text-align: center;
+        content: attr(alt);
+    }
