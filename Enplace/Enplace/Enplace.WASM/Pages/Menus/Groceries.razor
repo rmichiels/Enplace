@@ -1,6 +1,7 @@
 ﻿@page "/groceries/{Id:int}"
 @using Enplace.Library.Menus
 @using Enplace.Library.Models
+@using Enplace.Service.Services.Managers
 @attribute [Authorize]
 
 <div class="menu-groceries">
@@ -8,8 +9,20 @@
         @foreach (var kvp in _groceriesPerCategory)
         {
             <article class="section-wrapper @kvp.Key">
-                <header><h5>@kvp.Key</h5></header>
-                <section>
+                <header>
+                    <h5>@kvp.Key</h5>
+                    <button class="btn-icon material-symbols-rounded" @onclick=@(() => ToggleSection(kvp.Key))>
+                        @if (_hiddenSections.Contains(kvp.Key))
+                        {
+                            <span>open_in_full</span>
+                        }
+                        else
+                        {
+                            <span>close_fullscreen</span>
+                        }
+                    </button>
+                </header>
+                <section hidden="@_hiddenSections.Contains(kvp.Key)">
                     @foreach (GroceryListItem item in kvp.Value)
                     {
                         <GroceryBlade @bind-Item="@kvp.Value[kvp.Value.IndexOf(item)]" />
@@ -25,17 +38,45 @@
     public required MenuAPI API { get; set; }
     [Inject]
     public ILocalStorageService StorageService { get; set; }
+    [Inject]
+    public AsyncEventManager<MenuDTO> MenuEvents { get; set; }
+
     [Parameter]
     public int Id { get; set; }
 
     private Dictionary<string, List<GroceryListItem>> _groceriesPerCategory = [];
+    private List<string> _hiddenSections = [];
 
     protected async override Task OnInitializedAsync()
     {
-        _groceriesPerCategory = await StorageService.GetCacheFor<Dictionary<string, List<GroceryListItem>>>(Id, "groceries");
-        if(_groceriesPerCategory?.Count ==  0|| _groceriesPerCategory is null)
+        EventManager.TopicSelected.TriggerEvent(Topic.Menus);
+        await SetGroceries(Id);
+        MenuEvents.OnEventTriggered += (item) => SetGroceries(item?.Id);
+    }
+
+    public async Task SetGroceries(int? id)
+    {
+        if (id is not null)
         {
-            _groceriesPerCategory = await API.GetGroceriesFor(Id) ?? [];
+            _groceriesPerCategory = await StorageService.GetCacheFor<Dictionary<string, List<GroceryListItem>>>(id.Value, "groceries") ?? [];
+            if (_groceriesPerCategory?.Count == 0 || _groceriesPerCategory is null)
+            {
+                _groceriesPerCategory = await API.GetGroceriesFor(Id) ?? [];
+            }
+            _hiddenSections.AddRange(_groceriesPerCategory.Select(kvp => kvp.Key));
         }
+    }
+
+    public void ToggleSection(string key)
+    {
+        if (_hiddenSections.Contains(key))
+        {
+            _hiddenSections.Remove(key);
+        }
+        else
+        {
+            _hiddenSections.Add(key);
+        }
+        StateHasChanged();
     }
 }

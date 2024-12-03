@@ -1,5 +1,4 @@
-﻿using Blazored.LocalStorage;
-using Blazored.Modal.Services;
+﻿using Blazored.Modal.Services;
 using Enplace.Service.Contracts;
 using Enplace.Service.DTO;
 using Enplace.Service.Services.API;

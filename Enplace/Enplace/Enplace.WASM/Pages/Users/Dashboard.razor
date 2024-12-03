@@ -78,6 +78,7 @@
 
     protected override void OnInitialized()
     {
+        EventManager.TopicSelected.TriggerEvent(Topic.Recipes);
         //EventManager.OnSubmit += RefreshDashboard;
         //MenuEventManager.OnEventTriggered += MenuSelected;
     }

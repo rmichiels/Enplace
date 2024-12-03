@@ -19,7 +19,7 @@ namespace Enplace.Service.Services.Converters
                 ApproximateCookingTime = viewModel.ApproximateCookingTime,
                 ApproximateServingSize = viewModel.ApproximateServingSize,
                 RecipeCategoryId = viewModel.Category?.Id ?? 0,
-               
+
                 Description = viewModel.Description,
             };
 
