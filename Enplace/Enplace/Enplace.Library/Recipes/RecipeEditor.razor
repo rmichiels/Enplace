@@ -9,6 +9,7 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @using System.Security.Claims
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@implements IDisposable
 
 @if (Recipe is not null && Context is not null)
 {
@@ -192,6 +193,11 @@
         await Init();
         //await base.OnInitializedAsync();
     }
+
+    public void Dispose()
+    {
+        EventManager.IngredientRequested.OnEventTriggered -= RequestNewIngredient;
+    }
     /*
     protected override async Task OnParametersSetAsync()
         {
@@ -283,18 +289,16 @@
         var id = state.User.Identity as ClaimsIdentity;
         var scopes = id?.FindAll("scope") ?? [];
         List<string> allowedScopes = ["owner", "admin", "community-champion"];
-
         if (scopes.Any(c => allowedScopes.Contains(c.Value)))
         {
             var opts = new ModalOptions() { Size = ModalSize.Small };
             var modalParams = new ModalParameters();
-            ModalService.Show<IngredientCreator>("Request new Ingredient", modalParams, opts);
+            var creatorModal = ModalService.Show<IngredientCreator>("Request new Ingredient", modalParams, opts);
         }
         else
         {
             // standard user scope
         }
-
     }
 
     private async Task AssignCategory(int categoryId)
