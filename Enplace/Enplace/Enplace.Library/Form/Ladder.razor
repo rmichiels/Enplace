@@ -27,7 +27,7 @@
 
     public void StepUp()
     {
-        if (UpperBounds is null || Step + Magnitude < UpperBounds)
+        if (UpperBounds is null || Step + Magnitude <= UpperBounds)
         {
             Step += Magnitude;
             StepChanged.InvokeAsync(Step);
@@ -37,7 +37,7 @@
 
     public void StepDown()
     {
-        if (LowerBounds is null || Step - Magnitude > LowerBounds)
+        if (LowerBounds is null || Step - Magnitude >= LowerBounds)
         {
             Step -= Magnitude;
             StepChanged.InvokeAsync(Step);

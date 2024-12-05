@@ -8,7 +8,7 @@
             <span>@((Field * (Scale ?? 1)).ToString("0.##"))</span>
             @if (StateManagement == StateManagement.Internal)
             {
-                <button class="btn-icon" onclick="() =>Toggle(ComponentState.Edit)">
+                <button class="btn-icon" type="button" @onclick="() =>Toggle(ComponentState.Edit)">
                     <Enplace.Library.Icons.Edit />
                 </button>
             }
@@ -18,7 +18,7 @@
                 <InputNumber class="tgl tgl-number" TValue="decimal" @bind-Value="Field" placeholder="@Placeholder" />
                 @if (StateManagement == StateManagement.Internal)
                 {
-                    <button class="btn-icon" onclick="() =>{Toggle(ComponentState.Details); Callback();}">
+                    <button class="btn-icon" type="button"  @onclick="() =>{Toggle(ComponentState.Details); Callback();}">
                         <Enplace.Library.Icons.Heart />
                     </button>
                 }

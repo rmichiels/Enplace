@@ -17,4 +17,10 @@
         Error,
         Success
     }
+
+    public enum Topic
+    {
+        Recipes,
+        Menus
+    }
 }

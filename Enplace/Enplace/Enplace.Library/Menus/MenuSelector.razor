@@ -20,6 +20,8 @@
 
     [Inject]
     public MenuAPI API { get; set; }
+    [Inject]
+    public AsyncEventManager<MenuDTO> MenuEvents { get; set; }
 
     [Parameter]
     public RecipeDTO Recipe { get; set; }
@@ -50,6 +52,7 @@
         Menu.MenuRecipes.Add(Recipe);
         await API.Update(Menu);
         EventManager.TriggerOnSubmit();
+        MenuEvents.TriggerEvent(Menu);
         await BlazoredModal.CloseAsync();
     }
 }

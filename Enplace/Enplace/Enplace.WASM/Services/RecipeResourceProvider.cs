@@ -1,8 +1,6 @@
 ﻿using Enplace.Library.Contracts;
 using Enplace.Service.DTO;
 using Enplace.Service.Services.API;
-using System;
-using System.Net.Http.Json;
 
 namespace Enplace.WASM.Services
 {

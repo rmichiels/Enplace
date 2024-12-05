@@ -74,6 +74,8 @@
 @media(max-width:800px) {
     .generic-carrousel {
         flex-wrap: wrap;
+/*        overflow-x: scroll;*/
+        overflow-y: scroll;
     }
 
     .menu-carrousel{

@@ -29,6 +29,7 @@
         /*        max-height: 100%;*/
         max-width: 100%;
         min-width: 0;
+        flex: 1;
     }
 
 .section-menu {

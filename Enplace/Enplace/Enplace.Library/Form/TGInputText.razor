@@ -7,14 +7,14 @@
         case ComponentState.Details:
             <span>@Field</span>
             @ChildContent
-            <Enplace.Library.Icons.Edit @onclick="() =>Toggle(ComponentState.Edit)" />
+            @* <Enplace.Library.Icons.Edit @onclick="() =>Toggle(ComponentState.Edit)" /> *@
             break;
         default:
             <EditForm EditContext="EditContext">
                 <InputText class="tgl tgl-text" @bind-Value="Field" placeholder="@Placeholder" />
                 @if (StateManagement == StateManagement.Internal)
                 {
-                    <Enplace.Library.Icons.Details @onclick="() =>Callback()" />
+                 @*    <Enplace.Library.Icons.Details @onclick="() =>Callback()" /> *@
                 }
             </EditForm>
             break;

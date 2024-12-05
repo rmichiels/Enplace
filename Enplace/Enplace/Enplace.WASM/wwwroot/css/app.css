@@ -705,7 +705,7 @@ mobile-invert-col {
     gap: var(--gap-s);
 }
 
-@media(max-width:800px) {
+@media(max-width:800px){
     .tile {
         padding: var(--gap-s);
     }
@@ -727,12 +727,12 @@ mobile-invert-col {
 
 @media(max-width:800px) {
     .blazored-modal {
-        min-width: 100%;
+        min-width: 100vw;
         width: 100% !important;
     }
 
     .blazored-modal-focus-trap {
-        min-width: 100%;
+        min-width: 100vw;
         width: 100% !important;
     }
 }
