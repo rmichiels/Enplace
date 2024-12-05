@@ -1,0 +1,60 @@
+﻿<article>
+    <section class="d-flex flex-row flex-between">
+        <TGInputText @ref=TitleRef @bind-Field=Title @bind-State=State />
+        <button class="btn-icon material-symbols-rounded" type="button" @onclick=@(() => ToggleIsOpen())>
+            @if (IsOpen)
+            {
+                <span>close_fullscreen</span>
+
+            }
+            else
+            {
+                <span>open_in_full</span>
+            }
+        </button>
+    </section>
+
+    @if (IsOpen)
+    {
+        <hr />
+        <TGTextArea @bind-Field=Description @bind-State=State />
+    }
+</article>
+
+@code {
+    [Parameter]
+    public ComponentState State { get; set; }
+    [Parameter]
+    public EventCallback<ComponentState> StateChanged { get; set; }
+
+    [Parameter]
+    public string Title { get; set; } = string.Empty;
+    [Parameter]
+    public EventCallback<string> TitleChanged { get; set; }
+
+    [Parameter]
+    public string Description { get; set; } = string.Empty;
+    [Parameter]
+    public EventCallback<string> DescriptionChanged { get; set; }
+
+    TGInputText TitleRef { get; set; }
+    TGTextArea DescriptionRef { get; set; }
+
+    private bool IsOpen = false;
+    public void ToggleIsOpen()
+    {
+        IsOpen = !IsOpen;
+        StateHasChanged();
+    }
+
+    private async Task Callback()
+    {
+        await TitleRef.Callback();
+        await DescriptionRef.Callback();
+
+        await TitleChanged.InvokeAsync(Title);
+        await DescriptionChanged.InvokeAsync(Description);
+
+        StateHasChanged();
+    }
+}

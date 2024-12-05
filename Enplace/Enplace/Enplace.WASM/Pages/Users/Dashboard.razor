@@ -81,6 +81,7 @@
         EventManager.TopicSelected.TriggerEvent(Topic.Recipes);
         //EventManager.OnSubmit += RefreshDashboard;
         //MenuEventManager.OnEventTriggered += MenuSelected;
+        MenuEventManager.OnEventTriggered += MenuChanged;
     }
 
     private async Task RefreshDashboard()
@@ -92,6 +93,14 @@
         }
         StateHasChanged();
         Console.WriteLine("...Dashboard Refreshed.");
+    }
+
+    private async Task MenuChanged(MenuDTO? menu)
+    {
+        if(_selectedMenu?.Id == menu?.Id && _selectedMenu is not null && menu is not null) 
+        {
+            Task.Run(() => MenuRecipes.ForceCarrouselRefresh(menu));
+        }
     }
 
     private async Task MenuSelected(MenuDTO? menu)

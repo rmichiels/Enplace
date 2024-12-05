@@ -6,13 +6,13 @@
     {
         case ComponentState.Details:
             @ChildContent
-            <Enplace.Library.Icons.Edit @onclick="() =>Toggle(ComponentState.Edit)" />
+            @* <Enplace.Library.Icons.Edit @onclick="() =>Toggle(ComponentState.Edit)" /> *@
             break;
         default:
             <EditForm EditContext="EditContext" class="w-100">
                 <InputTextArea class="w-100 form-control" style="min-height:6rem;resize:none;" @bind-Value="Field" />
 
-                <Enplace.Library.Icons.Heart @onclick="() =>Callback()" />
+               @*  <Enplace.Library.Icons.Heart @onclick="() =>Callback()" /> *@
             </EditForm>
             break;
     }
