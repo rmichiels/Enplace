@@ -1,6 +1,4 @@
-﻿using Enplace.Service;
-
-namespace Enplace.Service.DTO
+﻿namespace Enplace.Service.DTO
 {
     public class Notification
     {

@@ -42,14 +42,14 @@ namespace Enplace.Library.Form
         [Parameter]
         public string Class { get; set; } = string.Empty;
 
-        protected virtual async void Callback()
+        public virtual async Task Callback()
         {
             await FieldChanged.InvokeAsync(Field);
             await StateChanged.InvokeAsync(State);
             StateHasChanged();
         }
 
-        protected virtual async void Toggle(ComponentState toggleTo)
+        protected virtual async Task Toggle(ComponentState toggleTo)
         {
             State = toggleTo;
             await StateChanged.InvokeAsync(State);

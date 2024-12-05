@@ -36,13 +36,13 @@
                 </button>
                 @if (EnplaceContext.User.Id == Item?.Owner?.Id)
                 {
-                    <button class="btn-icon" @onclick=ShowRecipeEditor>
+                    <button class="btn-icon" type="button" @onclick=ShowRecipeEditor>
                         <Enplace.Library.Icons.Edit />
                     </button>
                 }
                 else
                 {
-                    <button class="btn-icon" @onclick="() => ToggleLike()">
+                    <button class="btn-icon" type="button" @onclick="() => ToggleLike()">
                         <Enplace.Library.Icons.Heart />
                     </button>
                 }

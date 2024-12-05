@@ -1,11 +1,4 @@
 ﻿using Blazored.LocalStorage;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Enplace.Library.Models
 {
@@ -25,7 +18,7 @@ namespace Enplace.Library.Models
     {
         public DateTime TimeStamp { get; set; } = DateTime.Now;
         public int ID { get; set; } = 0;
-        public T Item { get; set; } 
+        public T Item { get; set; }
 
         public bool IsValid()
         {
@@ -57,13 +50,14 @@ namespace Enplace.Library.Models
         public static async Task<List<T>> GetCachedListFor<T>(this ILocalStorageService storage, int id, string? keyextension = null)
         {
             var storageKey = $"sk.enplace.cache:{typeof(T).Name}";
-            if(keyextension is not null)
+            if (keyextension is not null)
             {
                 storageKey += "-" + keyextension;
             }
             var result = await storage.GetItemAsync<CachedList<T>>(storageKey);
-       
-            if (result is null || !result.IsValid() || id != result.ID) {
+
+            if (result is null || !result.IsValid() || id != result.ID)
+            {
                 return [];
             }
             else

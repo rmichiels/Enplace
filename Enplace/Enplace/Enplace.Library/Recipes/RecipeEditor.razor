@@ -61,6 +61,16 @@
                                 <Enplace.Library.Ingredients.IngredientList @bind-Ingredients="Recipe.Ingredients" @bind-State="State" Scale=@Scale />
                                 break;
                             case EditorSection.Steps:
+                                foreach (var step in Recipe.RecipeSteps)
+                                {
+                                    <RecipeStep @bind-State=State
+                                                @bind-Title=@(Recipe.RecipeSteps[Recipe.RecipeSteps.IndexOf(step)].Name)
+                                                @bind-Description=@(Recipe.RecipeSteps[Recipe.RecipeSteps.IndexOf(step)].Description) />
+                                }
+                                <hr />
+                                <button type="button" class="btn-icon blade-control " @onclick=@(() => AddRecipeStep())>
+                                    <Enplace.Library.Icons.Add />
+                                </button>
                                 break;
                         }
                     </div>
@@ -184,7 +194,7 @@
     }
     /*
     protected override async Task OnParametersSetAsync()
-    {
+        {
 
         await base.OnParametersSetAsync();
     }*/
@@ -339,5 +349,16 @@
                 Size = ModalSize.Small,
             };
         ModalService.Show<MenuSelector>("Select menu", modalParams, options);
+    }
+
+    public void AddRecipeStep()
+    {
+        RecipeStepDTO stepDTO = new()
+            {
+                Name = $"Step {Recipe?.RecipeSteps?.Count + 1}",
+                Description = ""
+            };
+        Recipe.RecipeSteps.Add(stepDTO);
+        StateHasChanged();
     }
 }

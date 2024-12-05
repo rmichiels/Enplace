@@ -4,6 +4,13 @@
     width: fit-content;
 }
 
+header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    min-width: 300px;
+}
+
 .menu-groceries {
     display: flex;
     flex-direction: column;

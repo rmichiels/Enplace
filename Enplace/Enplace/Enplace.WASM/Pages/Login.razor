@@ -58,6 +58,11 @@
 
     public async void RegisterUser()
     {
+        if (_model.Credentials.Length < 4 || _model.Email.Length < 4)
+        {
+            Notifications.TriggerEvent(new() { Message = "Password or username too short.", Type = NotificationType.Error });
+            return;
+        }
         LoadingEventManager.TriggerEvent(true);
         try
         {

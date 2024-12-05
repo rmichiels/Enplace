@@ -13,6 +13,7 @@ namespace Enplace.Service.Services.Managers
         public static AsyncEventManager IngredientRequested { get; set; } = new();
         public static AsyncEventManager<MenuDTO> MenuSelection { get; set; } = new();
         public static AsyncEventManager<MenuDTO> MenuCreated { get; set; } = new();
+        public static AsyncEventManager<Topic> TopicSelected { get; set; } = new();
     }
 
     public class AsyncEventManager
