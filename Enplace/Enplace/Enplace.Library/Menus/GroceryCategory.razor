@@ -1,0 +1,49 @@
+﻿<article class="section-wrapper @Title">
+    <header class="interactable" @onclick=@(() => _isClosed.Value = !_isClosed.Value)>
+        <h5>@Title</h5>
+        <div class="self-end">
+            <span>
+                @done.Count(i => i == true)
+            </span>
+            /
+            <span>
+                @done.Length
+            </span>
+        </div>
+        <button class="btn-icon material-symbols-rounded">
+            @if (_isClosed.Value)
+            {
+                <span>open_in_full</span>
+            }
+            else
+            {
+                <span>close_fullscreen</span>
+            }
+        </button>
+    </header>
+    <section hidden="@_isClosed.Value">
+        @foreach (GroceryListItem item in Items)
+        {
+            <GroceryBlade @bind-Item="@Items[Items.IndexOf(item)]" @bind-ActiveState="@done[Items.IndexOf(item)]" />
+        }
+    </section>
+</article>
+
+@code {
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public List<GroceryListItem> Items { get; set; }
+
+    private bool[] done = [];
+    // private bool _isClosed = true;
+
+    private ReactiveProperty<bool> _isClosed = new(true);
+
+    protected override void OnInitialized()
+    {
+        done = new bool[Items.Count];
+        _isClosed.Bind((i) => StateHasChanged());
+    }
+}

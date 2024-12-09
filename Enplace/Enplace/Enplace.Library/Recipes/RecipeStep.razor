@@ -1,7 +1,16 @@
 ﻿<article>
-    <section class="d-flex flex-row flex-between">
-        <TGInputText @ref=TitleRef @bind-Field=Title @bind-State=State />
-        <button class="btn-icon material-symbols-rounded" type="button" @onclick=@(() => ToggleIsOpen())>
+    <section class="d-flex flex-row flex-start">
+        <TGInputText @ref=TitleRef @bind-Field:get=Title @bind-Field:set=TitleCallback @bind-State=State />
+        @*         @if (State == ComponentState.Create || State == ComponentState.Edit)
+        {
+        <button class="btn-icon material-symbols-rounded" type="button" @onclick=@(() => Callback())>
+        <span>
+        save
+        </span>
+        </button>
+        } *@
+
+        <button class="btn-icon material-symbols-rounded self-end" type="button" @onclick=@(() => ToggleIsOpen())>
             @if (IsOpen)
             {
                 <span>close_fullscreen</span>
@@ -16,8 +25,7 @@
 
     @if (IsOpen)
     {
-        <hr />
-        <TGTextArea @bind-Field=Description @bind-State=State />
+        <TGTextArea @ref=DescriptionRef @bind-Field:get=Description @bind-Field:set=DescriptionCallback @bind-State=State />
     }
 </article>
 
@@ -50,11 +58,28 @@
     private async Task Callback()
     {
         await TitleRef.Callback();
-        await DescriptionRef.Callback();
-
         await TitleChanged.InvokeAsync(Title);
-        await DescriptionChanged.InvokeAsync(Description);
 
+        if (DescriptionRef is not null)
+        {
+            await DescriptionRef.Callback();
+            await DescriptionChanged.InvokeAsync(Description);
+        }
+
+        StateHasChanged();
+    }
+
+    private void TitleCallback(string str)
+    {
+        Title = str;
+        TitleChanged.InvokeAsync(str);
+        StateHasChanged();
+    }
+
+    private void DescriptionCallback(string str)
+    {
+        Description = str;
+        DescriptionChanged.InvokeAsync(str);
         StateHasChanged();
     }
 }

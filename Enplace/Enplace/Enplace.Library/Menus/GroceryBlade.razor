@@ -1,5 +1,5 @@
-﻿<article class="grocery-blade interactable @_class" @onclick=@(()=> ActiveState = !ActiveState)>
-    <InputCheckbox class="xb-category" style="width: 1.2rem; accent-color:var(--color-category-underline);border-color:var(--color-category-underline);" @bind-Value="ActiveState" />
+﻿<article class="grocery-blade interactable @_class" @onclick=@(()=> Callback(!ActiveState))>
+    <InputCheckbox class="xb-category" style="width: 1.2rem; accent-color:var(--color-category-underline);border-color:var(--color-category-underline);" @bind-Value:get="ActiveState" @bind-Value:set=Callback />
     <label class="ingredient interactable">@Item.Name</label>
     <label class="interactable">@Item.Quantity.ToString("G29")</label>
     @if (!Item.Measurement.Contains("Unit", StringComparison.CurrentCultureIgnoreCase))
@@ -15,22 +15,22 @@
     public EventCallback<GroceryListItem> ItemChanged { get; set; }
 
     private string _class;
-    public bool ActiveState
+    [Parameter]
+    public bool ActiveState { get; set; }
+    [Parameter]
+    public EventCallback<bool> ActiveStateChanged { get; set; }
+
+    protected void Callback(bool flag)
     {
-        get => _activeState;
-        set
+        if (flag)
         {
-            _activeState = value;
-            if (value)
-            {
-                _class = "active";
-            }
-            else
-            {
-                _class = string.Empty;
-            }
-            StateHasChanged();
+            _class = "active";
         }
+        else
+        {
+            _class = string.Empty;
+        }
+        StateHasChanged();
+        ActiveStateChanged.InvokeAsync(flag);
     }
-    private bool _activeState = false;
 }
