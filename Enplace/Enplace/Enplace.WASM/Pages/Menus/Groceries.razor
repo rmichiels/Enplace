@@ -8,27 +8,7 @@
     <div class="category-wrapper">
         @foreach (var kvp in _groceriesPerCategory)
         {
-            <article class="section-wrapper @kvp.Key">
-                <header>
-                    <h5>@kvp.Key</h5>
-                    <button class="btn-icon material-symbols-rounded" @onclick=@(() => ToggleSection(kvp.Key))>
-                        @if (_hiddenSections.Contains(kvp.Key))
-                        {
-                            <span>open_in_full</span>
-                        }
-                        else
-                        {
-                            <span>close_fullscreen</span>
-                        }
-                    </button>
-                </header>
-                <section hidden="@_hiddenSections.Contains(kvp.Key)">
-                    @foreach (GroceryListItem item in kvp.Value)
-                    {
-                        <GroceryBlade @bind-Item="@kvp.Value[kvp.Value.IndexOf(item)]" />
-                    }
-                </section>
-            </article>
+            <GroceryCategory Items="@kvp.Value" Title="@kvp.Key" />
         }
     </div>
 </div>
@@ -45,7 +25,6 @@
     public int Id { get; set; }
 
     private Dictionary<string, List<GroceryListItem>> _groceriesPerCategory = [];
-    private List<string> _hiddenSections = [];
 
     protected async override Task OnInitializedAsync()
     {
@@ -63,20 +42,6 @@
             {
                 _groceriesPerCategory = await API.GetGroceriesFor(Id) ?? [];
             }
-            _hiddenSections.AddRange(_groceriesPerCategory.Select(kvp => kvp.Key));
         }
-    }
-
-    public void ToggleSection(string key)
-    {
-        if (_hiddenSections.Contains(key))
-        {
-            _hiddenSections.Remove(key);
-        }
-        else
-        {
-            _hiddenSections.Add(key);
-        }
-        StateHasChanged();
     }
 }

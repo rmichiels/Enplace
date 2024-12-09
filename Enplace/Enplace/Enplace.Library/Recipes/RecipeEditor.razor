@@ -67,8 +67,9 @@
                                     <RecipeStep @bind-State=State
                                                 @bind-Title=@(Recipe.RecipeSteps[Recipe.RecipeSteps.IndexOf(step)].Name)
                                                 @bind-Description=@(Recipe.RecipeSteps[Recipe.RecipeSteps.IndexOf(step)].Description) />
+                                    <hr />
                                 }
-                                <hr />
+
                                 <button type="button" class="btn-icon blade-control " @onclick=@(() => AddRecipeStep())>
                                     <Enplace.Library.Icons.Add />
                                 </button>
