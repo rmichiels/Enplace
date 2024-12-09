@@ -161,7 +161,7 @@ body {
     --color-base-alt: black !important;
 }
 
-.Aromatic {
+.Aromatics {
     --color-category-underline: #88bcb3;
 }
 
@@ -177,12 +177,16 @@ body {
     --color-category-underline: #c35256;
 }
 
-.Seasoning {
+.Spices {
     --color-category-underline: #c3fcf1;
 }
 
 .Vegetable {
     --color-category-underline: #00c7a0;
+}
+
+.Dairy {
+    --color-category-underline: #ffe171;
 }
 
 .Details {
@@ -321,6 +325,7 @@ body {
 }
 
 .tgl-text {
+    min-width: fit-content;
 }
 
 h1:focus {
@@ -612,7 +617,7 @@ mobile-invert-col {
         max-width: 100% !important;
         width: 100%;
         min-width: 0;
-        min-height: 100vh;
+        min-height: 100svh;
         justify-content: space-between;
         padding: 0.5rem !important;
     }
@@ -705,7 +710,7 @@ mobile-invert-col {
     gap: var(--gap-s);
 }
 
-@media(max-width:800px){
+@media(max-width:800px) {
     .tile {
         padding: var(--gap-s);
     }
@@ -782,3 +787,8 @@ img {
         text-align: center;
         content: attr(alt);
     }
+
+
+.self-end {
+    margin-left: auto;
+}
