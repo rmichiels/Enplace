@@ -1,14 +1,22 @@
 ﻿@rendermode RenderMode.InteractiveAuto
 @inherits ToggelableBase<string>
 
-<div class="d-flex gap-2">
-    @switch (State)
-    {
-        case ComponentState.Details:
-            <span>@Field</span>
-            break;
-        default:
-            <InputText class="tgl tgl-text" @bind-Value="Field" placeholder="@Placeholder" />
-            break;
-    }
-</div>
+
+@switch (State)
+{
+    case ComponentState.Details:
+        <div class="d-flex gap-2 h-100">
+            @if (ChildContent is null)
+            {
+                <span>@Field</span>
+            }
+            else
+            {
+                @ChildContent
+            }
+        </div>
+        break;
+    default:
+        <InputText class="tgl tgl-text" @bind-Value="Field" placeholder="@Placeholder" />
+        break;
+}

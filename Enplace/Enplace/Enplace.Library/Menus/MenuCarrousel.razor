@@ -2,9 +2,11 @@
 @using Blazored.Modal.Services
 @using Enplace.Service.Services.Managers
 @using System.Globalization
+@implements IDisposable
+
 
 <section class="menu-carrousel">
-    <MenuCard State="ComponentState.Create" OnMenuSelected="(m) => ShowMenuEditor()" />
+    <MenuCard State="ComponentState.Create" @* ItemChanged="(m) => ShowMenuEditor()" *@ />
     @foreach (MenuDTO menu in Menus)
     {
         <MenuCard @bind-Menu="@Menus[Menus.IndexOf(menu)]" State="@ComponentState.Details" Class="@(menu.Id == _selectedMenu?.Id ? "ActiveMenu" : string.Empty)" />
@@ -74,5 +76,10 @@
         var opt = new ModalOptions() { Size = ModalSize.Medium };
         var param = new ModalParameters().Add(nameof(MenuEditor.State), ComponentState.Create);
         Modal.Show<MenuEditor>("Create new menu", param, opt);
+    }
+
+    public void Dispose()
+    {
+        
     }
 }

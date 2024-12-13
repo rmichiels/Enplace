@@ -1,0 +1,30 @@
+﻿@using Blazored.Modal
+@using Blazored.Modal.Services
+
+<section>
+    <p>
+        @Text
+    </p>
+    <div class="flex-row flex-around gap-s">
+        <button class="btn btn-primary Vegetarian" @onclick="() => Confirm()">
+            @AffirmativeAction
+        </button>
+        <button class="btn btn-secondary Standard" @onclick="() => Close()">
+            Cancel
+        </button>
+    </div>
+</section>
+
+@code {
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
+    private async Task Close() => await BlazoredModal.CloseAsync(ModalResult.Cancel());
+
+    protected async Task Confirm() => await BlazoredModal.CloseAsync(ModalResult.Ok());
+
+    [Parameter]
+    public string Text { get; set; }
+
+    [Parameter]
+    public string AffirmativeAction { get; set; } = "Confirm";
+
+}

@@ -3,6 +3,7 @@
 @using Enplace.Service.Services.Managers
 @typeparam TItem where TItem : class, ILabeled, new()
 @typeparam TComponent where TComponent : BaseTile<TItem>
+@implements IDisposable
 
 <section class="generic-carrousel @Class">
     @if (ShowCreationTile)
@@ -139,6 +140,14 @@
         {
             await SelectedItemChanged.InvokeAsync(item);
             StateHasChanged();
+        }
+    }
+
+    public void Dispose()
+    {
+        if (!QueryOverride)
+        {
+            ItemEvents.OnEventTriggered -= ForceCarrouselRefresh;
         }
     }
 }

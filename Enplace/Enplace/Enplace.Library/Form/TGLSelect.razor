@@ -1,7 +1,7 @@
 ﻿@inherits ToggelableBase<int>
 @rendermode RenderMode.InteractiveAuto
 
-<InputSelect class="@($"tgl tgl-select {State} {Class}")" TValue="int" @bind-Value="Field" placeholder="@Placeholder" style="height:100%" disabled=@(State != ComponentState.Edit && State !=ComponentState.Create && State !=ComponentState.Loading )>
+<InputSelect class="@($"tgl tgl-select {State} {Class}")" TValue="int" @bind-Value:get="Field" @bind-Value:set=@FieldChanged.InvokeAsync placeholder="@Placeholder" style="height:100%" disabled=@(State != ComponentState.Edit && State !=ComponentState.Create && State !=ComponentState.Loading )>
     @if (Placeholder is not null)
     {
         <option value="0" selected="selected">@Placeholder</option>
