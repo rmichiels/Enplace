@@ -13,6 +13,8 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+
 Uri keyVaultEndpoint = new(Environment.GetEnvironmentVariable("VaultUri") ?? string.Empty);
 var cred = new DefaultAzureCredential();
 var client = new SecretClient(new Uri(keyVaultEndpoint.ToString()), cred);

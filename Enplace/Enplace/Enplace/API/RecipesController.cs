@@ -55,7 +55,7 @@ namespace Enplace.API
         [Route("like/{recipeid}")]
         [HttpPatch]
         [Authorize]
-        public async Task<IActionResult> ToggleLike([FromRoute]int recipeid)
+        public async Task<IActionResult> ToggleLike([FromRoute] int recipeid)
         {
             var user = await GetUser();
             if (user is null)
@@ -74,6 +74,10 @@ namespace Enplace.API
                     if (!recipe.Likes.Any(like => like.UserID == user.Id && like.RecipeID == recipeid))
                     {
                         await Service.Link(ur);
+                        if (user is not null)
+                        {
+                            Task.Run(() => TrackActivityFor(user, recipeid));
+                        }
                         return NoContent();
                     }
                     else

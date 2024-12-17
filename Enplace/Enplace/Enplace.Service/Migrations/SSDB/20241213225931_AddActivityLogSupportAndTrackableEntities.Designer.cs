@@ -4,6 +4,7 @@ using Enplace.Service.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Enplace.Service.Migrations.SSDB
 {
     [DbContext(typeof(SSDBContext))]
-    partial class SSDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241213225931_AddActivityLogSupportAndTrackableEntities")]
+    partial class AddActivityLogSupportAndTrackableEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -28,9 +31,6 @@ namespace Enplace.Service.Migrations.SSDB
                         .HasColumnType("varchar(255)");
 
                     b.Property<int>("ItemID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserID")
                         .HasColumnType("int");
 
                     b.Property<int?>("CreatedByID")
@@ -50,7 +50,10 @@ namespace Enplace.Service.Migrations.SSDB
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("timestamp(6)");
 
-                    b.HasKey("Topic", "ItemID", "UserID");
+                    b.Property<int>("UserID")
+                        .HasColumnType("int");
+
+                    b.HasKey("Topic", "ItemID");
 
                     b.HasIndex("UserID");
 
