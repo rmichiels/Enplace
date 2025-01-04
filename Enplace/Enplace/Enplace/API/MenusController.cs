@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Security.Claims;
 
 namespace Enplace.API
 {
@@ -137,7 +136,7 @@ namespace Enplace.API
         {
             var entity = await _converter.Convert(DTO);
             var q = await Service.Query<UserMenu>();
-            var dbEntity = q.Include(um => um.MenuRecipes).First(um => um.Id == entity.Id);
+            var dbEntity = await q.Include(um => um.MenuRecipes).FirstAsync(um => um.Id == entity.Id);
 
             try
             {

@@ -832,7 +832,7 @@ img {
 select {
     /* styling */
     background-color: white;
-    border: thin solid blue;
+    border: 2px solid rgba(255, 255, 255, 0.8);
     border-radius: 4px;
     display: inline-block;
     font: inherit;
@@ -857,7 +857,7 @@ select {
         background-position: calc(100% - 15px) 1em, calc(100% - 20px) 1em, calc(100% - 2.5em) 0.5em;
         background-size: 5px 5px, 5px 5px, 1px 1.5em;
         background-repeat: no-repeat;
-        border-color: green;
+        border-color: black;
         outline: 0;
     }
 

@@ -18,7 +18,8 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "VaultUri": "https://kv-sk-core.vault.azure.net/",
-        "AZURE_USERNAME": "microbbe@gmail.com"
+        "AZURE_USERNAME": "microbbe@gmail.com",
+        "CfgUri": "https://cfg-sk-core.azconfig.io"
       },
       "dotnetRunMessages": true,
       "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}",

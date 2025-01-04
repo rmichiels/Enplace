@@ -2,8 +2,6 @@
 using Enplace.Service.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Security.Claims;
 
 namespace Enplace.API
@@ -31,7 +29,7 @@ namespace Enplace.API
         protected async Task TrackActivityFor(User userToTrack, int itemId)
         {
             var userQuery = await Service.Query<User>();
-            var currentUser = userQuery.Include(u => u.ActivityLog).FirstOrDefault(u => u.Id == userToTrack.Id);
+            var currentUser = await userQuery.Include(u => u.ActivityLog).FirstOrDefaultAsync(u => u.Id == userToTrack.Id);
 
             if (currentUser is not null)
             {

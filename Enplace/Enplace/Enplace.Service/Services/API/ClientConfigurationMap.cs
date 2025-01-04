@@ -32,16 +32,9 @@ namespace Enplace.Service.Services.API
 
         public bool TryGetValue(string label, out ClientConfiguration? value)
         {
-            if (_configMap.ContainsKey(label))
-            {
-                value = _configMap[label];
-                return true;
-            }
-            else
-            {
-                value = null;
-                return false;
-            }
+            var result = _configMap.TryGetValue(label, out ClientConfiguration? outValue);
+            value = outValue;
+            return result;
         }
 
         public class ClientConfiguration
@@ -54,8 +47,8 @@ namespace Enplace.Service.Services.API
             }
 
             public string BaseURL { get; set; }
-            public string Suffix { get; set; } = string.Empty;
-            public bool AllowAuthHeader { get; set; } = true;
+            public string Suffix { get; set; }
+            public bool AllowAuthHeader { get; set; }
         }
     }
 }

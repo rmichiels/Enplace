@@ -5,7 +5,6 @@ using Enplace.Service.Services.Converters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 
 namespace Enplace.API
@@ -65,9 +64,9 @@ namespace Enplace.API
             else
             {
                 var query = await Service.Query<Recipe>();
-                var recipe = query
+                var recipe = await query
                 .Include(r => r.Likes)
-                .First(r => r.Id == recipeid);
+                .FirstAsync(r => r.Id == recipeid);
                 UserRecipe ur = new() { UserID = user.Id, RecipeID = recipeid };
                 try
                 {
