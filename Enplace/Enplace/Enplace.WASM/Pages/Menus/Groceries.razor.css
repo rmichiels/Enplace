@@ -1,7 +1,8 @@
-﻿h5 {
-    font-size: 1.2rem;
-    box-shadow: inset 0 -0.4rem 0 0 var(--color-category-underline);
-    width: fit-content;
+﻿header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    min-width: 300px;
 }
 
 .menu-groceries {

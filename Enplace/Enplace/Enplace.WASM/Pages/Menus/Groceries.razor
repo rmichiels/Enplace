@@ -1,21 +1,15 @@
 ﻿@page "/groceries/{Id:int}"
 @using Enplace.Library.Menus
 @using Enplace.Library.Models
+@using Enplace.Service.Services.Managers
 @attribute [Authorize]
+@implements IDisposable
 
 <div class="menu-groceries">
     <div class="category-wrapper">
         @foreach (var kvp in _groceriesPerCategory)
         {
-            <article class="section-wrapper @kvp.Key">
-                <header><h5>@kvp.Key</h5></header>
-                <section>
-                    @foreach (GroceryListItem item in kvp.Value)
-                    {
-                        <GroceryBlade @bind-Item="@kvp.Value[kvp.Value.IndexOf(item)]" />
-                    }
-                </section>
-            </article>
+            <GroceryCategory Items="@kvp.Value" Title="@kvp.Key" />
         }
     </div>
 </div>
@@ -24,7 +18,10 @@
     [Inject]
     public required MenuAPI API { get; set; }
     [Inject]
-    public ILocalStorageService StorageService { get; set; }
+    public required ILocalStorageService StorageService { get; set; }
+    [Inject]
+    public required AsyncEventManager<MenuDTO> MenuEvents { get; set; }
+
     [Parameter]
     public int Id { get; set; }
 
@@ -32,10 +29,34 @@
 
     protected async override Task OnInitializedAsync()
     {
-        _groceriesPerCategory = await StorageService.GetCacheFor<Dictionary<string, List<GroceryListItem>>>(Id, "groceries");
-        if(_groceriesPerCategory?.Count ==  0|| _groceriesPerCategory is null)
+        MenuEvents.OnEventTriggered += SetGroceries;
+        EventManager.TopicSelected.TriggerEvent(Topic.Menus);
+        if (_groceriesPerCategory?.Count == 0 || _groceriesPerCategory is null)
         {
-            _groceriesPerCategory = await API.GetGroceriesFor(Id) ?? [];
+
+            _groceriesPerCategory = await StorageService.GetCacheFor<Dictionary<string, List<GroceryListItem>>>(Id, "groceries") ?? [];
+            if (_groceriesPerCategory?.Count == 0 || _groceriesPerCategory is null)
+            {
+                _groceriesPerCategory = await API.GetGroceriesFor(Id) ?? [];
+            }
         }
+    }
+
+    public async Task SetGroceries(MenuDTO? menu)
+    {
+        if (menu?.Id is not null)
+        {
+            _groceriesPerCategory = await StorageService.GetCacheFor<Dictionary<string, List<GroceryListItem>>>(menu.Id, "groceries") ?? [];
+            if (_groceriesPerCategory?.Count == 0 || _groceriesPerCategory is null)
+            {
+                _groceriesPerCategory = await API.GetGroceriesFor(menu.Id) ?? [];
+            }
+            StateHasChanged();
+        }
+    }
+
+    public void Dispose()
+    {
+        MenuEvents.OnEventTriggered -= SetGroceries;
     }
 }

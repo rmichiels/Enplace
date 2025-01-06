@@ -22,6 +22,41 @@ namespace Enplace.Service.Migrations.SSDB
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
+            modelBuilder.Entity("Enplace.Service.Entities.ActivityLog", b =>
+                {
+                    b.Property<string>("Topic")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<int>("ItemID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CreatedByID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int?>("ModifiedByID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ModifiedOn")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("Stamp")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp(6)");
+
+                    b.HasKey("Topic", "ItemID", "UserID");
+
+                    b.HasIndex("UserID");
+
+                    b.ToTable("ActivityLog");
+                });
+
             modelBuilder.Entity("Enplace.Service.Entities.DeltaStore", b =>
                 {
                     b.Property<int>("Id")
@@ -349,6 +384,17 @@ namespace Enplace.Service.Migrations.SSDB
                     b.ToTable("UserRecipes", (string)null);
                 });
 
+            modelBuilder.Entity("Enplace.Service.Entities.ActivityLog", b =>
+                {
+                    b.HasOne("Enplace.Service.Entities.User", "User")
+                        .WithMany("ActivityLog")
+                        .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Enplace.Service.Entities.Ingredient", b =>
                 {
                     b.HasOne("Enplace.Service.Entities.IngredientCategory", "IngredientCategory")
@@ -519,6 +565,8 @@ namespace Enplace.Service.Migrations.SSDB
 
             modelBuilder.Entity("Enplace.Service.Entities.User", b =>
                 {
+                    b.Navigation("ActivityLog");
+
                     b.Navigation("LikedRecipes");
 
                     b.Navigation("OwnedRecipes");

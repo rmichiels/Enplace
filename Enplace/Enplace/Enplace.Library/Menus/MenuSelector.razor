@@ -3,15 +3,21 @@
 
 <article class="menu-selector flex-col flex-start ">
     <div class="flex-row flex-start w-100">
-        <TGLSelect Field="Menu.Id" FieldChanged="(i) => SelectMenu(i)" Options="_menuOptions.ToList<ILabeled>()" Class="blade-control m-auto" />
+        <TGLSelect @bind-Field:get="Menu.Id" @bind-Field:set="SelectMenu" Options="_menuOptions.ToList<ILabeled>()" Class="blade-control m-auto min-350" />
     </div>
-    <div class="flex-row flex-between align-items-center w-100">
-        <Silhouette Class="blade-label m-row-3 dark-mode" />
-        <Ladder @bind-Step="MenuScale" LowerBounds="1" />
-        <button class="btn-icon blade-button" @onclick="() => AddRecipeToMenu()">
-            <Enplace.Library.Icons.Add />
-        </button>
-    </div>
+    @if (Recipe is not null)
+    {
+        <div class="flex-row flex-between align-items-center w-100">
+            <div class="flex-row flex-between align-items-center">
+                <Silhouette Class="blade-label m-row-3 dark-mode" />
+                <Ladder @bind-Step="MenuScale" LowerBounds="1" />
+            </div>
+            <button class="btn-icon blade-button" @onclick="() => AddRecipeToMenu()">
+                Add
+                <Enplace.Library.Icons.Add />
+            </button>
+        </div>
+    }
 </article>
 
 @code {
@@ -20,6 +26,8 @@
 
     [Inject]
     public MenuAPI API { get; set; }
+    [Inject]
+    public required AsyncEventManager<MenuDTO> MenuEvents { get; set; }
 
     [Parameter]
     public RecipeDTO Recipe { get; set; }
@@ -34,12 +42,17 @@
     {
         Menu = EnplaceContext.Menu ?? new();
         _menuOptions = await API.GetAll();
-        MenuScale = Recipe.ApproximateServingSize ?? 1;
+        if (Recipe is not null)
+        {
+            MenuScale = Recipe.ApproximateServingSize ?? 1;
+        }
     }
 
-    private async Task SelectMenu(int i)
+    public void SelectMenu(int i)
     {
+        Console.WriteLine(i);
         Menu = _menuOptions.First(m => m.Id == i);
+        MenuEvents.TriggerEvent(Menu);
         StateHasChanged();
     }
 
@@ -50,6 +63,7 @@
         Menu.MenuRecipes.Add(Recipe);
         await API.Update(Menu);
         EventManager.TriggerOnSubmit();
+        MenuEvents.TriggerEvent(Menu);
         await BlazoredModal.CloseAsync();
     }
 }

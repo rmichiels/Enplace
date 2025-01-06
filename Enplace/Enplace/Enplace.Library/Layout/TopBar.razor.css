@@ -3,6 +3,7 @@
     flex-direction: row;
     justify-content: space-around;
     gap: 2rem;
+    background: var(--palette-bg);
 }
 
 @media(max-height:800px) {
@@ -12,6 +13,6 @@
         top: 0;
         padding-top: var(--gap-s);
         padding-bottom: var(--gap-s);
-        background-color: var(--palette-neutral);
+        background-color: var(--palette-bg);
     }
 }

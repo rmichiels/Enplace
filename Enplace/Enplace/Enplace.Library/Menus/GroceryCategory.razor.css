@@ -1,0 +1,37 @@
+﻿section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+h5 {
+    font-size: 1.2rem;
+    box-shadow: inset 0 -0.4rem 0 0 var(--color-category-underline);
+    width: fit-content;
+}
+
+header {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    min-width: 300px;
+    gap: var(--gap-m);
+    align-items:center;
+}
+
+.menu-groceries {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: flex-start;
+    align-items: center;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.section-wrapper {
+    border-radius: 10px;
+    border: 3px solid var(--color-category-underline);
+    padding: 0.5rem 1rem 0.5rem 1rem;
+    background-color: white;
+}

@@ -1,0 +1,80 @@
+﻿<article>
+    <section class="d-flex flex-row flex-start">
+        <TGInputText @ref=TitleRef @bind-Field:get=Title @bind-Field:set=TitleCallback @bind-State=State>
+            <h4>
+                @Title
+            </h4>
+        </TGInputText>
+        <button class="btn-icon material-symbols-rounded self-end" type="button" @onclick=@(() => ToggleIsOpen())>
+            @if (IsOpen)
+            {
+                <span>close_fullscreen</span>
+
+            }
+            else
+            {
+                <span>open_in_full</span>
+            }
+        </button>
+    </section>
+
+    @if (IsOpen)
+    {
+        <TGTextArea @ref=DescriptionRef @bind-Field:get=Description @bind-Field:set=DescriptionCallback @bind-State=State />
+    }
+</article>
+
+@code {
+    [Parameter]
+    public ComponentState State { get; set; }
+    [Parameter]
+    public EventCallback<ComponentState> StateChanged { get; set; }
+
+    [Parameter]
+    public string Title { get; set; } = string.Empty;
+    [Parameter]
+    public EventCallback<string> TitleChanged { get; set; }
+
+    [Parameter]
+    public string Description { get; set; } = string.Empty;
+    [Parameter]
+    public EventCallback<string> DescriptionChanged { get; set; }
+
+    TGInputText TitleRef { get; set; }
+    TGTextArea DescriptionRef { get; set; }
+
+    private bool IsOpen = false;
+    public void ToggleIsOpen()
+    {
+        IsOpen = !IsOpen;
+        StateHasChanged();
+    }
+
+    private async Task Callback()
+    {
+        await TitleRef.Callback();
+        await TitleChanged.InvokeAsync(Title);
+
+        if (DescriptionRef is not null)
+        {
+            await DescriptionRef.Callback();
+            await DescriptionChanged.InvokeAsync(Description);
+        }
+
+        StateHasChanged();
+    }
+
+    private void TitleCallback(string str)
+    {
+        Title = str;
+        TitleChanged.InvokeAsync(str);
+        StateHasChanged();
+    }
+
+    private void DescriptionCallback(string str)
+    {
+        Description = str;
+        DescriptionChanged.InvokeAsync(str);
+        StateHasChanged();
+    }
+}

@@ -1,6 +1,7 @@
 ﻿@page "/"
 @page "/dashboard"
 @attribute [Authorize]
+@implements IDisposable
 
 @using Blazored.Modal
 @using Blazored.Modal.Services
@@ -16,7 +17,7 @@
                 what will you be cooking today @EnplaceContext.User.Name ?
             </p>
         </aside>
-        <div class="d-flex flex-col glass f-1">
+        <div class="d-flex flex-col glass f-1" style="padding-bottom:0 !important;">
             <header class="flex-row flex-between gap-m">
                 <span class="subtitle">Your menus</span>
                 <button type="button" class="btn-icon m-revealed" @onclick="ShowMenuEditor">
@@ -24,7 +25,7 @@
                 </button>
             </header>
             <CachedCarrousel TItem="MenuDTO" TComponent="MenuCard"
-                             Class="menu-carrousel m-hidden-scrollbar f-1"
+                             Class="menu-carrousel m-hidden-scrollbar f-1 glass-padding"
                              @bind-SelectedItem:get="_selectedMenu" @bind-SelectedItem:set="MenuSelected"
                              SelectFirst=true ShowCreationTile=true FilterOnUser=true />
         </div>
@@ -78,8 +79,10 @@
 
     protected override void OnInitialized()
     {
+        EventManager.TopicSelected.TriggerEvent(Topic.Recipes);
         //EventManager.OnSubmit += RefreshDashboard;
         //MenuEventManager.OnEventTriggered += MenuSelected;
+        MenuEventManager.OnEventTriggered += MenuChanged;
     }
 
     private async Task RefreshDashboard()
@@ -91,6 +94,14 @@
         }
         StateHasChanged();
         Console.WriteLine("...Dashboard Refreshed.");
+    }
+
+    private async Task MenuChanged(MenuDTO? menu)
+    {
+        if(_selectedMenu?.Id == menu?.Id && _selectedMenu is not null && menu is not null) 
+        {
+            Task.Run(() => MenuRecipes.ForceCarrouselRefresh(menu));
+        }
     }
 
     private async Task MenuSelected(MenuDTO? menu)
@@ -148,5 +159,10 @@
             var response = await MenuAPI.Update(_selectedMenu);
             StateHasChanged();
         }
+    }
+
+    public void Dispose()
+    {
+        MenuEventManager.OnEventTriggered -= MenuChanged;
     }
 }

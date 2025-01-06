@@ -2,30 +2,31 @@
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.ApplicationInsights.Extensibility;
 
-public class TelemetryFilterDependecyOk : ITelemetryProcessor
+namespace Enplace.Telemetry
 {
-    private ITelemetryProcessor Next { get; set; }
-
-    // next will point to the next TelemetryProcessor in the chain.
-    public TelemetryFilterDependecyOk(ITelemetryProcessor next)
+    public class TelemetryFilterDependecyOk : ITelemetryProcessor
     {
-        this.Next = next;
-    }
+        private ITelemetryProcessor Next { get; set; }
 
-    public void Process(ITelemetry item)
-    {
-        // To filter out an item, return without calling the next processor.
-        if (!OKtoSend(item)) { return; }
+        // next will point to the next TelemetryProcessor in the chain.
+        public TelemetryFilterDependecyOk(ITelemetryProcessor next)
+        {
+            Next = next;
+        }
 
-        this.Next.Process(item);
-    }
+        public void Process(ITelemetry item)
+        {
+            // To filter out an item, return without calling the next processor.
+            if (!OKtoSend(item)) { return; }
 
-    // Example: replace with your own criteria.
-    private bool OKtoSend(ITelemetry item)
-    {
-        var dependency = item as DependencyTelemetry;
-        if (dependency == null) return true;
+            Next.Process(item);
+        }
 
-        return dependency.Success != true;
+        // Example: replace with your own criteria.
+        private bool OKtoSend(ITelemetry item)
+        {
+            if (item is not DependencyTelemetry dependency) return true;
+            return dependency.Success != true;
+        }
     }
 }

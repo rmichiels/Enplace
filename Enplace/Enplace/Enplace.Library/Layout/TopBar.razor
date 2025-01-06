@@ -1,8 +1,37 @@
-﻿<header style="padding-left:1rem;padding-right:1rem;">
-    <Enplace.Library.Recipes.RecipeSelector/>
-@*     <Enplace.Library.Auth.AccountManager /> *@
+﻿@implements IDisposable
+
+<header style="padding-left:1rem;padding-right:1rem;">
+    @switch (CurrentTopic)
+    {
+        case Topic.Recipes:
+            <Enplace.Library.Recipes.RecipeSelector />
+            break;
+        case Topic.Menus:
+            <Enplace.Library.Menus.MenuSelector />
+            break;
+    }
 </header>
 
 @code {
     private string str = string.Empty;
+
+    public Topic CurrentTopic { get; set; }
+
+    protected override void OnInitialized()
+    {
+        EventManager.TopicSelected.OnEventTriggered += SelectTopic;
+        base.OnInitialized();
+    }
+
+    public Task SelectTopic(Topic topic)
+    {
+        CurrentTopic = topic;
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+
+    public void Dispose()
+    {
+        EventManager.TopicSelected.OnEventTriggered -= SelectTopic;
+    }
 }
