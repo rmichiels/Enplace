@@ -7,6 +7,14 @@ namespace Enplace.Service.Database
     {
         public static void Configure(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<ActivityLog>(entity =>
+            {
+                entity.HasKey(log => new { log.Topic, log.ItemID, log.UserID });
+
+                entity.HasOne(l => l.User).WithMany(l => l.ActivityLog);
+            });
+
+
             modelBuilder.Entity<DeltaStore>(entity =>
             {
                 entity.ToTable("DeltaStore");
@@ -127,6 +135,10 @@ namespace Enplace.Service.Database
                 entity.Property(e => e.Id).HasColumnName("ID");
                 entity.HasIndex(e => e.SKID).IsUnique();
                 entity.HasIndex(e => e.Name).IsUnique();
+
+                entity.HasMany(u => u.ActivityLog)
+                .WithOne(l => l.User)
+                .HasForeignKey(l => l.UserID);
             });
 
             modelBuilder.Entity<UserMenu>(entity =>

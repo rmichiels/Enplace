@@ -14,4 +14,7 @@ public partial class User : ILabeled
     public virtual ICollection<UserMenu> UserMenus { get; set; } = [];
     [JsonIgnore]
     public virtual ICollection<UserRecipe> LikedRecipes { get; set; } = [];
+
+    [JsonIgnore]
+    public virtual ICollection<ActivityLog> ActivityLog { get; set; } = [];
 }

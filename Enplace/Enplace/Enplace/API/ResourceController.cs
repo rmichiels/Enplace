@@ -5,8 +5,6 @@ using Enplace.Service.Services.Converters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Validations;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Security.Claims;
 
 namespace Enplace.API
@@ -76,7 +74,7 @@ namespace Enplace.API
                 query = query.Where(r => r.Category.Name.ToUpper().Contains(category.ToUpper()));
             }
 
-            var remainder = query.ToList().Skip(page - 1 * pagesize);
+            var remainder = query.AsEnumerable().Skip(page - 1 * pagesize);
             var queryResult = remainder.Take(pagesize);
             RecipeConverter converter = new();
 

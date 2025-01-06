@@ -5,7 +5,6 @@ using Enplace.Service.Services.Converters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 
 namespace Enplace.API
@@ -55,7 +54,7 @@ namespace Enplace.API
         [Route("like/{recipeid}")]
         [HttpPatch]
         [Authorize]
-        public async Task<IActionResult> ToggleLike([FromRoute]int recipeid)
+        public async Task<IActionResult> ToggleLike([FromRoute] int recipeid)
         {
             var user = await GetUser();
             if (user is null)
@@ -65,15 +64,19 @@ namespace Enplace.API
             else
             {
                 var query = await Service.Query<Recipe>();
-                var recipe = query
+                var recipe = await query
                 .Include(r => r.Likes)
-                .First(r => r.Id == recipeid);
+                .FirstAsync(r => r.Id == recipeid);
                 UserRecipe ur = new() { UserID = user.Id, RecipeID = recipeid };
                 try
                 {
                     if (!recipe.Likes.Any(like => like.UserID == user.Id && like.RecipeID == recipeid))
                     {
                         await Service.Link(ur);
+                        if (user is not null)
+                        {
+                            Task.Run(() => TrackActivityFor(user, recipeid));
+                        }
                         return NoContent();
                     }
                     else

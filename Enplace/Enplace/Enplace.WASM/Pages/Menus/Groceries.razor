@@ -3,6 +3,7 @@
 @using Enplace.Library.Models
 @using Enplace.Service.Services.Managers
 @attribute [Authorize]
+@implements IDisposable
 
 <div class="menu-groceries">
     <div class="category-wrapper">
@@ -17,9 +18,9 @@
     [Inject]
     public required MenuAPI API { get; set; }
     [Inject]
-    public ILocalStorageService StorageService { get; set; }
+    public required ILocalStorageService StorageService { get; set; }
     [Inject]
-    public AsyncEventManager<MenuDTO> MenuEvents { get; set; }
+    public required AsyncEventManager<MenuDTO> MenuEvents { get; set; }
 
     [Parameter]
     public int Id { get; set; }
@@ -28,20 +29,34 @@
 
     protected async override Task OnInitializedAsync()
     {
+        MenuEvents.OnEventTriggered += SetGroceries;
         EventManager.TopicSelected.TriggerEvent(Topic.Menus);
-        await SetGroceries(Id);
-        MenuEvents.OnEventTriggered += (item) => SetGroceries(item?.Id);
-    }
-
-    public async Task SetGroceries(int? id)
-    {
-        if (id is not null)
+        if (_groceriesPerCategory?.Count == 0 || _groceriesPerCategory is null)
         {
-            _groceriesPerCategory = await StorageService.GetCacheFor<Dictionary<string, List<GroceryListItem>>>(id.Value, "groceries") ?? [];
+
+            _groceriesPerCategory = await StorageService.GetCacheFor<Dictionary<string, List<GroceryListItem>>>(Id, "groceries") ?? [];
             if (_groceriesPerCategory?.Count == 0 || _groceriesPerCategory is null)
             {
                 _groceriesPerCategory = await API.GetGroceriesFor(Id) ?? [];
             }
         }
+    }
+
+    public async Task SetGroceries(MenuDTO? menu)
+    {
+        if (menu?.Id is not null)
+        {
+            _groceriesPerCategory = await StorageService.GetCacheFor<Dictionary<string, List<GroceryListItem>>>(menu.Id, "groceries") ?? [];
+            if (_groceriesPerCategory?.Count == 0 || _groceriesPerCategory is null)
+            {
+                _groceriesPerCategory = await API.GetGroceriesFor(menu.Id) ?? [];
+            }
+            StateHasChanged();
+        }
+    }
+
+    public void Dispose()
+    {
+        MenuEvents.OnEventTriggered -= SetGroceries;
     }
 }

@@ -36,7 +36,6 @@ namespace Enplace.Library.Models
                 storageKey += "-" + keyextension;
             }
             var result = await storage.GetItemAsync<CachedItem<T>>(storageKey);
-
             if (result is null || !result.IsValid() || id != result.ID)
             {
                 return default;

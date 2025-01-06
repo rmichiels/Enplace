@@ -1,25 +1,28 @@
 ﻿using Microsoft.ApplicationInsights.Channel;
 using Microsoft.ApplicationInsights.Extensibility;
 
-public class TelemetryFilterNoAppMetrics : ITelemetryProcessor
+namespace Enplace.Telemetry
 {
-    private ITelemetryProcessor _next;
-
-    public TelemetryFilterNoAppMetrics(ITelemetryProcessor next)
+    public class TelemetryFilterNoAppMetrics : ITelemetryProcessor
     {
-        _next = next;
-    }
+        private ITelemetryProcessor _next;
 
-    public void Process(ITelemetry item)
-    {
-        // Check if the telemetry is of type MetricTelemetry and filter out 'AppMetrics'
-
-        if (item is Microsoft.ApplicationInsights.DataContracts.MetricTelemetry)
+        public TelemetryFilterNoAppMetrics(ITelemetryProcessor next)
         {
-            return; // stop processing AppMetrics telemetry
+            _next = next;
         }
 
-        // Continue processing other telemetry items
-        _next.Process(item);
+        public void Process(ITelemetry item)
+        {
+            // Check if the telemetry is of type MetricTelemetry and filter out 'AppMetrics'
+
+            if (item is Microsoft.ApplicationInsights.DataContracts.MetricTelemetry)
+            {
+                return; // stop processing AppMetrics telemetry
+            }
+
+            // Continue processing other telemetry items
+            _next.Process(item);
+        }
     }
 }

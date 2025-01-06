@@ -32,7 +32,7 @@
                             <ImageDropper @bind-Image="@_recipeHeaderImg" />
                         </div>
                     }
-                    <div class="card-body flex-col flex-1">
+                    <div class="card-body flex-col flex-1 px-1000-scroll">
                         @switch (ActiveSection)
                         {
                             case EditorSection.General:
@@ -69,10 +69,12 @@
                                                 @bind-Description=@(Recipe.RecipeSteps[Recipe.RecipeSteps.IndexOf(step)].Description) />
                                     <hr />
                                 }
-
-                                <button type="button" class="btn-icon blade-control " @onclick=@(() => AddRecipeStep())>
-                                    <Enplace.Library.Icons.Add />
-                                </button>
+                                @if (State != ComponentState.Details)
+                                {
+                                    <button type="button" class="btn-icon blade-control sticky-bottom" @onclick=@(() => AddRecipeStep())>
+                                        <Enplace.Library.Icons.Add />
+                                    </button>
+                                }
                                 break;
                         }
                     </div>
