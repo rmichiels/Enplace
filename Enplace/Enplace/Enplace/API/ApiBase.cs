@@ -1,7 +1,7 @@
 ﻿using Enplace.Service.Contracts;
 using Enplace.Service.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace Enplace.API
@@ -26,6 +26,24 @@ namespace Enplace.API
             return user;
         }
 
+        protected async Task TrackActivityFor(User userToTrack, int itemId)
+        {
+            var userQuery = await Service.Query<User>();
+            var currentUser = await userQuery.Include(u => u.ActivityLog).FirstOrDefaultAsync(u => u.Id == userToTrack.Id);
+
+            if (currentUser is not null)
+            {
+                var currentTopicLog = currentUser?.ActivityLog.Where(log => log.Topic == typeof(TEntity).Name).OrderBy(log => log.ModifiedOn).ToList();
+                if (currentTopicLog?.Count == 10)
+                {
+                    currentUser?.ActivityLog.Remove(currentTopicLog.Last());
+                }
+                currentUser?.ActivityLog.Add(new() { User = userToTrack, Topic = typeof(TEntity).Name, ItemID = itemId });
+                await Service.Update<User>(currentUser);
+            }
+
+        }
+
         [Route("list")]
         [HttpGet]
         public virtual async Task<ICollection<TDTO>> GetAll([FromQuery] bool foruser = false)
@@ -46,6 +64,7 @@ namespace Enplace.API
         [HttpPost]
         public async Task<IActionResult> Add(TDTO DTO)
         {
+            var currentUser = await GetUser();
             TEntity entity = await _converter.Convert(DTO);
 
             var addedEntity = await Service.Add(entity);
@@ -55,6 +74,10 @@ namespace Enplace.API
             }
             else
             {
+                if (currentUser is not null)
+                {
+                    Task.Run(() => TrackActivityFor(currentUser, entity.Id));
+                }
                 return Ok(addedEntity);
             }
         }
@@ -63,6 +86,8 @@ namespace Enplace.API
         [Route("{param}")]
         public async Task<TDTO?> Get(string param)
         {
+            var currentUser = await GetUser();
+
             TEntity? entity;
             if (int.TryParse(param, out var id))
             {
@@ -78,6 +103,10 @@ namespace Enplace.API
             }
             else
             {
+                if (currentUser is not null)
+                {
+                    Task.Run(() => TrackActivityFor(currentUser, entity.Id));
+                }
                 return await _converter.Convert(entity);
             }
         }
@@ -106,10 +135,15 @@ namespace Enplace.API
         [HttpPatch]
         public virtual async Task<IActionResult> Update(TDTO DTO)
         {
+            var currentUser = await GetUser();
             var entity = await _converter.Convert(DTO);
             try
             {
                 var result = await Service.Update(entity);
+                if (currentUser is not null)
+                {
+                    Task.Run(() => TrackActivityFor(currentUser, entity.Id));
+                }
                 return Ok();
             }
             catch (Exception ex)

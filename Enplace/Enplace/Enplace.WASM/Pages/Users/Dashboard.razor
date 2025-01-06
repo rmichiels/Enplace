@@ -1,6 +1,7 @@
 ﻿@page "/"
 @page "/dashboard"
 @attribute [Authorize]
+@implements IDisposable
 
 @using Blazored.Modal
 @using Blazored.Modal.Services
@@ -158,5 +159,10 @@
             var response = await MenuAPI.Update(_selectedMenu);
             StateHasChanged();
         }
+    }
+
+    public void Dispose()
+    {
+        MenuEventManager.OnEventTriggered -= MenuChanged;
     }
 }

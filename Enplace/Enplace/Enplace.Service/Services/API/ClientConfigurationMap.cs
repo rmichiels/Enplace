@@ -6,7 +6,7 @@ namespace Enplace.Service.Services.API
     {
         // private const string _localHost = "https://localhost:7283";
         //private const string _azureHost = "https://localhost:7283";
-        private const string _azureHost = "https://sk-enplace-api.azurewebsites.net";
+        private const string _azureHost = "https://enplace.api.swissknife.solutions";
         private const string _idService = "https://id.swissknife.solutions/api/v1";
         //private const string _idService = "http://localhost:8080";
 
@@ -32,16 +32,9 @@ namespace Enplace.Service.Services.API
 
         public bool TryGetValue(string label, out ClientConfiguration? value)
         {
-            if (_configMap.ContainsKey(label))
-            {
-                value = _configMap[label];
-                return true;
-            }
-            else
-            {
-                value = null;
-                return false;
-            }
+            var result = _configMap.TryGetValue(label, out ClientConfiguration? outValue);
+            value = outValue;
+            return result;
         }
 
         public class ClientConfiguration
@@ -54,8 +47,8 @@ namespace Enplace.Service.Services.API
             }
 
             public string BaseURL { get; set; }
-            public string Suffix { get; set; } = string.Empty;
-            public bool AllowAuthHeader { get; set; } = true;
+            public string Suffix { get; set; }
+            public bool AllowAuthHeader { get; set; }
         }
     }
 }

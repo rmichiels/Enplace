@@ -75,7 +75,8 @@
         grid-template-columns: [image] min-content [main] 1fr;
         min-width: 300px;
         width: 300px;
-        max-height: 100px;
+        height: 90px;
+        max-height: 90px;
     }
 
     .tile-image {

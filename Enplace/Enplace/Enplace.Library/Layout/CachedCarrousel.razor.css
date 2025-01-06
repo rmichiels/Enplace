@@ -63,8 +63,8 @@
 
 @media(max-height:800px) {
     .generic-carrousel {
-        padding-bottom: 0;
-        flex-wrap: nowrap !important;
+/*        padding-bottom: 0;*/
+        height:100%;
     }
 
         .generic-carrousel::-webkit-scrollbar-track {
@@ -74,11 +74,18 @@
 @media(max-width:800px) {
     .generic-carrousel {
         flex-wrap: wrap;
-/*        overflow-x: scroll;*/
+        /*        overflow-x: scroll;*/
         overflow-y: scroll;
     }
 
     .menu-carrousel{
 
+    }
+}
+
+@media(max-width:400px) {
+    .generic-carrousel {
+        flex-wrap: nowrap;
+        overflow-y: hidden;
     }
 }

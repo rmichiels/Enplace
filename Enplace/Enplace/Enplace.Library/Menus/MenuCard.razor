@@ -12,7 +12,7 @@
             break;
         case ComponentState.Details:
             <span class="subtitle">@Item?.Name</span>
-            <button class="btn-icon" @onclick="() => DeleteMenu()">
+            <button class="btn-icon" @onclick="() => ShowDeletionConfirmationModal()">
                 <Delete />
             </button>
             break;
@@ -26,6 +26,18 @@
             await API.Delete(Item.Id);
             ItemEvents.TriggerEvent(Item);
             EventManager.TriggerOnSubmit();
+        }
+    }
+
+    protected async Task ShowDeletionConfirmationModal()
+    {
+        var opt = new ModalOptions() { Size = ModalSize.Medium };
+        var param = new ModalParameters().Add(nameof(ConfirmationModal.Text), $"Are you sure you want to delete your menu, {Item.Name}?");
+        var modal = ModalService.Show<ConfirmationModal>("Confirm Deletion", param, opt);
+        var result = await modal.Result;
+        if (result.Confirmed)
+        {
+            await DeleteMenu();
         }
     }
 

@@ -1,23 +1,41 @@
-using Enplace.Components;
-using Enplace.Service;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Logging;
-using Microsoft.OpenApi.Models;
-using System.Diagnostics;
-using System.Text;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Enplace.Components;
+using Enplace.Service;
+using Enplace.Service.Database;
+using Enplace.Telemetry;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
-
+using Microsoft.OpenApi.Models;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Diagnostics;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+
 Uri keyVaultEndpoint = new(Environment.GetEnvironmentVariable("VaultUri") ?? string.Empty);
+Uri cfgEndpoint = new(Environment.GetEnvironmentVariable("CfgUri") ?? string.Empty);
+
 var cred = new DefaultAzureCredential();
-var client = new SecretClient(new Uri(keyVaultEndpoint.ToString()), cred);
-var sink = client.GetSecret("k-enplace-api-sink");
+
+var secretClient = new SecretClient(new Uri(keyVaultEndpoint.ToString()), cred);
+var sink = await secretClient.GetSecretAsync("k-enplace-api-sink");
 Assert.IsNotNull(sink.Value.Value);
+
+var dbcred = await secretClient.GetSecretAsync("k-enplace-db-password");
+Assert.IsNotNull(dbcred.Value.Value);
+
+builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+builder.Configuration.AddAzureAppConfiguration(options =>
+{
+    options.Connect(cfgEndpoint, new DefaultAzureCredential());
+    options.ConfigureKeyVault(cfg => cfg.Register(secretClient));
+});
+
+builder.Services.Configure<MySqlKeyChain>(builder.Configuration.GetSection("Enplace:MySqlKeyChain"));
 
 // Inject Telemetry
 builder.Logging.AddApplicationInsights();
@@ -29,7 +47,13 @@ builder.Services.AddApplicationInsightsTelemetryProcessor<TelemetryFilterDepende
 builder.Services.AddCors(
     options => options.AddDefaultPolicy(builder =>
         builder.AllowAnyHeader()
-         .WithOrigins("https://sk-enplace-client.azurewebsites.net", "https://localhost:7282", "https://localhost:7287")
+         .WithOrigins(
+            "https://sk-enplace-client.azurewebsites.net", 
+            "https://localhost:7282", 
+            "https://localhost:7287", 
+            "https://enplace.swissknife.solutions", 
+            "https://enplace.api.swissknife.solutions"
+        )
         .AllowAnyMethod()
     )
 );
@@ -65,7 +89,11 @@ builder.Services.AddAuthorization(
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
-builder.Services.AddEnplaceServices();
+
+var keychainSection = builder.Configuration.GetSection("Enplace:MySqlKeyChain");
+var keychain = keychainSection.Get<MySqlKeyChain>();
+
+builder.Services.AddEnplaceServices(keychain);
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen(
     options =>

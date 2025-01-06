@@ -1,15 +1,10 @@
 ﻿<article>
     <section class="d-flex flex-row flex-start">
-        <TGInputText @ref=TitleRef @bind-Field:get=Title @bind-Field:set=TitleCallback @bind-State=State />
-        @*         @if (State == ComponentState.Create || State == ComponentState.Edit)
-        {
-        <button class="btn-icon material-symbols-rounded" type="button" @onclick=@(() => Callback())>
-        <span>
-        save
-        </span>
-        </button>
-        } *@
-
+        <TGInputText @ref=TitleRef @bind-Field:get=Title @bind-Field:set=TitleCallback @bind-State=State>
+            <h4>
+                @Title
+            </h4>
+        </TGInputText>
         <button class="btn-icon material-symbols-rounded self-end" type="button" @onclick=@(() => ToggleIsOpen())>
             @if (IsOpen)
             {
