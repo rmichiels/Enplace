@@ -52,7 +52,8 @@ builder.Services.AddCors(
             "https://localhost:7282", 
             "https://localhost:7287", 
             "https://enplace.swissknife.solutions", 
-            "https://enplace.api.swissknife.solutions"
+            "https://enplace.api.swissknife.solutions",
+            "https://0.0.0.0"
         )
         .AllowAnyMethod()
     )
