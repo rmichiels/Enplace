@@ -12,11 +12,11 @@ EXPOSE 9443
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["Enplace/Enplace/Enplace.csproj", "Enplace/Enplace/"]
-COPY ["Enplace/Enplace.Service/Enplace.Service.csproj", "Enplace/Enplace.Service/"]
-RUN dotnet restore "./Enplace/Enplace/Enplace.csproj"
+COPY ["Enplace/Enplace.csproj", "Enplace/"]
+COPY ["Enplace.Service/Enplace.Service.csproj", "Enplace.Service/"]
+RUN dotnet restore "./Enplace/Enplace.csproj"
 COPY . .
-WORKDIR "/src/Enplace/Enplace"
+WORKDIR "/src/Enplace/"
 RUN dotnet build "./Enplace.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
