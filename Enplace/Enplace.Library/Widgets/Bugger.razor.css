@@ -1,0 +1,23 @@
+﻿.slide-out {
+    z-index: 1000;
+    position: absolute;
+    left: 0.5rem;
+    bottom: 0.5rem;
+    display: flex;
+    flex-direction: row;
+    background-color: var(--palette-base);
+    border-radius: var(--border-radius);
+    min-height: 40px;
+    min-width: 40px;
+    gap: var(--gap-s);
+    width: calc-size(auto);
+    transition: width 1s;
+}
+
+.btn-bug {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: var(--border-radius);
+    background-color: var(--palette-base-alt);
+}

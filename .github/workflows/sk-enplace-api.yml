@@ -21,10 +21,10 @@ on:
         #type: string
 env:
   AZURE_WEBAPP_NAME: sk-enplace-api
-  AZURE_WEBAPP_PACKAGE_PATH: Enplace\Enplace\publish
+  AZURE_WEBAPP_PACKAGE_PATH: Enplace\publish
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 8.0.x
-  WORKING_DIRECTORY: Enplace\Enplace\Enplace\Enplace.csproj
+  WORKING_DIRECTORY: Enplace\Enplace\Enplace.csproj
 jobs:
   build:
     runs-on: windows-latest

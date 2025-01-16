@@ -1,0 +1,23 @@
+﻿<div class="slide-out">
+    <button class="material-symbols-rounded btn-bug text-center p-1" @onclick=@(() => _isOpen.Value = !_isOpen.Value)>
+        bug_report
+    </button>
+    @if (_isOpen.Value)
+    {
+        <p class="pe-1 feedback-subtle text-center">
+            any issues or unexpected behaviour? Report a
+            <a href="https://github.com/rmichiels/Enplace/issues" target=”_blank”>bug</a>!
+        </p>
+    }
+</div>
+
+@code {
+    protected override Task OnInitializedAsync()
+    {
+        _isOpen = new(false);
+        _isOpen.Bind((_) => StateHasChanged());
+        return base.OnInitializedAsync();
+    }
+
+    private ReactiveProperty<bool> _isOpen;
+}
