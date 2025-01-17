@@ -40,7 +40,12 @@
                                     <span class="subtitle blade-label" style="width:min-content;">Title</span>
                                     <InputText class=@($"blade-control {State}") @bind-Value="Recipe.Name" placeholder="Recipe Name..." disabled=@(State != ComponentState.Edit && State !=ComponentState.Create ) />
                                     <span class="subtitle blade-label">Category</span>
-                                    <TGLSelect Class="blade-control" Field="@_recipeCategoryId" Placeholder="@(Recipe.Category?.Name ?? string.Empty)" FieldChanged="(i) => AssignCategory(i)" Options="EnplaceContext.RecipeCategories.ToList<ILabeled>()" State="State" />
+                                    <TGLSelect Class="blade-control" Field="@_recipeCategoryId" Placeholder="@(Recipe.Category?.Name ?? string.Empty)" FieldChanged="(i) => AssignCategory(i)" Options="EnplaceContext.RecipeCategories.ToList<ILabeled>()" State="State">
+                                        <span class="blade-control">
+                                            @Recipe.Category.Name
+                                        </span>
+
+                                    </TGLSelect>
                                     <Clock Class="blade-label m-row-3 dark-mode" />
                                     <InputNumber class=@($"blade-control text-center {State}") @bind-Value="Recipe.ApproximateCookingTime" disabled=@(State != ComponentState.Edit && State !=ComponentState.Create ) />
                                     <Silhouette Class="blade-label m-row-3 dark-mode" />
