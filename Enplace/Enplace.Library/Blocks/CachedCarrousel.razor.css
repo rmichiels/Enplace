@@ -41,17 +41,17 @@
     grid-column: content;
 }
 
-@media(max-height:800px) {
+@media(max-height : 800px) or (orientation:portrait) {
     .generic-carrousel {
-/*        padding-bottom: 0;*/
-        height:100%;
+        /*        padding-bottom: 0;*/
+        height: 100%;
     }
 
         .generic-carrousel::-webkit-scrollbar-track {
         }
 }
 
-@media(max-width:800px) {
+@media(max-width:800px) or (orientation:portrait) {
     .generic-carrousel {
         flex-wrap: wrap;
         /*        overflow-x: scroll;*/
@@ -59,7 +59,7 @@
     }
 }
 
-@media(max-width:400px) {
+@media(max-width:400px) or (orientation:portrait){
     .generic-carrousel {
         flex-wrap: nowrap;
         overflow-y: hidden;

@@ -34,7 +34,7 @@
     background-color: white;
 }
 
-@media(max-width:800px) {
+@media(max-width:800px) or (orientation:portrait){
     .category-wrapper {
         max-width: 100%;
         min-width: 66%;

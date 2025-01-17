@@ -38,7 +38,7 @@ article {
     min-width: 0;
 }
 
-@media(max-width: 800px) {
+@media(max-width: 800px) or (orientation:portrait) {
     .page {
         flex-direction: column-reverse;
         gap: var(--gap-s);
@@ -63,7 +63,7 @@ article {
     max-height: 100%;
 }
 
-@media(max-width: 800px) {
+@media(max-width: 800px) or (orientation:portrait) {
     .sidebar {
         position: sticky;
         bottom: 0;
@@ -71,6 +71,7 @@ article {
         max-width: 100%;
         justify-content: flex-end;
         background-color: var(--palette-base);
+        max-height: 75px;
     }
 }
 

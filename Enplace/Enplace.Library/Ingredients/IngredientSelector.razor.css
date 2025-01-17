@@ -60,7 +60,7 @@
         min-width: 0;
     }
 
-@media(max-width:800px) {
+@media(max-width:800px) or (orientation:portrait){
     .input-blade {
         grid-template-columns: 0;
         grid-template-columns: [left] 1fr [right] 1fr;

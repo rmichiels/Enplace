@@ -21,7 +21,6 @@
         grid-template-rows: [ctrl-corner-a] 90px [ctrl-body] 1fr [ctrl-corner-b] 90px;
         max-height: 840px;
         max-width: 90px;
-       
     }
 
         .ctrl-bar .container {
@@ -29,19 +28,20 @@
         }
 }
 
-@media(max-width:800px) {
+@media(max-width:800px) or (orientation:portrait) {
     .ctrl-bar {
         position: sticky;
         bottom: 0;
         grid-template-columns: [ctrl-corner-a] 0 [ctrl-body] 1fr [ctrl-corner-b] 0;
-        max-height: 90px;
+        min-height: 50px;
+        max-height: 100%;
         max-width: 100%;
     }
 
         .ctrl-bar .container {
             flex-direction: row;
             justify-content: space-between;
-            padding-top: 0.5rem;
-            padding-bottom: 0.5rem;
+            /*            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;*/
         }
 }

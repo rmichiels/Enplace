@@ -57,7 +57,7 @@
     src: url(/Roboto-Black.ttf) format('truetype');
 }
 
-@media(max-width :800px) {
+@media (max-width : 800px) or (orientation:portrait) {
     html {
         font-size: 90%;
     }
@@ -433,7 +433,7 @@ code {
     transform: scaleY(-1);
 }
 
-@media(max-width:500px) {
+@media(max-width:500px) or (orientation:portrait) {
     .corner-a {
         transform: rotate(270deg)
     }
@@ -593,7 +593,7 @@ mobile-invert-col {
     margin-left: auto;
 }
 
-@media(max-width:800px) {
+@media (max-width:800px) or (orientation:portrait) {
     .blazored-modal {
         margin: 0 !important;
         max-height: 100vh !important;
@@ -710,7 +710,7 @@ mobile-invert-col {
     gap: var(--gap-s);
 }
 
-@media(max-width:800px) {
+@media (max-width:800px) or (orientation:portrait) {
     .tile {
         padding: var(--gap-s);
     }
@@ -730,7 +730,7 @@ mobile-invert-col {
     }
 }*/
 
-@media(max-width:800px) {
+@media (max-width:800px) or (orientation:portrait) {
     .blazored-modal {
         min-width: 100vw;
         width: 100% !important;
