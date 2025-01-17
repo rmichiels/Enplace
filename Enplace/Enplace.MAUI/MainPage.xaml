@@ -2,13 +2,14 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Enplace.MAUI"
-             xmlns:wasm="clr-namespace:Enplace.Library;assembly=Enplace.Library" 
+            xmlns:lib="clr-namespace:Enplace.Library;assembly=Enplace.Library"
              x:Class="Enplace.MAUI.MainPage"
              BackgroundColor="{DynamicResource PageBackgroundColor}">
 
     <BlazorWebView x:Name="blazorWebView" HostPage="wwwroot/index.html">
         <BlazorWebView.RootComponents>
-            <RootComponent Selector="#app" ComponentType="{x:Type wasm:App}" />
+            <RootComponent Selector="#app" ComponentType="{x:Type lib:App}" />
         </BlazorWebView.RootComponents>
     </BlazorWebView>
+
 </ContentPage>

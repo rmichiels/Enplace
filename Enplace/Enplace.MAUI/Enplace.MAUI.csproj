@@ -68,5 +68,4 @@
       <ProjectReference Include="..\Enplace.Library\Enplace.Library.csproj" />
     </ItemGroup>
 
-
-		</Project>
+</Project>

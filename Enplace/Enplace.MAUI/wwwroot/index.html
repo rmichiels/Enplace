@@ -1,26 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Enplace.WASM</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Enplace.MAUI</title>
     <base href="/" />
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
     <link rel="stylesheet" href="css/app.css" />
+    <link rel="stylesheet" href="Enplace.MAUI.styles.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
-    <link href="manifest.webmanifest" rel="manifest" />
-    <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
-    <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png" />
     <link rel="preload" as="font" type="font/ttf" href="/MaterialSymbolsRounded-VariableFont_FILL,GRAD,opsz,wght.ttf"
           crossorigin="anonymous">
     <link rel="preload" as="font" type="font/ttf" href="/Roboto-Regular.ttf" crossorigin="anonymous">
     <link rel="preload" as="font" type="font/ttf" href="/Roboto-Bold.ttf" crossorigin="anonymous">
     <link rel="preload" as="font" type="font/ttf" href="/Roboto-Black.ttf" crossorigin="anonymous">
-
 </head>
 
 <body>
+
+    <div class="status-bar-safe-area"></div>
+
     <div id="app">
         <div class="ct-loader">
             <img src="SK_Loading_SatBlue.gif" />
@@ -32,7 +31,9 @@
         <a href="" class="reload">Reload</a>
         <a class="dismiss">🗙</a>
     </div>
-    <script src="_framework/blazor.webview.js"></script>
-    <script>navigator.serviceWorker.register('service-worker.js');</script>
+
+    <script src="_framework/blazor.webview.js" autostart="false"></script>
+
 </body>
+
 </html>

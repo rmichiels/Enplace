@@ -122,8 +122,11 @@
     // Even if we don't care about the results on this page.
     private async Task SetGroceries(MenuDTO menu)
     {
-        var groceries = await MenuAPI.GetGroceriesFor(menu.Id);
-        await StorageService.SetCacheFor(groceries, menu.Id, "groceries");
+        if(menu is not null)
+        {
+            var groceries = await MenuAPI.GetGroceriesFor(menu.Id);
+            await StorageService.SetCacheFor(groceries, menu.Id, "groceries");
+        }
     }
 
     public void ShowRecipeCreator()

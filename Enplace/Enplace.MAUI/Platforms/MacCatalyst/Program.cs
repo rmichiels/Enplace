@@ -1,6 +1,7 @@
-﻿using UIKit;
+﻿using ObjCRuntime;
+using UIKit;
 
-namespace Enplace.MAUI.Platforms.MacCatalyst
+namespace Enplace.MAUI
 {
     public class Program
     {

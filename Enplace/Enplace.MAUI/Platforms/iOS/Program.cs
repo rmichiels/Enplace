@@ -1,6 +1,7 @@
-﻿using UIKit;
+﻿using ObjCRuntime;
+using UIKit;
 
-namespace Enplace.MAUI.Platforms.iOS
+namespace Enplace.MAUI
 {
     public class Program
     {

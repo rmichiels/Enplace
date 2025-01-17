@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enplace.Service", "Enplace.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enplace.WASM", "Enplace.WASM\Enplace.WASM.csproj", "{D3C15647-6C89-4431-8A40-AE295FEBD309}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enplace.MAUI", "Enplace.MAUI\Enplace.MAUI.csproj", "{DD0B34F6-AF0A-4C82-9B2A-94ECE9EE9514}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enplace.MAUI", "Enplace.MAUI\Enplace.MAUI.csproj", "{612369A2-5A55-47EA-B474-A8115581656E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,12 +29,12 @@ Global
 		{D3C15647-6C89-4431-8A40-AE295FEBD309}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3C15647-6C89-4431-8A40-AE295FEBD309}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D3C15647-6C89-4431-8A40-AE295FEBD309}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DD0B34F6-AF0A-4C82-9B2A-94ECE9EE9514}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DD0B34F6-AF0A-4C82-9B2A-94ECE9EE9514}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DD0B34F6-AF0A-4C82-9B2A-94ECE9EE9514}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{DD0B34F6-AF0A-4C82-9B2A-94ECE9EE9514}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DD0B34F6-AF0A-4C82-9B2A-94ECE9EE9514}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DD0B34F6-AF0A-4C82-9B2A-94ECE9EE9514}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{612369A2-5A55-47EA-B474-A8115581656E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{612369A2-5A55-47EA-B474-A8115581656E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{612369A2-5A55-47EA-B474-A8115581656E}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{612369A2-5A55-47EA-B474-A8115581656E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{612369A2-5A55-47EA-B474-A8115581656E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{612369A2-5A55-47EA-B474-A8115581656E}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

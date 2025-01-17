@@ -43,16 +43,16 @@ namespace Enplace.Service
 
             // Base services
             services.AddSingleton<ClientConfigurationMap>();
-            services.AddBlazoredLocalStorageAsSingleton();
+            services.AddBlazoredLocalStorage();
             services.AddBlazoredModal();
 
             // Intermediary Services
-            services.AddSingleton<IHttpClientFactory, CustomHttpProvider>();
+            services.AddScoped<IHttpClientFactory, CustomHttpProvider>();
             services.AddAuthorizationCore();
             services.AddScoped<AuthenticationStateProvider, SwissknifeAuthStateProvider>();
 
             // Top services
-            services.AddSingleton<ConfigurationService>();
+            services.AddScoped<ConfigurationService>();
             services.AddScoped<ApiService<RecipeDTO>>();
             services.AddScoped<ApiService<MenuDTO>>();
             services.AddScoped<ApiService<IngredientDTO>>();

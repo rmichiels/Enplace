@@ -1,6 +1,6 @@
 ﻿using Foundation;
 
-namespace Enplace.MAUI.Platforms.iOS
+namespace Enplace.MAUI
 {
     [Register("AppDelegate")]
     public class AppDelegate : MauiUIApplicationDelegate
