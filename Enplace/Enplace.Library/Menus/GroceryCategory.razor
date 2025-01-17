@@ -7,7 +7,7 @@
             </span>
             /
             <span>
-                @done.Length
+                @done.Count
             </span>
         </div>
         <button class="btn-icon material-symbols-rounded">
@@ -36,14 +36,19 @@
     [Parameter]
     public List<GroceryListItem> Items { get; set; }
 
-    private bool[] done = [];
+    private List<bool> done = [];
     // private bool _isClosed = true;
 
     private ReactiveProperty<bool> _isClosed = new(true);
 
     protected override void OnInitialized()
     {
-        done = new bool[Items.Count];
         _isClosed.Bind((i) => StateHasChanged());
+    }
+
+    protected override void OnParametersSet()
+    {
+        done = Items.Select(i => false).ToList<bool>();
+        base.OnParametersSet();
     }
 }
