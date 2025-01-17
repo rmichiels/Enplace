@@ -1,8 +1,7 @@
 ﻿using Enplace.Library.Contracts;
 using Enplace.Service.DTO;
-using Enplace.Service.Services.API;
 
-namespace Enplace.WASM.Services
+namespace Enplace.Service.Services.API
 {
     public class RecipeResourceProvider : IResourceProvider<RecipeDTO>
     {

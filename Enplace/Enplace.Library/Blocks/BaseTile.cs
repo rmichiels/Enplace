@@ -5,7 +5,7 @@ using Enplace.Service.Services.API;
 using Enplace.Service.Services.Managers;
 using Microsoft.AspNetCore.Components;
 
-namespace Enplace.Library.Layout
+namespace Enplace.Library.Blocks
 {
     public class BaseTile<TItem> : ComponentBase where TItem : class, ILabeled, new()
     {

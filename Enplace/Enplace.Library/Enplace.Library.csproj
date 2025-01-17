@@ -6,9 +6,15 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+	<PropertyGroup>
+		<EnableDefaultContentItems>true</EnableDefaultContentItems>
+		<StaticWebAssetBasePath>/</StaticWebAssetBasePath>
+	</PropertyGroup>
+	
   <ItemGroup>
     <None Remove="Auth\AccountManager.razor.css" />
     <None Remove="Ingredients\IngredientSelector.razor.css" />
+    <None Remove="Pages\Menus\Groceries.razor.css" />
     <None Remove="Recipes\RecipeEditor.razor.css" />
     <None Remove="Swissknife.css" />
   </ItemGroup>
@@ -16,6 +22,7 @@
   <ItemGroup>
     <Content Include="Auth\AccountManager.razor.css" />
     <Content Include="Ingredients\IngredientSelector.razor.css" />
+    <Content Include="Pages\Menus\Groceries.razor.css" />
     <Content Include="Recipes\RecipeEditor.razor.css" />
     <Content Include="Swissknife.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -35,11 +42,4 @@
   <ItemGroup>
     <ProjectReference Include="..\Enplace.Service\Enplace.Service.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Content Update="wwwroot\SK_Loading_SatBlue.gif">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
 </Project>

@@ -2,7 +2,7 @@
 using Enplace.Service.DTO;
 using System.Net.Http.Json;
 
-namespace Enplace.WASM.Services
+namespace Enplace.Service.Services.API
 {
     public class IngredientResourceService : IResource<IngredientDTO>
     {

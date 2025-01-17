@@ -1,6 +1,6 @@
 ﻿using Foundation;
 
-namespace Enplace.MAUI
+namespace Enplace.MAUI.Platforms.MacCatalyst
 {
     [Register("AppDelegate")]
     public class AppDelegate : MauiUIApplicationDelegate

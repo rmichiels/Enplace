@@ -1,12 +1,11 @@
 ﻿using Blazored.LocalStorage;
-using Enplace.Service;
 using Enplace.Service.Services.API;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace Enplace.WASM.Services
+namespace Enplace.Service.Services
 {
     public class SwissknifeAuthStateProvider : AuthenticationStateProvider
     {

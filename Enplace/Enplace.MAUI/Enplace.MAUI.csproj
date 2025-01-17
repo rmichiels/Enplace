@@ -65,11 +65,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Enplace.WASM\Enplace.WASM.csproj" />
+      <ProjectReference Include="..\Enplace.Library\Enplace.Library.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="wwwroot\" />
-    </ItemGroup>
 
-</Project>
+		</Project>
